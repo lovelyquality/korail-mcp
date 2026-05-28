@@ -1,0 +1,47 @@
+# Secrets
+.env
+
+# Python virtual environments
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# pip
+*.egg-info/
+dist/
+build/
+
+# Project-local temp/reference files
+.claude/
+sse_test_*.txt
+01_filtering_result.csv
+공공데이터_전체_개방_목록*.CSV
+공공데이터_전체_개방_목록*.csv
+API key.md
+KORAIL_MCP_진행현황ver[1-8].md
+참고X/
+오픈데이터셋/
+OpenAPI정보/
+개선점 메모.md
+테스트 프롬프트.md
+test/
+제안신청서-MCP.pdf
+
+# Temp logs
+startup_error.txt
+startup_out.txt
