@@ -361,9 +361,15 @@ SSE 사용 시 Claude Desktop config:
 - **⚠️ KRIC API 키 아직 미테스트** — 키 발급 후 실제 응답 필드명 확인 필요
   - openapi.kric.go.kr 회원가입 → API 신청 → KRIC_API_KEY .env 설정
 
-### ③ 🤖 Agent 개발 (C1~C3, E1~E3)
-- 6종 에이전트 설계 및 구현
-- MCP 서버들을 조합하는 상위 레이어
+### ③ ✅ Agent 개발 (C1~C3, E1~E3) 완료
+- **구현 방식**: Claude Desktop Project + 시스템 프롬프트
+- **파일 위치**: `agents/` 폴더
+- C1 여행·예매: train-ops + convenience + network + codebook
+- C2 접근성: convenience + codebook + kric
+- C3 고객응대: train-ops + convenience + codebook + voc-cs
+- E1 통계분석: stats + carriage + rolling-stock + freight + network + voc-cs
+- E2 현장운영: rolling-stock + freight + network + codebook + train-ops
+- E3 내부지원: internal-svc + procurement + codebook
 
 ### ④ ☁️ SSE 중앙 서버 배포 (보류)
 - Oracle Cloud ARM (AP-Osaka-1) 용량 부족으로 보류
