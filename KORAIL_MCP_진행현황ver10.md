@@ -1,6 +1,6 @@
 # KORAIL MCP Agent 프로젝트 진행현황 ver10
 
-> 최종 업데이트: 2026-05-29 (M9 m-procurement + M11 m-kric 완료, 총 도구 95개)
+> 최종 업데이트: 2026-05-29 (M9·M11·Agent 완료 + 전 서버 출처 표기 통일, 총 도구 95개)
 > 이 문서 하나로 전체 컨텍스트 파악 가능 (ver1~ver9 읽을 필요 없음)
 > 데이터 목록 분석 필요 시 → `01_filtering_result.csv` 참고
 
@@ -59,6 +59,7 @@
 - **⚠️ `type=json` 필수**, 조건 파라미터 `cond[필드::연산자]`
 - **도구 11개**: issueStatistics 10개 + `get_ktx_long_term_stats`(로컬 XLSX)
 - **로컬 파일**: `data/ktx_segment_stats.xlsx`
+- **✅ `_wrap()` 적용 완료**: 전 도구 출처·데이터셋명 포함
 
 ### 3-3. m-train-ops (korail-train-ops) ✅
 - **경로**: `E:\AI\MCP\m-train-ops\`
@@ -75,6 +76,7 @@
 - **경로**: `E:\AI\MCP\m-carriage\`
 - **API**: B551457 REST
 - **도구 4개**: `get_mainline_carriage`, `get_wide_area_carriage`, `get_freight_carriage`, `get_carriage_codes`
+- **✅ `_wrap()` 적용 완료**: 전 도구 출처·데이터셋명 포함
 
 ### 3-6. m-freight (korail-freight) ✅
 - **경로**: `E:\AI\MCP\m-freight\`
@@ -125,6 +127,10 @@
   - 표준API(1): `get_handicapped_facilities`
 - **응답 구조**: `{"header": {"resultCode": "00"/"30", ...}, "body": [...]}`
 - **API 키 없으면** 각 도구는 빈 리스트 반환 (크래시 없음)
+- **✅ `_FACILITY_MAP`에 `stationCnvFacl` 추가** → 60개 API 전체 커버 완성
+- **⚠️ KRIC API 활용신청 보류**: 포털 웹 오류로 신청 미완료, 추후 진행 예정
+  - 신청 완료 후 `.env` 파일에 `KRIC_API_KEY=발급키` 설정 필요
+  - `stPlf`(역사별 승강장) 등 실제 응답 후 엔드포인트 매핑 재확인 권장
 
 ---
 
@@ -371,6 +377,17 @@ SSE 사용 시 Claude Desktop config:
 - E2 현장운영: rolling-stock + freight + network + codebook + train-ops
 - E3 내부지원: internal-svc + procurement + codebook
 
-### ④ ☁️ SSE 중앙 서버 배포 (보류)
+### ④ ✅ 전 서버 출처 표기 통일 (완료 2026-05-29)
+- m-stats: `_wrap()` 10개 도구 전체 적용 (issueStatistics/* 데이터셋명)
+- m-carriage: `_wrap()` 추가 + 4개 도구 전체 적용 (B551457/carriageStatistics/*)
+- m-kric: `_FACILITY_MAP`에 `stationCnvFacl` 추가 (60개 API 전체 커버)
+- 모든 MCP 서버 `_meta.출처` 통일 완료 (data.go.kr / openapi.kric.go.kr)
+
+### ⑤ 🔑 KRIC API 활용신청 (보류)
+- openapi.kric.go.kr 포털 웹 오류로 신청 보류
+- 재시도 시: 60개 API 개별 신청 → KRIC_API_KEY 발급 → `.env` 설정
+- **참고**: KRIC API 응답은 raw 그대로 반환하므로 키만 있으면 동작
+
+### ⑥ ☁️ SSE 중앙 서버 배포 (보류)
 - Oracle Cloud ARM (AP-Osaka-1) 용량 부족으로 보류
 - 필요 시 Tokyo 재시도 또는 다른 클라우드 (Fly.io, Render 등) 검토
