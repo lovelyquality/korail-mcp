@@ -1,6 +1,6 @@
 # KORAIL MCP Agent 프로젝트 진행현황 ver10
 
-> 최종 업데이트: 2026-05-29 (M9 m-procurement 완료 / m-freight get_freight_items 추가)
+> 최종 업데이트: 2026-05-29 (M9 m-procurement + M11 m-kric 완료, 총 도구 95개)
 > 이 문서 하나로 전체 컨텍스트 파악 가능 (ver1~ver9 읽을 필요 없음)
 > 데이터 목록 분석 필요 시 → `01_filtering_result.csv` 참고
 
@@ -16,7 +16,7 @@
 | 작업 폴더 | `E:\AI\MCP\` |
 | venv 활성화 | `.\venv\Scripts\Activate.ps1` |
 | venv 확인 | `Get-Command python \| Select-Object Source` |
-| Claude Desktop | 설치됨, MCP 12개 연결 (tavily 포함) |
+| Claude Desktop | 설치됨, MCP 14개 연결 (tavily 포함) |
 | Claude Desktop 설정 위치 | `%APPDATA%\Claude\claude_desktop_config.json` |
 | GitHub 레포 | https://github.com/lovelyquality/korail-mcp (Public) |
 
@@ -113,6 +113,19 @@
 - **⚠️ `get_lease_codes`**: /codes 엔드포인트 현재 빈 응답
 - **⚠️ `get_social_org` / `get_support_departments`**: 대용량 → 필터 없으면 200건 제한
 
+### 3-11. m-kric (korail-kric) ✅
+- **경로**: `E:\AI\MCP\m-kric\`
+- **API**: KRIC openapi.kric.go.kr (60개 엔드포인트 → 16개 도구)
+- **⚠️ `KRIC_API_KEY` 별도 필요** (data.go.kr 키와 다름, openapi.kric.go.kr 발급)
+- **도구 16개**:
+  - 열차이용정보(3): `get_subway_routes`, `get_subway_timetable`, `get_subway_train_details`
+  - 편의정보(5): `get_urban_station_info`, `get_urban_station_schedule`, `get_urban_station_facilities`, `get_urban_station_environment`, `get_urban_station_access`
+  - 교통약자정보(4): `get_accessible_platform`, `get_accessible_routes`, `get_accessible_elevators`, `get_accessible_train`
+  - 안전정보(3): `get_station_safety_equipment`, `get_station_screen_door`, `get_train_safety_equipment`
+  - 표준API(1): `get_handicapped_facilities`
+- **응답 구조**: `{"header": {"resultCode": "00"/"30", ...}, "body": [...]}`
+- **API 키 없으면** 각 도구는 빈 리스트 반환 (크래시 없음)
+
 ---
 
 ## 4. GitHub 레포 현황
@@ -150,7 +163,8 @@ https://github.com/lovelyquality/korail-mcp
     "korail-rolling-stock": { "command": "E:/AI/MCP/m-rolling-stock/venv/Scripts/python.exe", "args": ["E:/AI/MCP/m-rolling-stock/server.py"] },
     "korail-voc-cs": { "command": "E:/AI/MCP/m-voc-cs/venv/Scripts/python.exe", "args": ["E:/AI/MCP/m-voc-cs/server.py"] },
     "korail-internal-svc": { "command": "E:/AI/MCP/m-internal-svc/venv/Scripts/python.exe", "args": ["E:/AI/MCP/m-internal-svc/server.py"] },
-    "korail-procurement": { "command": "E:/AI/MCP/m-procurement/venv/Scripts/python.exe", "args": ["E:/AI/MCP/m-procurement/server.py"] }
+    "korail-procurement": { "command": "E:/AI/MCP/m-procurement/venv/Scripts/python.exe", "args": ["E:/AI/MCP/m-procurement/server.py"] },
+    "korail-kric": { "command": "E:/AI/MCP/m-kric/venv/Scripts/python.exe", "args": ["E:/AI/MCP/m-kric/server.py"] }
   }
 }
 ```
@@ -311,8 +325,8 @@ SSE 사용 시 Claude Desktop config:
 | M8 | m-internal-svc | ✅ 완료 | 14 |
 | M9 | m-procurement | ✅ 완료 | 4 |
 | M10 | m-voc-cs | ✅ 완료 | 10 |
-| M11 | m-kric | 💡 신규 제안 | - |
-| **합계** | | | **79** |
+| M11 | m-kric | ✅ 완료 | 16 |
+| **합계** | | | **95** |
 
 ---
 
@@ -342,10 +356,10 @@ SSE 사용 시 Claude Desktop config:
 | 철도운영정보_품목정보 | ✅→M5 | `get_freight_items` m-freight에 추가 (861건) |
 | 자재문서/첨부문서 CSV 2개 | ❌ | 파일명만, 실제 파일 접근 불가 |
 
-### ② 💡 M11 m-kric (신규 제안)
-- KRIC openapi.kric.go.kr 61개 API (전국 도시철도)
-- 별도 KRIC API 키 필요
-- M9 처리 후 결정
+### ② ✅ M11 m-kric (완료)
+- KRIC openapi.kric.go.kr 60개 API → 16개 도구 통합
+- **⚠️ KRIC API 키 아직 미테스트** — 키 발급 후 실제 응답 필드명 확인 필요
+  - openapi.kric.go.kr 회원가입 → API 신청 → KRIC_API_KEY .env 설정
 
 ### ③ 🤖 Agent 개발 (C1~C3, E1~E3)
 - 6종 에이전트 설계 및 구현
