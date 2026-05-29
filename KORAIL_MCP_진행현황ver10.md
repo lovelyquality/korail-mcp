@@ -1,6 +1,6 @@
 # KORAIL MCP Agent 프로젝트 진행현황 ver10
 
-> 최종 업데이트: 2026-05-29 (M9·M11·Agent 완료 + 전 서버 출처 표기 통일, 총 도구 95개)
+> 최종 업데이트: 2026-05-29 (M9·Agent 완료 + 전 서버 출처 표기 통일, M11 m-kric 삭제, 총 도구 79개)
 > 이 문서 하나로 전체 컨텍스트 파악 가능 (ver1~ver9 읽을 필요 없음)
 > 데이터 목록 분석 필요 시 → `01_filtering_result.csv` 참고
 
@@ -16,7 +16,7 @@
 | 작업 폴더 | `E:\AI\MCP\` |
 | venv 활성화 | `.\venv\Scripts\Activate.ps1` |
 | venv 확인 | `Get-Command python \| Select-Object Source` |
-| Claude Desktop | 설치됨, MCP 14개 연결 (tavily 포함) |
+| Claude Desktop | 설치됨, MCP 12개 연결 (tavily 포함, m-kric 제거) |
 | Claude Desktop 설정 위치 | `%APPDATA%\Claude\claude_desktop_config.json` |
 | GitHub 레포 | https://github.com/lovelyquality/korail-mcp (Public) |
 
@@ -115,22 +115,10 @@
 - **⚠️ `get_lease_codes`**: /codes 엔드포인트 현재 빈 응답
 - **⚠️ `get_social_org` / `get_support_departments`**: 대용량 → 필터 없으면 200건 제한
 
-### 3-11. m-kric (korail-kric) ✅
-- **경로**: `E:\AI\MCP\m-kric\`
-- **API**: KRIC openapi.kric.go.kr (60개 엔드포인트 → 16개 도구)
-- **⚠️ `KRIC_API_KEY` 별도 필요** (data.go.kr 키와 다름, openapi.kric.go.kr 발급)
-- **도구 16개**:
-  - 열차이용정보(3): `get_subway_routes`, `get_subway_timetable`, `get_subway_train_details`
-  - 편의정보(5): `get_urban_station_info`, `get_urban_station_schedule`, `get_urban_station_facilities`, `get_urban_station_environment`, `get_urban_station_access`
-  - 교통약자정보(4): `get_accessible_platform`, `get_accessible_routes`, `get_accessible_elevators`, `get_accessible_train`
-  - 안전정보(3): `get_station_safety_equipment`, `get_station_screen_door`, `get_train_safety_equipment`
-  - 표준API(1): `get_handicapped_facilities`
-- **응답 구조**: `{"header": {"resultCode": "00"/"30", ...}, "body": [...]}`
-- **API 키 없으면** 각 도구는 빈 리스트 반환 (크래시 없음)
-- **✅ `_FACILITY_MAP`에 `stationCnvFacl` 추가** → 60개 API 전체 커버 완성
-- **⚠️ KRIC API 활용신청 보류**: 포털 웹 오류로 신청 미완료, 추후 진행 예정
-  - 신청 완료 후 `.env` 파일에 `KRIC_API_KEY=발급키` 설정 필요
-  - `stPlf`(역사별 승강장) 등 실제 응답 후 엔드포인트 매핑 재확인 권장
+### 3-11. m-kric (korail-kric) ❌ 삭제됨 (2026-05-29)
+- **삭제 사유**: openapi.kric.go.kr 포털의 데이터 대부분이 구버전/오래된 자료로 확인됨
+- **삭제 내역**: 폴더 제거, setup.bat에서 제거, Claude Desktop 연결 해제 필요
+- **Claude Desktop**: GUI에서 `korail-kric` 연결 수동 해제 필요 (설정 → MCP)
 
 ---
 
@@ -331,8 +319,8 @@ SSE 사용 시 Claude Desktop config:
 | M8 | m-internal-svc | ✅ 완료 | 14 |
 | M9 | m-procurement | ✅ 완료 | 4 |
 | M10 | m-voc-cs | ✅ 완료 | 10 |
-| M11 | m-kric | ✅ 완료 | 16 |
-| **합계** | | | **95** |
+| M11 | m-kric | ❌ 삭제 | — |
+| **합계** | | | **79** |
 
 ---
 

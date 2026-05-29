@@ -28,7 +28,7 @@ echo Python 확인: %PYVER%
 echo.
 
 :: 서버 목록
-set SERVERS=m-convenience m-stats m-train-ops m-codebook m-carriage m-freight m-network m-rolling-stock m-voc-cs m-internal-svc m-procurement m-kric
+set SERVERS=m-convenience m-stats m-train-ops m-codebook m-carriage m-freight m-network m-rolling-stock m-voc-cs m-internal-svc m-procurement
 
 :: 각 서버 설치
 echo ----------------------------------------------------------------
@@ -154,10 +154,6 @@ echo },
 echo "korail-procurement": {
 echo   "command": "%ROOT:\=\\%\\m-procurement\\venv\\Scripts\\python.exe",
 echo   "args": ["%ROOT:\=\\%\\m-procurement\\server.py"]
-echo },
-echo "korail-kric": {
-echo   "command": "%ROOT:\=\\%\\m-kric\\venv\\Scripts\\python.exe",
-echo   "args": ["%ROOT:\=\\%\\m-kric\\server.py"]
 echo }
 echo.
 echo ----------------------------------------------------------------
