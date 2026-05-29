@@ -327,6 +327,29 @@ def get_logistics_facility(station_name: str = "", region: str = "", limit: int 
     }
 
 
+@mcp.tool()
+def get_freight_items(query: str = "", limit: int = 50) -> dict:
+    """화물 품목정보 조회 (총 861건, 로컬 CSV).
+
+    품목코드·품목명·품목약어명·최저톤수율 정보. 계층형 코드 구조
+    (상위 0000, 중위 00, 하위 01~99). 빈 query시 상위 항목부터 limit 반환.
+    """
+    rows = _get("freight_items", lambda: _load_csv("freight_items.csv"))
+    if query:
+        q = query.strip()
+        rows = [
+            r for r in rows
+            if _contains(r.get("품목코드(ITM_CD)"), q)
+            or _contains(r.get("품목명(ITM_NM)"), q)
+            or _contains(r.get("품목약어명(ITM_AVVR_NM)"), q)
+        ]
+    return {
+        "total": len(rows),
+        "data": rows[:limit],
+        "_meta": _make_meta("한국철도공사_철도운영정보_품목정보", "2024.08.01"),
+    }
+
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
