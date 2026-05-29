@@ -18,6 +18,22 @@ mcp = FastMCP("KORAIL 발권·이동유형 통계")
 _ktx_cache: dict = {}
 
 
+def _wrap(data: list, dataset: str) -> str:
+    """데이터 + 메타(출처·건수) 통합 반환. 모든 도구의 표준 반환 형식."""
+    return json.dumps(
+        {
+            "data": data,
+            "_meta": {
+                "출처": "한국철도공사 공공데이터포털 (data.go.kr)",
+                "데이터셋": dataset,
+                "건수": len(data),
+            },
+        },
+        ensure_ascii=False,
+        indent=2,
+    )
+
+
 def fetch_stats(endpoint: str, cond: dict = {}) -> list:
     params = {
         "serviceKey": API_KEY,
@@ -43,7 +59,7 @@ def get_mainline_station_per(opr_ymd: str = "", opr_ymd_gte: str = "", opr_ymd_l
     if stn_nm: cond["stn_nm::LIKE"] = stn_nm
     items = fetch_stats("mainLineStationPer", cond)
     if not items: return "조회된 데이터가 없습니다."
-    return json.dumps([{"운행일자": i.get("opr_ymd"), "역코드": i.get("stn_cd"), "역명": i.get("stn_nm"), "승차인원": i.get("ride_nope"), "하차인원": i.get("goff_nope")} for i in items], ensure_ascii=False, indent=2)
+    return _wrap([{"운행일자": i.get("opr_ymd"), "역코드": i.get("stn_cd"), "역명": i.get("stn_nm"), "승차인원": i.get("ride_nope"), "하차인원": i.get("goff_nope")} for i in items], "issueStatistics/mainLineStationPer")
 
 
 @mcp.tool()
@@ -54,7 +70,7 @@ def get_mainline_route_per(run_ym: str = "", rte_nm: str = "") -> str:
     if rte_nm: cond["rte_nm::LIKE"] = rte_nm
     items = fetch_stats("mainLineRoutePer", cond)
     if not items: return "조회된 데이터가 없습니다."
-    return json.dumps([{"운행연월": i.get("run_ym"), "노선코드": i.get("rte_cd"), "노선명": i.get("rte_nm"), "차종코드": i.get("carmdl_cd"), "차종": i.get("carmdl"), "이용인원": i.get("utztn_nope")} for i in items], ensure_ascii=False, indent=2)
+    return _wrap([{"운행연월": i.get("run_ym"), "노선코드": i.get("rte_cd"), "노선명": i.get("rte_nm"), "차종코드": i.get("carmdl_cd"), "차종": i.get("carmdl"), "이용인원": i.get("utztn_nope")} for i in items], "issueStatistics/mainLineRoutePer")
 
 
 @mcp.tool()
@@ -65,7 +81,7 @@ def get_wide_rail_station_per(run_ym: str = "", stn_nm: str = "") -> str:
     if stn_nm: cond["stn_nm::LIKE"] = stn_nm
     items = fetch_stats("wideRailloadStationPer", cond)
     if not items: return "조회된 데이터가 없습니다."
-    return json.dumps([{"운행연월": i.get("run_ym"), "역코드": i.get("stn_cd"), "역명": i.get("stn_nm"), "승차인원": i.get("ride_nope"), "하차인원": i.get("goff_nope")} for i in items], ensure_ascii=False, indent=2)
+    return _wrap([{"운행연월": i.get("run_ym"), "역코드": i.get("stn_cd"), "역명": i.get("stn_nm"), "승차인원": i.get("ride_nope"), "하차인원": i.get("goff_nope")} for i in items], "issueStatistics/wideRailloadStationPer")
 
 
 @mcp.tool()
@@ -76,7 +92,7 @@ def get_wide_rail_route_per(run_ym: str = "", sbwy_ln_nm: str = "") -> str:
     if sbwy_ln_nm: cond["sbwy_ln_nm::LIKE"] = sbwy_ln_nm
     items = fetch_stats("wideRailloadRoutePer", cond)
     if not items: return "조회된 데이터가 없습니다."
-    return json.dumps([{"운행연월": i.get("run_ym"), "전철선코드": i.get("sbwy_ln_cd"), "전철선명": i.get("sbwy_ln_nm"), "승차인원": i.get("ride_nope"), "하차인원": i.get("goff_nope")} for i in items], ensure_ascii=False, indent=2)
+    return _wrap([{"운행연월": i.get("run_ym"), "전철선코드": i.get("sbwy_ln_cd"), "전철선명": i.get("sbwy_ln_nm"), "승차인원": i.get("ride_nope"), "하차인원": i.get("goff_nope")} for i in items], "issueStatistics/wideRailloadRoutePer")
 
 
 @mcp.tool()
@@ -85,7 +101,7 @@ def get_mainline_distance_per(run_ym: str = "") -> str:
     cond = {"run_ym::EQ": run_ym} if run_ym else {}
     items = fetch_stats("mainLineDistancePer", cond)
     if not items: return "조회된 데이터가 없습니다."
-    return json.dumps([{"운행연월": i.get("run_ym"), "거리구분코드": i.get("dst_se_cd"), "거리구분명": i.get("dst_se_nm"), "이용인원": i.get("utztn_nope")} for i in items], ensure_ascii=False, indent=2)
+    return _wrap([{"운행연월": i.get("run_ym"), "거리구분코드": i.get("dst_se_cd"), "거리구분명": i.get("dst_se_nm"), "이용인원": i.get("utztn_nope")} for i in items], "issueStatistics/mainLineDistancePer")
 
 
 @mcp.tool()
@@ -96,7 +112,7 @@ def get_mainline_model_per(run_ym: str = "", carmdl: str = "") -> str:
     if carmdl: cond["carmdl::LIKE"] = carmdl
     items = fetch_stats("mainLineModelPer", cond)
     if not items: return "조회된 데이터가 없습니다."
-    return json.dumps([{"운행연월": i.get("run_ym"), "차종코드": i.get("carmdl_cd"), "차종": i.get("carmdl"), "이용인원": i.get("utztn_nope")} for i in items], ensure_ascii=False, indent=2)
+    return _wrap([{"운행연월": i.get("run_ym"), "차종코드": i.get("carmdl_cd"), "차종": i.get("carmdl"), "이용인원": i.get("utztn_nope")} for i in items], "issueStatistics/mainLineModelPer")
 
 
 @mcp.tool()
@@ -107,7 +123,7 @@ def get_mainline_day_of_week_per(run_ym: str = "", rte_nm: str = "") -> str:
     if rte_nm: cond["rte_nm::LIKE"] = rte_nm
     items = fetch_stats("mainLineDayOfWeekPer", cond)
     if not items: return "조회된 데이터가 없습니다."
-    return json.dumps([{"운행연월": i.get("run_ym"), "노선코드": i.get("rte_cd"), "노선명": i.get("rte_nm"), "요일": i.get("dow"), "이용인원": i.get("utztn_nope")} for i in items], ensure_ascii=False, indent=2)
+    return _wrap([{"운행연월": i.get("run_ym"), "노선코드": i.get("rte_cd"), "노선명": i.get("rte_nm"), "요일": i.get("dow"), "이용인원": i.get("utztn_nope")} for i in items], "issueStatistics/mainLineDayOfWeekPer")
 
 
 @mcp.tool()
@@ -118,7 +134,7 @@ def get_mainline_grade_per(run_ym: str = "", carmdl: str = "") -> str:
     if carmdl: cond["carmdl::LIKE"] = carmdl
     items = fetch_stats("mainLineGradePer", cond)
     if not items: return "조회된 데이터가 없습니다."
-    return json.dumps([{"운행연월": i.get("run_ym"), "차종코드": i.get("carmdl_cd"), "차종": i.get("carmdl"), "객실등급코드": i.get("gsrm_grd_cd"), "객실등급명": i.get("gsrm_grd_nm"), "이용인원": i.get("utztn_nope")} for i in items], ensure_ascii=False, indent=2)
+    return _wrap([{"운행연월": i.get("run_ym"), "차종코드": i.get("carmdl_cd"), "차종": i.get("carmdl"), "객실등급코드": i.get("gsrm_grd_cd"), "객실등급명": i.get("gsrm_grd_nm"), "이용인원": i.get("utztn_nope")} for i in items], "issueStatistics/mainLineGradePer")
 
 
 @mcp.tool()
@@ -129,7 +145,7 @@ def get_mainline_ticketing_stat(ntsl_ym: str = "", ise_type: str = "") -> str:
     if ise_type: cond["ise_type::LIKE"] = ise_type
     items = fetch_stats("mainLineTicketingStat", cond)
     if not items: return "조회된 데이터가 없습니다."
-    return json.dumps([{"판매연월": i.get("ntsl_ym"), "발권유형코드": i.get("ise_type_cd"), "발권유형": i.get("ise_type"), "판매비율(%)": i.get("ntsl_rt")} for i in items], ensure_ascii=False, indent=2)
+    return _wrap([{"판매연월": i.get("ntsl_ym"), "발권유형코드": i.get("ise_type_cd"), "발권유형": i.get("ise_type"), "판매비율(%)": i.get("ntsl_rt")} for i in items], "issueStatistics/mainLineTicketingStat")
 
 
 @mcp.tool()
@@ -140,7 +156,7 @@ def get_mainline_person_distance(run_ym: str = "", rte_nm: str = "") -> str:
     if rte_nm: cond["rte_nm::LIKE"] = rte_nm
     items = fetch_stats("mainLinePersonDistance", cond)
     if not items: return "조회된 데이터가 없습니다."
-    return json.dumps([{"운행연월": i.get("run_ym"), "노선코드": i.get("rte_cd"), "노선명": i.get("rte_nm"), "인거리": i.get("pd")} for i in items], ensure_ascii=False, indent=2)
+    return _wrap([{"운행연월": i.get("run_ym"), "노선코드": i.get("rte_cd"), "노선명": i.get("rte_nm"), "인거리": i.get("pd")} for i in items], "issueStatistics/mainLinePersonDistance")
 
 
 def _parse_ktx_stats() -> dict:

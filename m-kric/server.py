@@ -1,7 +1,7 @@
 """korail-kric MCP server.
 
 국가철도공단(KRIC) openapi.kric.go.kr 전국 도시철도 API
-60개 엔드포인트를 15개 도구로 통합.
+60개 엔드포인트를 16개 도구로 통합.
 
 분류:
   열차이용정보 (3): 노선·편성, 시각표, 열차 시설·환경
@@ -248,14 +248,15 @@ def get_urban_station_schedule(
 
 # 편의시설 종류 → 엔드포인트 매핑
 _FACILITY_MAP = {
-    "elevator":    "convenientInfo/stationElevator",
-    "escalator":   "convenientInfo/stationEscalator",
-    "toilet":      "convenientInfo/stationToilet",
-    "atm":         "convenientInfo/stationATM",
-    "locker":      "convenientInfo/stationLocker",
-    "dairy_room":  "convenientInfo/stationDairyRoom",
-    "wifi":        "convenientInfo/stationWIFI",
-    "lost_office": "convenientInfo/stationLostPropertyOffice",
+    "elevator":        "convenientInfo/stationElevator",
+    "escalator":       "convenientInfo/stationEscalator",
+    "toilet":          "convenientInfo/stationToilet",
+    "atm":             "convenientInfo/stationATM",
+    "locker":          "convenientInfo/stationLocker",
+    "dairy_room":      "convenientInfo/stationDairyRoom",
+    "wifi":            "convenientInfo/stationWIFI",
+    "lost_office":     "convenientInfo/stationLostPropertyOffice",
+    "convenience_std": "convenientInfo/stationCnvFacl",   # 편의정보(표준)
 }
 
 
@@ -270,15 +271,16 @@ def get_urban_station_facilities(
     """도시철도 역사 편의시설 현황 조회.
 
     facility_type 선택지:
-      "elevator"   → 엘리베이터 현황
-      "escalator"  → 에스컬레이터 현황
-      "toilet"     → 화장실 현황
-      "atm"        → ATM 기기 위치
-      "locker"     → 물품보관함 현황
-      "dairy_room" → 수유실 현황
-      "wifi"       → 와이파이 위치
-      "lost_office"→ 유실물센터 정보
-      "all"        → 위 8종 모두 (기본값, 응답이 큼)
+      "elevator"        → 엘리베이터 현황
+      "escalator"       → 에스컬레이터 현황
+      "toilet"          → 화장실 현황
+      "atm"             → ATM 기기 위치
+      "locker"          → 물품보관함 현황
+      "dairy_room"      → 수유실 현황
+      "wifi"            → 와이파이 위치
+      "lost_office"     → 유실물센터 정보
+      "convenience_std" → 편의시설 표준정보 (stationCnvFacl)
+      "all"             → 위 9종 모두 (기본값, 응답이 큼)
     """
     extra = {"stinCd": stin_cd, "stinNm": stin_nm}
     targets = (

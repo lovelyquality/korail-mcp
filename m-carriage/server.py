@@ -13,6 +13,22 @@ BASE_URL = "https://apis.data.go.kr/B551457/carriageStatistics"
 mcp = FastMCP("KORAIL 열차수송통계")
 
 
+def _wrap(data: list, dataset: str) -> str:
+    """데이터 + 메타(출처·건수) 통합 반환. 모든 도구의 표준 반환 형식."""
+    return json.dumps(
+        {
+            "data": data,
+            "_meta": {
+                "출처": "한국철도공사 공공데이터포털 (data.go.kr)",
+                "데이터셋": dataset,
+                "건수": len(data),
+            },
+        },
+        ensure_ascii=False,
+        indent=2,
+    )
+
+
 def fetch_carriage(endpoint: str, cond: dict = {}) -> list:
     """carriageStatistics 엔드포인트에서 데이터를 가져옵니다 (최대 1000건)."""
     params = {"serviceKey": API_KEY, "pageNo": 1, "numOfRows": 1000}
@@ -68,7 +84,7 @@ def get_mainline_carriage(
     items = fetch_carriage("mainLineTravelerTrain", cond)
     if not items:
         return "조회된 간선 여객열차 수송실적이 없습니다."
-    return json.dumps(items, ensure_ascii=False, indent=2)
+    return _wrap(items, "B551457/carriageStatistics/mainLineTravelerTrain")
 
 
 @mcp.tool()
@@ -119,7 +135,7 @@ def get_wide_area_carriage(
     items = fetch_carriage("wideAreaTravelerTrain", cond)
     if not items:
         return "조회된 광역 여객열차 수송실적이 없습니다."
-    return json.dumps(items, ensure_ascii=False, indent=2)
+    return _wrap(items, "B551457/carriageStatistics/wideAreaTravelerTrain")
 
 
 @mcp.tool()
@@ -178,7 +194,7 @@ def get_freight_carriage(
     items = fetch_carriage("freightTrain", cond)
     if not items:
         return "조회된 화물열차 수송실적이 없습니다."
-    return json.dumps(items, ensure_ascii=False, indent=2)
+    return _wrap(items, "B551457/carriageStatistics/freightTrain")
 
 
 @mcp.tool()
@@ -205,7 +221,7 @@ def get_carriage_codes(code_type: str = "", code: str = "", value: str = "") -> 
     items = fetch_carriage("codes", cond)
     if not items:
         return "조회된 코드가 없습니다. code_type(예: stn_cd, mrnt_cd, sbwy_ln_cd)을 지정해주세요."
-    return json.dumps(items, ensure_ascii=False, indent=2)
+    return _wrap(items, "B551457/carriageStatistics/codes")
 
 
 if __name__ == "__main__":
