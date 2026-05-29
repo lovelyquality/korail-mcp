@@ -350,6 +350,61 @@ def get_freight_items(query: str = "", limit: int = 50) -> dict:
     }
 
 
+@mcp.tool()
+def get_hazardous_cargo(query: str = "", grade: str = "", limit: int = 50) -> dict:
+    """위험물 정보 조회 (로컬 CSV, 2025.09.15 기준).
+
+    위험물분류기준(52건) + 위험물코드상세(2301건) 두 테이블을 통합 조회.
+    - query: 국제위험물 한글명 부분일치 검색 (예: '가스', '폭발물', '산')
+    - grade: 위험물등급번호 정확일치 필터 (예: '1'=폭발물, '2'=가스, '3'=인화성액체)
+    - limit: 최대 반환 건수 (기본 50)
+
+    위험물 등급 안내:
+      1=폭발물, 2=가스(인화성·독성), 3=인화성액체, 4=가연성고체,
+      5=산화성물질, 6=독성물질, 7=방사성물질, 8=부식성물질, 9=기타위험물
+    """
+    # 등급 기준 테이블 (캐시)
+    grades = _get("haz_grade", lambda: _load_csv("hazardous_grade.csv"))
+    grade_map = {
+        r.get("위험물등급번호", ""): {
+            "등급명": r.get("위험물등급명", ""),
+            "IMDG코드": r.get("국제철도위험물취급기준(IMDG 코드)", ""),
+            "IMDG명": r.get("국제철도위험물취급기준명(IMDG 코드명)", ""),
+            "대표물품": r.get("국제철도위험물취급대표물품(IMDG대표물품)", ""),
+        }
+        for r in grades
+    }
+
+    # 코드 상세 테이블
+    details = _get("haz_detail", lambda: _load_csv("hazardous_detail.csv"))
+
+    result = details
+    if grade:
+        result = [r for r in result if r.get("위험물등급번호", "") == grade]
+    if query:
+        q = query.strip()
+        result = [r for r in result if _contains(r.get("국제위험물한글명", ""), q)
+                  or _contains(r.get("국제위험물번호", ""), q)]
+
+    rows = []
+    for r in result[:limit]:
+        g = grade_map.get(r.get("위험물등급번호", ""), {})
+        rows.append({
+            "국제위험물번호": r.get("국제위험물번호", ""),
+            "한글명": r.get("국제위험물한글명", ""),
+            "위험물등급번호": r.get("위험물등급번호", ""),
+            "등급명": g.get("등급명", ""),
+            "IMDG코드": r.get("국제철도위험물취급기준(IMDG 코드)", ""),
+            "분류코드": r.get("위험물분류코드", ""),
+        })
+
+    return {
+        "total": len(result),
+        "data": rows,
+        "_meta": _make_meta("한국철도공사_철도운영정보_위험물 정보", "2025.09.15"),
+    }
+
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()

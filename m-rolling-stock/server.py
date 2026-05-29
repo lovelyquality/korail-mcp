@@ -193,6 +193,57 @@ def get_maintenance_equipment(region: str = "") -> str:
     return _wrap(result, "한국철도공사_기계 보유현황", "2024.12.31")
 
 
+@mcp.tool()
+def get_train_operation_by_type(year: int = 0, train_type: str = "") -> str:
+    """차종별 연간 운행실적 조회 (로컬 CSV, 2025.08.31 기준, 2019~2025년).
+
+    디젤기관차·전기기관차·전동차(수도권) 등 KORAIL 보유 차종별 연간 운행 횟수.
+    2025년은 8월까지의 통계.
+
+    - year: 특정 연도 (예: 2024). 0이면 전체(2019~2025).
+    - train_type: 차종명 부분일치 필터 (예: 'KTX', 'ITX', '디젤기관차', '전기기관차').
+                  미입력 시 전체 차종 컬럼 반환.
+
+    주요 차종: 디젤기관차(4400·7300·7400·7500호대), 전기기관차(8200·8500호대),
+              KTX, ITX-새마을, ITX-청춘, 누리로, 수도권전동차 각 계열
+    """
+    from pathlib import Path as _Path
+    import csv as _csv
+
+    def _load_op_type():
+        with open(_Path(__file__).parent / "data" / "train_operation_by_type.csv",
+                  encoding="cp949", newline="") as f:
+            return list(_csv.DictReader(f))
+
+    rows = _get("train_op_type", _load_op_type)
+
+    if year:
+        rows = [r for r in rows if str(r.get("년도", "")).strip() == str(year)]
+
+    if not rows:
+        return f"연도 '{year}'에 해당하는 데이터가 없습니다. (범위: 2019~2025)"
+
+    if train_type:
+        # 해당 차종 컬럼만 추출
+        result = []
+        for r in rows:
+            filtered = {"년도": r.get("년도", "")}
+            for col, val in r.items():
+                if train_type in col:
+                    filtered[col] = val
+            if len(filtered) > 1:
+                result.append(filtered)
+        if not result:
+            all_cols = [c for c in rows[0].keys() if c != "년도" and c != "차종별 운행 결과 합계"]
+            return json.dumps({
+                "error": f"'{train_type}'에 해당하는 차종 없음",
+                "사용가능한_차종": all_cols,
+            }, ensure_ascii=False, indent=2)
+        return _wrap(result, "한국철도공사_차종별운행", "2025.08.31")
+
+    return _wrap(rows, "한국철도공사_차종별운행", "2025.08.31")
+
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()

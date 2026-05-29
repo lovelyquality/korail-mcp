@@ -476,6 +476,55 @@ def get_ktx_stations(
     return _wrap_list(result, "한국철도공사_KTX 노선별 역정보", "2025.11.21")
 
 
+@mcp.tool()
+def get_station_track_info(station_name: str = "", current_only: bool = True) -> dict:
+    """역별 선로·시설 상세 정보 조회 (공통기준 역상세, 로컬 CSV, 2025.06.18 기준, 5161행).
+
+    구내유효장·선로길이·지선·전용선 거리, 총선수, 분기역여부, 입환시작여부 등
+    현장 운영에 필요한 역 선로 제원 정보 제공.
+
+    - station_name: 역이름 부분일치 (예: '서울', '부산', '대전'). 미입력 시 전체.
+    - current_only: True(기본)이면 현재 유효한 이력만 반환 (역이력적용종료일자 빈 값).
+                    False이면 이력 전체(동일 역의 이력 변경 포함) 반환.
+
+    주요 컬럼:
+      구내유효장(m), 구내선로길이(m), 지선유효장(m), 지선선로거리(m),
+      전용선유효장(m), 전용선선로거리(m), 총선수, 분기역여부(Y/N), 입환시작여부(Y/N)
+    """
+    def _load_station_detail():
+        with open(DATA_DIR / "station_detail.csv", encoding="cp949", newline="") as f:
+            return list(csv.DictReader(f))
+
+    rows = _get("station_detail", _load_station_detail)
+
+    if current_only:
+        rows = [r for r in rows if not r.get("역이력적용종료일자", "").strip()]
+    if station_name:
+        rows = [r for r in rows if station_name in str(r.get("역이름", ""))]
+
+    if not rows:
+        msg = f"'{station_name}'에 해당하는 역을 찾을 수 없습니다." if station_name else "조회된 데이터가 없습니다."
+        return msg
+
+    result = [
+        {
+            "역이름": r.get("역이름", ""),
+            "이력적용시작일": r.get("역이력적용시작일자", ""),
+            "구내유효장(m)": r.get("구내유효장", ""),
+            "구내선로길이(m)": r.get("구내선로길이", ""),
+            "지선유효장(m)": r.get("지선유효장", ""),
+            "지선선로거리(m)": r.get("지선선로거리", ""),
+            "전용선유효장(m)": r.get("전용선유효장", ""),
+            "전용선선로거리(m)": r.get("전용선선로거리", ""),
+            "총선수": r.get("총선수", ""),
+            "분기역여부": r.get("분기역여부", ""),
+            "입환시작여부": r.get("입환시작여부", ""),
+        }
+        for r in rows
+    ]
+    return _wrap_list(result, "한국철도공사_공통기준 역상세 정보", "2025.06.18")
+
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
