@@ -16,9 +16,9 @@
 차량 제원 조회, 화물 코드/작업선/물류시설 확인, 노선 정보 파악에 활용합니다.
 
 ## 사용 가능한 도구
-- **korail-rolling-stock**: 차량 형식별 제원, 화차 하중/자중별 현황, 정비장비
-- **korail-freight**: 화물코드, 컨테이너 규격, 화물작업선, 적하시간, 물류시설, 품목정보, 수탁정보
-- **korail-network**: 노선정보, 역간거리, 구간별 정보, 운임, KTX 역 목록
+- **korail-rolling-stock**: 차량 형식별 제원, 화차 하중/자중별 현황, 정비장비, 차종별 연간 운행실적
+- **korail-freight**: 화물코드, 컨테이너 규격, 화물작업선, 적하시간, 물류시설, 품목정보, 수탁정보, 위험물 정보
+- **korail-network**: 노선정보, 역간거리, 구간별 정보, 운임, KTX 역 목록, 역별 선로 상세 제원
 - **korail-codebook**: 역 코드/이름 검색, 노선 정보, 지역별 역 목록
 - **korail-train-ops**: 열차 운행계획, 운행이력
 - **korail-convenience**: 역사 시설정보, 물류 접근성
@@ -34,10 +34,13 @@
 - 차량 형식별 제원 확인 (정원, 중량, 크기 등)
 - 화차 하중·자중 기준별 보유 현황 파악
 - 정비장비 보유 현황 조회
+- 차종별 연간 운행실적 조회 (2019~2025)
 - 화물 품목/내적화물코드 검색 및 디코딩
+- 위험물 운송 가능 여부 및 등급·분류코드 조회
 - 화물 작업선 정보 조회 (역명별)
 - 표준 적하시간 및 조정이력 확인
 - 물류시설 현황 조회
+- 역별 선로 제원 조회 (유효장, 선로길이, 분기역 여부 등)
 - 역간 운행거리 및 구간 정보 확인
 - 열차 운행 계획 및 이력 조회
 ```
@@ -47,10 +50,13 @@
 ## 활용 예시 프롬프트
 - "KTX-이음 형식 제원 알려줘 (정원, 최고속도 등)."
 - "하중 15톤 이상 화차 보유현황 알려줘."
-- "부산진역 화물 작업선 정보 조회해줘."
+- "부산진역 화물 작업선 정보랑 선로 제원 같이 조회해줘."
 - "내적화물코드 7404가 뭔지 알려줘."
 - "서울~부산 운행거리가 몇 km야?"
 - "표준 적하시간 목록 보여줘."
+- "프로판 철도 운송 시 위험물 등급이랑 분류코드 알려줘."
+- "2024년도 차종별 운행실적 보여줘."
+- "서울역 구내유효장이랑 총선수 알려줘."
 
 ---
 
@@ -69,6 +75,9 @@
 | 화물작업선 조회 | korail-freight: list_freight_work_lines |
 | 표준 적하시간 | korail-freight: list_standard_loading_time |
 | 물류시설 조회 | korail-freight: get_logistics_facility |
+| 위험물 조회 | korail-freight: get_hazardous_cargo |
 | 역간 거리 | korail-network: get_station_distance, get_operation_distance |
 | 구간 정보 | korail-network: get_segment_info |
+| 역별 선로 제원 | korail-network: get_station_track_info |
 | 열차 운행계획 | korail-train-ops: get_train_run_plan |
+| 차종별 운행실적 | korail-rolling-stock: get_train_operation_by_type |
