@@ -55,6 +55,6 @@ KORAIL MCP Agent는 Claude Desktop의 **Project 기능**을 활용한 역할별 
 ## 주의사항
 
 - Claude Desktop에 MCP 서버가 정상 연결된 상태에서 사용하세요.
-- KRIC API(C2 Agent)는 별도 키 발급이 필요합니다 (`m-kric/.env` 설정).
+- C2 Agent의 도시철도 시설 조회(`m-urban-rail`)는 API 승인 후 활성화됩니다.
 - Agent는 실시간 예매·예약 기능을 제공하지 않습니다.
 - 데이터는 data.go.kr 공공데이터 기준으로, 실시간 운행 정보와 다를 수 있습니다.
