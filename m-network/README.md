@@ -1,14 +1,14 @@
-# 🗺️ m-network — 선로망·운임·운행거리 조회
+﻿# ?뿺截?m-network ???좊줈留씲룹슫?꽷룹슫?됯굅由?議고쉶
 
-KORAIL 노선·역간 거리, 화물 운임, 선로 정보를 조회하는 MCP 서버 (도구 8개)
+KORAIL ?몄꽑쨌??컙 嫄곕━, ?붾Ъ ?댁엫, ?좊줈 ?뺣낫瑜?議고쉶?섎뒗 MCP ?쒕쾭 (?꾧뎄 8媛?
 
-| 도구 | 설명 |
+| ?꾧뎄 | ?ㅻ챸 |
 |---|---|
-| `search_routes` | 노선 검색 |
-| `get_station_distance` | 역간 거리 조회 |
-| `get_freight_minimum_fare` | 화물 최소 운임 조회 |
-| `get_freight_rate` | 화물 운임 조회 |
-| `get_segment_info` | 구간 정보 조회 |
-| `get_operation_distance` | 운행 거리 조회 |
-| `get_ktx_stations` | KTX 정차역 목록 |
-| `get_station_track_info` | 역 선로 현황 조회 |
+| `search_routes` | ?몄꽑 寃??|
+| `get_station_distance` | ??컙 嫄곕━ 議고쉶 |
+| `get_freight_minimum_fare` | ?붾Ъ 理쒖냼 ?댁엫 議고쉶 |
+| `get_freight_rate` | ?붾Ъ ?댁엫 議고쉶 |
+| `get_segment_info` | 援ш컙 ?뺣낫 議고쉶 |
+| `get_operation_distance` | ?댄뻾 嫄곕━ 議고쉶 |
+| `get_ktx_stations` | KTX ?뺤감??紐⑸줉 |
+| `get_station_track_info` | ???좊줈 ?꾪솴 議고쉶 |
