@@ -5,7 +5,7 @@
 
 ---
 
-## 제공 서버 (총 10개, 74개 도구)
+## 제공 서버 (총 11개, 82개 도구)
 
 | 서버 | 도구 수 | 제공 데이터 |
 |---|:-:|---|
@@ -14,11 +14,12 @@
 | m-train-ops | 4 | 열차 운행계획·운행이력 |
 | m-codebook | 4 | 역코드·노선코드 조회 |
 | m-carriage | 4 | 간선·광역·화물 수송실적 |
-| m-freight | 9 | 화물·컨테이너·물류시설 |
-| m-network | 7 | 노선·역간거리·운임 정보 |
-| m-rolling-stock | 5 | 차량 보유현황·형별제원 |
+| m-freight | 11 | 화물·컨테이너·물류시설·품목·위험물 |
+| m-network | 8 | 노선·역간거리·운임·역 선로제원 |
+| m-rolling-stock | 6 | 차량 보유현황·형별제원·차종별 운행실적 |
 | m-voc-cs | 10 | 고객서비스·정보공개 |
 | m-internal-svc | 14 | 임대매장·사회공헌·인사 정보 |
+| m-procurement | 4 | 자재그룹·G2B 품명·자재속성·대상장비 |
 
 ---
 
@@ -60,7 +61,7 @@ git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
 
 `C:\korail-mcp` 폴더에서 `setup.bat`를 **더블클릭**합니다.
 
-- 10개 서버의 Python 가상환경 자동 생성
+- 11개 서버의 Python 가상환경 자동 생성
 - 필요한 패키지 자동 설치
 - Claude Desktop 설정 파일 자동 생성
 - `.env` 파일 자동 생성
@@ -135,6 +136,10 @@ C:\Users\[사용자명]\AppData\Roaming\Claude\claude_desktop_config.json
 "korail-internal-svc": {
   "command": "C:\\korail-mcp\\m-internal-svc\\venv\\Scripts\\python.exe",
   "args": ["C:\\korail-mcp\\m-internal-svc\\server.py"]
+},
+"korail-procurement": {
+  "command": "C:\\korail-mcp\\m-procurement\\venv\\Scripts\\python.exe",
+  "args": ["C:\\korail-mcp\\m-procurement\\server.py"]
 }
 ```
 
@@ -215,6 +220,13 @@ KTX 차량 보유 현황을 알려주세요.
 사회공헌 활동 현황을 보여주세요.
 사내 지원시설 목록을 알려주세요.
 회의실 현황을 조회해주세요.
+```
+
+### 조달·자재 (korail-procurement)
+```
+KTX-산천에 쓰이는 자재그룹코드를 알려주세요.
+G2B 품명에서 '방열기'를 검색해주세요.
+자재번호 1109275의 속성값이 뭔가요?
 ```
 
 ---

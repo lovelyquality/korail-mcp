@@ -120,7 +120,9 @@
 - **삭제 완료**: 폴더 제거, setup.bat·config 제거, git 흔적 제거
 - ⚠️ **혼동 주의**: 아래 신규 m-urban-rail/m-rail-infra는 `data.go.kr` 기반(별개)
 
-### 3-12. m-urban-rail (korail-urban-rail) 🟡 구조완성 (2026-05-30)
+### 3-12. m-urban-rail (korail-urban-rail) 🟡 구조완성·배포제외 (2026-05-30)
+- **배포 상태**: ⚠️ setup.bat·config·README에서 제외 (API 미승인으로 미동작)
+  코드는 git에 WIP로 보존. 월요일 API 승인 후 UUID 채우고 배포 대상에 재편입.
 - **경로**: `E:\AI\MCP\m-urban-rail\`
 - **데이터 소스**: 국가철도공단 data.go.kr 오픈API 26건 (DATA_GO_KR_API_KEY 사용)
   - 삭제된 m-kric(openapi.kric.go.kr)와 **완전 별개** — data.go.kr 표준 odcloud
