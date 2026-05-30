@@ -1,16 +1,15 @@
-# 📋 m-voc-cs — VOC·고객만족도·정보공개
+﻿# ?뱥 m-voc-cs ??VOC쨌怨좉컼留뚯”?꽷룹젙蹂닿났媛?
+KORAIL 怨좉컼留뚯”???듦퀎, ?곷떞 ?좏삎쨌遺?? ?ъ쟾 怨듭떆, ?뺣낫怨듦컻 ?꾪솴??議고쉶?섎뒗 MCP ?쒕쾭 (?꾧뎄 10媛?
 
-KORAIL 고객만족도 통계, 상담 유형·부서, 사전 공시, 정보공개 현황을 조회하는 MCP 서버 (도구 10개)
-
-| 도구 | 설명 |
+| ?꾧뎄 | ?ㅻ챸 |
 |---|---|
-| `get_customer_satisfaction_stats` | 고객만족도 통계 조회 |
-| `get_consultation_types` | 상담 유형 조회 |
-| `get_consultation_departments` | 상담 부서 조회 |
-| `get_advance_disclosure` | 사전 공시 조회 |
-| `get_advance_disclosure_detail` | 사전 공시 상세 조회 |
-| `get_advance_disclosure_files` | 사전 공시 첨부파일 조회 |
-| `get_info_disclosure_dept` | 정보공개 담당 부서 |
-| `get_info_disclosure_codes` | 정보공개 코드 조회 |
-| `get_homepage_dept` | 홈페이지 담당 부서 |
-| `get_homepage_position` | 홈페이지 담당자 직위 |
+| `get_customer_satisfaction_stats` | 怨좉컼留뚯”???듦퀎 議고쉶 |
+| `get_consultation_types` | ?곷떞 ?좏삎 議고쉶 |
+| `get_consultation_departments` | ?곷떞 遺??議고쉶 |
+| `get_advance_disclosure` | ?ъ쟾 怨듭떆 議고쉶 |
+| `get_advance_disclosure_detail` | ?ъ쟾 怨듭떆 ?곸꽭 議고쉶 |
+| `get_advance_disclosure_files` | ?ъ쟾 怨듭떆 泥⑤??뚯씪 議고쉶 |
+| `get_info_disclosure_dept` | ?뺣낫怨듦컻 ?대떦 遺??|
+| `get_info_disclosure_codes` | ?뺣낫怨듦컻 肄붾뱶 議고쉶 |
+| `get_homepage_dept` | ?덊럹?댁? ?대떦 遺??|
+| `get_homepage_position` | ?덊럹?댁? ?대떦??吏곸쐞 |
