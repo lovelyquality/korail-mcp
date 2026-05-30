@@ -135,18 +135,12 @@
 - **⚠️ UUID 미설정**: `_ACCESSIBILITY_MAP`/`_AMENITY_MAP`/`_SAFETY_MAP`/`_INFO_MAP`의
   `uddi` 값이 빈 상태. 활용신청 후 MD 제공 시 채우면 동작. 미설정 시 안내 메시지 반환.
 
-### 3-13. m-rail-infra (korail-rail-infra) 🟡 구조완성 (2026-05-30)
-- **경로**: `E:\AI\MCP\m-rail-infra\`
-- **데이터 소스**: 국가철도공단 data.go.kr (파일데이터는 키 불필요, odcloud는 키 필요)
-- **범위**: 철도 건설·개발·안전 인프라 (KORAIL 운영 데이터와 구분되는 기능 영역) → E3
-- **SSE 포트**: 8014
-- **도구 8개**:
-  - `get_rail_safety_incidents` (안전사고) / `get_rail_safety_yearbook` (사고연보)
-  - `get_national_rail_plan` (제4차 국가철도망) / `get_hsr_status` (고속철도 현황·계획)
-  - `get_station_area_development` (역세권개발) / `get_happy_housing` (행복주택)
-  - `get_national_property` (국유재산) / `get_construction_status` (건설현황·현장)
-- **⚠️ 소스 미설정**: `_ENDPOINTS`의 `uddi`/`csv` 빈 상태. MD/CSV 제공 시 채우면 동작.
-  로컬 CSV 우선 → odcloud 순으로 자동 로드.
+### 3-13. m-rail-infra ❌ 생성 후 삭제됨 (2026-05-30)
+- 철도 건설·개발·안전 인프라 카테고리로 구조 생성했으나, 대상 데이터셋
+  (안전사고·국가철도망·역세권개발·국유재산·건설현황 등 17건)이 전부
+  **재등록 타임스탬프(2025-11-17)만 최신이고 실제 내용은 stale**로 확인 → 폐기.
+- **교훈**: KRIC 파일데이터 `수정일`은 일괄 재등록 시각일 뿐 내용 갱신 아님.
+  신선도 보장되는 KRIC 데이터는 사실상 API(m-urban-rail) 뿐.
 
 ---
 
@@ -399,20 +393,17 @@ SSE 사용 시 Claude Desktop config:
 - m-kric: `_FACILITY_MAP`에 `stationCnvFacl` 추가 (60개 API 전체 커버)
 - 모든 MCP 서버 `_meta.출처` 통일 완료 (data.go.kr / openapi.kric.go.kr)
 
-### ⑤ ❌ M11 m-kric 완전삭제 (2026-05-30)
-- openapi.kric.go.kr 데이터 구버전 확인 → 폴더·config·git 흔적 모두 제거
-- 대체: data.go.kr 기반 신규 2서버(m-urban-rail, m-rail-infra)
+### ⑤ ❌ m-kric / m-rail-infra 삭제 (2026-05-30)
+- **m-kric**: openapi.kric.go.kr 데이터 구버전 → 폴더·config·git 흔적 모두 제거
+- **m-rail-infra**: 대상 파일데이터 전부 stale(재등록 타임스탬프만 최신) → 폐기
 
-### ⑥ 🟡 신규 서버 데이터 연결 (진행중, 2026-05-30)
+### ⑥ 🟡 m-urban-rail 데이터 연결 (대기, 2026-05-30)
 **m-urban-rail (전국 도시철도 역사정보, 9개 도구)**
 - 구조 완성, data.go.kr 오픈API 26건 매핑 dict 작성
-- ⚠️ 각 API odcloud UUID 미설정 → 활용신청 후 MD 제공 시 `uddi` 채우면 동작
-- 필요 MD: 26개 API별 Swagger UUID + 출력변수(컬럼명, 특히 역명 필드)
-
-**m-rail-infra (철도 건설·개발·안전, 8개 도구)**
-- 구조 완성, 10개 데이터셋 매핑 dict 작성
-- ⚠️ 소스 미설정 → MD/CSV 제공 시 `uddi`(odcloud) 또는 `csv`(로컬) 채우면 동작
-- 로컬 CSV 우선 → odcloud 순으로 자동 로드
+- ⚠️ API 승인 대기: KRIC 홈페이지 인증 + 근무자 수동 승인 → **월요일 승인 예정**
+- 승인 후 각 API odcloud UUID를 `_*_MAP`의 `uddi`에 입력하면 동작
+- 역명 검색은 후보 필드(역사명/역명/정거장명/STATION_NM) 자동 매칭 → UUID만 필요
+- **결론**: 신선도 보장되는 KRIC 데이터는 이 API 26건 뿐 (파일데이터는 stale)
 
 ### ⑦ ☁️ SSE 중앙 서버 배포 (보류)
 - Oracle Cloud ARM (AP-Osaka-1) 용량 부족으로 보류

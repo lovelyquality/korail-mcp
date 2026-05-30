@@ -28,7 +28,7 @@ echo Python 확인: %PYVER%
 echo.
 
 :: 서버 목록
-set SERVERS=m-convenience m-stats m-train-ops m-codebook m-carriage m-freight m-network m-rolling-stock m-voc-cs m-internal-svc m-procurement m-urban-rail m-rail-infra
+set SERVERS=m-convenience m-stats m-train-ops m-codebook m-carriage m-freight m-network m-rolling-stock m-voc-cs m-internal-svc m-procurement m-urban-rail
 
 :: 각 서버 설치
 echo ----------------------------------------------------------------
@@ -158,10 +158,6 @@ echo },
 echo "korail-urban-rail": {
 echo   "command": "%ROOT:\=\\%\\m-urban-rail\\venv\\Scripts\\python.exe",
 echo   "args": ["%ROOT:\=\\%\\m-urban-rail\\server.py"]
-echo },
-echo "korail-rail-infra": {
-echo   "command": "%ROOT:\=\\%\\m-rail-infra\\venv\\Scripts\\python.exe",
-echo   "args": ["%ROOT:\=\\%\\m-rail-infra\\server.py"]
 echo }
 echo.
 echo ----------------------------------------------------------------
