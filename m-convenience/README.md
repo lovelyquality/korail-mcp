@@ -10,3 +10,4 @@ KORAIL 역사 편의시설, 접근성 설비, 환승·위치 정보를 조회하
 | `get_station_facilities_detail` | 시설 상세 정보 |
 | `get_station_transfer_info` | 환승 정보 |
 | `get_station_location` | 역 위치·주소 정보 |
+
