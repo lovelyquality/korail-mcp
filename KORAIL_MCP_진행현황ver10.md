@@ -1,6 +1,6 @@
 # KORAIL MCP Agent 프로젝트 진행현황 ver10
 
-> 최종 업데이트: 2026-05-29 (M9·Agent 완료 + 전 서버 출처 표기 통일, M11 m-kric 삭제, 총 도구 79개)
+> 최종 업데이트: 2026-05-30 (m-kric 완전삭제, 도구 3종 추가, KRIC data.go.kr 기반 신규 2서버 구조 생성)
 > 이 문서 하나로 전체 컨텍스트 파악 가능 (ver1~ver9 읽을 필요 없음)
 > 데이터 목록 분석 필요 시 → `01_filtering_result.csv` 참고
 
@@ -115,10 +115,38 @@
 - **⚠️ `get_lease_codes`**: /codes 엔드포인트 현재 빈 응답
 - **⚠️ `get_social_org` / `get_support_departments`**: 대용량 → 필터 없으면 200건 제한
 
-### 3-11. m-kric (korail-kric) ❌ 삭제됨 (2026-05-29)
+### 3-11. m-kric (korail-kric) ❌ 완전삭제됨 (2026-05-30)
 - **삭제 사유**: openapi.kric.go.kr 포털의 데이터 대부분이 구버전/오래된 자료로 확인됨
-- **삭제 내역**: 폴더 제거, setup.bat에서 제거, Claude Desktop 연결 해제 필요
-- **Claude Desktop**: GUI에서 `korail-kric` 연결 수동 해제 필요 (설정 → MCP)
+- **삭제 완료**: 폴더 제거, setup.bat·config 제거, git 흔적 제거
+- ⚠️ **혼동 주의**: 아래 신규 m-urban-rail/m-rail-infra는 `data.go.kr` 기반(별개)
+
+### 3-12. m-urban-rail (korail-urban-rail) 🟡 구조완성 (2026-05-30)
+- **경로**: `E:\AI\MCP\m-urban-rail\`
+- **데이터 소스**: 국가철도공단 data.go.kr 오픈API 26건 (DATA_GO_KR_API_KEY 사용)
+  - 삭제된 m-kric(openapi.kric.go.kr)와 **완전 별개** — data.go.kr 표준 odcloud
+- **범위**: 전국 도시철도(수도권1~9호선, 부산·대구·대전·광주·인천, 경전철 등)
+- **SSE 포트**: 8013
+- **도구 9개** (API 26건을 기능 그룹으로 통합):
+  - `get_urban_accessibility` (접근성 10종: 엘베·에스컬·휠체어리프트·안전발판·이격거리·점자 등) → C2
+  - `get_urban_amenity` (편의 5종: 화장실·수유실·물품보관함·ATM·유실물)
+  - `get_urban_safety` (안전 5종: 제세동기·소화설비·비상콜폰·공기호흡기·스크린도어) → C3
+  - `get_urban_station_info` / `get_urban_exit_info` / `get_urban_transfer_info`
+  - `get_urban_timetable` / `get_urban_lines` / `get_urban_train_timetable`
+- **⚠️ UUID 미설정**: `_ACCESSIBILITY_MAP`/`_AMENITY_MAP`/`_SAFETY_MAP`/`_INFO_MAP`의
+  `uddi` 값이 빈 상태. 활용신청 후 MD 제공 시 채우면 동작. 미설정 시 안내 메시지 반환.
+
+### 3-13. m-rail-infra (korail-rail-infra) 🟡 구조완성 (2026-05-30)
+- **경로**: `E:\AI\MCP\m-rail-infra\`
+- **데이터 소스**: 국가철도공단 data.go.kr (파일데이터는 키 불필요, odcloud는 키 필요)
+- **범위**: 철도 건설·개발·안전 인프라 (KORAIL 운영 데이터와 구분되는 기능 영역) → E3
+- **SSE 포트**: 8014
+- **도구 8개**:
+  - `get_rail_safety_incidents` (안전사고) / `get_rail_safety_yearbook` (사고연보)
+  - `get_national_rail_plan` (제4차 국가철도망) / `get_hsr_status` (고속철도 현황·계획)
+  - `get_station_area_development` (역세권개발) / `get_happy_housing` (행복주택)
+  - `get_national_property` (국유재산) / `get_construction_status` (건설현황·현장)
+- **⚠️ 소스 미설정**: `_ENDPOINTS`의 `uddi`/`csv` 빈 상태. MD/CSV 제공 시 채우면 동작.
+  로컬 CSV 우선 → odcloud 순으로 자동 로드.
 
 ---
 
@@ -359,7 +387,7 @@ SSE 사용 시 Claude Desktop config:
 - **구현 방식**: Claude Desktop Project + 시스템 프롬프트
 - **파일 위치**: `agents/` 폴더
 - C1 여행·예매: train-ops + convenience + network + codebook
-- C2 접근성: convenience + codebook + kric
+- C2 접근성: convenience + codebook + urban-rail (← kric 대체)
 - C3 고객응대: train-ops + convenience + codebook + voc-cs
 - E1 통계분석: stats + carriage + rolling-stock + freight + network + voc-cs
 - E2 현장운영: rolling-stock + freight + network + codebook + train-ops
@@ -371,11 +399,21 @@ SSE 사용 시 Claude Desktop config:
 - m-kric: `_FACILITY_MAP`에 `stationCnvFacl` 추가 (60개 API 전체 커버)
 - 모든 MCP 서버 `_meta.출처` 통일 완료 (data.go.kr / openapi.kric.go.kr)
 
-### ⑤ 🔑 KRIC API 활용신청 (보류)
-- openapi.kric.go.kr 포털 웹 오류로 신청 보류
-- 재시도 시: 60개 API 개별 신청 → KRIC_API_KEY 발급 → `.env` 설정
-- **참고**: KRIC API 응답은 raw 그대로 반환하므로 키만 있으면 동작
+### ⑤ ❌ M11 m-kric 완전삭제 (2026-05-30)
+- openapi.kric.go.kr 데이터 구버전 확인 → 폴더·config·git 흔적 모두 제거
+- 대체: data.go.kr 기반 신규 2서버(m-urban-rail, m-rail-infra)
 
-### ⑥ ☁️ SSE 중앙 서버 배포 (보류)
+### ⑥ 🟡 신규 서버 데이터 연결 (진행중, 2026-05-30)
+**m-urban-rail (전국 도시철도 역사정보, 9개 도구)**
+- 구조 완성, data.go.kr 오픈API 26건 매핑 dict 작성
+- ⚠️ 각 API odcloud UUID 미설정 → 활용신청 후 MD 제공 시 `uddi` 채우면 동작
+- 필요 MD: 26개 API별 Swagger UUID + 출력변수(컬럼명, 특히 역명 필드)
+
+**m-rail-infra (철도 건설·개발·안전, 8개 도구)**
+- 구조 완성, 10개 데이터셋 매핑 dict 작성
+- ⚠️ 소스 미설정 → MD/CSV 제공 시 `uddi`(odcloud) 또는 `csv`(로컬) 채우면 동작
+- 로컬 CSV 우선 → odcloud 순으로 자동 로드
+
+### ⑦ ☁️ SSE 중앙 서버 배포 (보류)
 - Oracle Cloud ARM (AP-Osaka-1) 용량 부족으로 보류
 - 필요 시 Tokyo 재시도 또는 다른 클라우드 (Fly.io, Render 등) 검토
