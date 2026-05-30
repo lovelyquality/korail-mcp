@@ -15,3 +15,4 @@ KORAIL 간선·광역 여객 수송 통계, KTX 장기 통계를 조회하는 MC
 | `get_mainline_ticketing_stat` | 발권 통계 |
 | `get_mainline_person_distance` | 인킬로(여객 수송량) 통계 |
 | `get_ktx_long_term_stats` | KTX 장기 통계 |
+
