@@ -1,17 +1,17 @@
-﻿# ?쉯 m-urban-rail ???꾩떆泥좊룄 ??궗 ?쒖꽕 議고쉶
+# 🚇 도시철도 역사 시설 조회
 
-?꾧뎅 ?꾩떆泥좊룄 ??궗???묎렐?굿룻렪?샕룹븞?꽷룹븞???쒖꽕???듯빀 議고쉶?섎뒗 MCP ?쒕쾭 (?꾧뎄 9媛?
+전국 도시철도 역사의 접근성·편의·안전·안내 시설을 통합 조회하는 MCP 서버 (도구 9개)
 
-> **?좑툘 WIP** ??KRIC API ?뱀씤 ?湲?以? UUID ?낅젰 ???쒖꽦???덉젙.
+> **⚠️ WIP** — KRIC API 승인 대기 중. UUID 입력 후 활성화 예정.
 
-| ?꾧뎄 | ?ㅻ챸 |
+| 도구 | 설명 |
 |---|---|
-| `get_urban_accessibility` | ?묎렐???쒖꽕 議고쉶 |
-| `get_urban_amenity` | ?몄쓽?쒖꽕 議고쉶 |
-| `get_urban_safety` | ?덉쟾?쒖꽕 議고쉶 |
-| `get_urban_station_info` | ??궗 湲곕낯 ?뺣낫 |
-| `get_urban_exit_info` | 異쒓뎄 ?뺣낫 議고쉶 |
-| `get_urban_transfer_info` | ?섏듅 ?뺣낫 議고쉶 |
-| `get_urban_timetable` | ?쒓컖??議고쉶 |
-| `get_urban_lines` | ?몄꽑 ?뺣낫 議고쉶 |
-| `get_urban_train_timetable` | ?댁감 ?쒓컖??議고쉶 |
+| `get_urban_accessibility` | 접근성 시설 조회 |
+| `get_urban_amenity` | 편의시설 조회 |
+| `get_urban_safety` | 안전시설 조회 |
+| `get_urban_station_info` | 역사 기본 정보 |
+| `get_urban_exit_info` | 출구 정보 조회 |
+| `get_urban_transfer_info` | 환승 정보 조회 |
+| `get_urban_timetable` | 시각표 조회 |
+| `get_urban_lines` | 노선 정보 조회 |
+| `get_urban_train_timetable` | 열차 시각표 조회 |

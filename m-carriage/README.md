@@ -1,10 +1,10 @@
-﻿# ?쉩 m-carriage ??李⑤웾쨌?붿감 醫낅쪟 議고쉶
+# 🚃 차량·화차 종류 조회
 
-KORAIL 媛꾩꽑쨌愿묒뿭 泥좊룄 李⑤웾 諛??붿감 ?꾪솴??議고쉶?섎뒗 MCP ?쒕쾭 (?꾧뎄 4媛?
+KORAIL 간선·광역 철도 차량 및 화차 현황을 조회하는 MCP 서버 (도구 4개)
 
-| ?꾧뎄 | ?ㅻ챸 |
+| 도구 | 설명 |
 |---|---|
-| `get_mainline_carriage` | 媛꾩꽑泥좊룄 李⑤웾 醫낅쪟 議고쉶 |
-| `get_wide_area_carriage` | 愿묒뿭泥좊룄 李⑤웾 醫낅쪟 議고쉶 |
-| `get_freight_carriage` | ?붿감 醫낅쪟 議고쉶 |
-| `get_carriage_codes` | 李⑤웾쨌?붿감 肄붾뱶 議고쉶 |
+| `get_mainline_carriage` | 간선철도 차량 종류 조회 |
+| `get_wide_area_carriage` | 광역철도 차량 종류 조회 |
+| `get_freight_carriage` | 화차 종류 조회 |
+| `get_carriage_codes` | 차량·화차 코드 조회 |

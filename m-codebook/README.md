@@ -1,9 +1,10 @@
-﻿# ?뱰 m-codebook ????퐫?쑣룸끂??肄붾뱶遺?
-KORAIL ??肄붾뱶 諛??몄꽑 ?뺣낫瑜?議고쉶?섎뒗 MCP ?쒕쾭 (?꾧뎄 4媛?
+# 📖 역코드·노선 코드북
 
-| ?꾧뎄 | ?ㅻ챸 |
+KORAIL 역 코드 및 노선 정보를 조회하는 MCP 서버 (도구 4개)
+
+| 도구 | 설명 |
 |---|---|
-| `search_station` | ??챸?쇰줈 ??寃??|
-| `decode_station_code` | ??퐫??????챸쨌吏???댁꽍 |
-| `search_route` | ?몄꽑 寃??|
-| `list_stations_by_region` | 吏??퀎 ??紐⑸줉 |
+| `search_station` | 역명으로 역 검색 |
+| `decode_station_code` | 역코드 → 역명·지역 해석 |
+| `search_route` | 노선 검색 |
+| `list_stations_by_region` | 지역별 역 목록 |
