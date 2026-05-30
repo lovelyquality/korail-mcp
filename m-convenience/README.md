@@ -1,12 +1,12 @@
-# 🏢 m-convenience — 역 편의시설·접근성 조회
+﻿# ?룫 m-convenience ?????몄쓽?쒖꽕쨌?묎렐??議고쉶
 
-KORAIL 역사 편의시설, 접근성 설비, 환승·위치 정보를 조회하는 MCP 서버 (도구 6개)
+KORAIL ??궗 ?몄쓽?쒖꽕, ?묎렐???ㅻ퉬, ?섏듅쨌?꾩튂 ?뺣낫瑜?議고쉶?섎뒗 MCP ?쒕쾭 (?꾧뎄 6媛?
 
-| 도구 | 설명 |
+| ?꾧뎄 | ?ㅻ챸 |
 |---|---|
-| `get_station_facilities` | 역 시설 목록 조회 |
-| `get_accessible_facilities` | 접근성 편의시설 조회 |
-| `list_stations_with_elevator` | 엘리베이터 설치 역 목록 |
-| `get_station_facilities_detail` | 시설 상세 정보 |
-| `get_station_transfer_info` | 환승 정보 |
-| `get_station_location` | 역 위치·주소 정보 |
+| `get_station_facilities` | ???쒖꽕 紐⑸줉 議고쉶 |
+| `get_accessible_facilities` | ?묎렐???몄쓽?쒖꽕 議고쉶 |
+| `list_stations_with_elevator` | ?섎━踰좎씠???ㅼ튂 ??紐⑸줉 |
+| `get_station_facilities_detail` | ?쒖꽕 ?곸꽭 ?뺣낫 |
+| `get_station_transfer_info` | ?섏듅 ?뺣낫 |
+| `get_station_location` | ???꾩튂쨌二쇱냼 ?뺣낫 |
