@@ -245,3 +245,7 @@ G2B 품명에서 '방열기'를 검색해주세요.
   git lfs install   # 최초 1회
   git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
   ```
+
+---
+
+각 서버의 도구 목록 및 상세 설명은 해당 폴더의 `README.md`를 참조하세요.
