@@ -1,17 +1,17 @@
-# 📦 m-freight — 화물·위험물·물류 조회
+﻿# ?벀 m-freight ???붾Ъ쨌?꾪뿕臾셋룸Ъ瑜?議고쉶
 
-KORAIL 화물 코드, 컨테이너 기록, 위험물 정보, 물류 시설을 조회하는 MCP 서버 (도구 11개)
+KORAIL ?붾Ъ 肄붾뱶, 而⑦뀒?대꼫 湲곕줉, ?꾪뿕臾??뺣낫, 臾쇰쪟 ?쒖꽕??議고쉶?섎뒗 MCP ?쒕쾭 (?꾧뎄 11媛?
 
-| 도구 | 설명 |
+| ?꾧뎄 | ?ㅻ챸 |
 |---|---|
-| `search_freight_code` | 화물 코드 검색 |
-| `decode_freight_code` | 화물 코드 해석 |
-| `search_container_record` | 컨테이너 운송 기록 |
-| `list_freight_work_lines` | 화물 취급 노선 목록 |
-| `list_standard_loading_time` | 표준 하역 시간 |
-| `search_loading_time_adjustment` | 하역 시간 조정 조회 |
-| `search_consignment_change` | 위탁 변경 조회 |
-| `search_consignment_change_per_wagon` | 화차별 위탁 변경 조회 |
-| `get_logistics_facility` | 물류 시설 조회 |
-| `get_freight_items` | 화물 품목 조회 |
-| `get_hazardous_cargo` | 위험물 정보 조회 |
+| `search_freight_code` | ?붾Ъ 肄붾뱶 寃??|
+| `decode_freight_code` | ?붾Ъ 肄붾뱶 ?댁꽍 |
+| `search_container_record` | 而⑦뀒?대꼫 ?댁넚 湲곕줉 |
+| `list_freight_work_lines` | ?붾Ъ 痍④툒 ?몄꽑 紐⑸줉 |
+| `list_standard_loading_time` | ?쒖? ?섏뿭 ?쒓컙 |
+| `search_loading_time_adjustment` | ?섏뿭 ?쒓컙 議곗젙 議고쉶 |
+| `search_consignment_change` | ?꾪긽 蹂寃?議고쉶 |
+| `search_consignment_change_per_wagon` | ?붿감蹂??꾪긽 蹂寃?議고쉶 |
+| `get_logistics_facility` | 臾쇰쪟 ?쒖꽕 議고쉶 |
+| `get_freight_items` | ?붾Ъ ?덈ぉ 議고쉶 |
+| `get_hazardous_cargo` | ?꾪뿕臾??뺣낫 議고쉶 |
