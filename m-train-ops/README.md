@@ -1,10 +1,10 @@
-# 🚆 m-train-ops — 열차 운행 계획·이력 조회
+﻿# ?쉮 m-train-ops ???댁감 ?댄뻾 怨꾪쉷쨌?대젰 議고쉶
 
-KORAIL 열차 운행 계획, 실시간 운행 정보, 운행 이력을 조회하는 MCP 서버 (도구 4개)
+KORAIL ?댁감 ?댄뻾 怨꾪쉷, ?ㅼ떆媛??댄뻾 ?뺣낫, ?댄뻾 ?대젰??議고쉶?섎뒗 MCP ?쒕쾭 (?꾧뎄 4媛?
 
-| 도구 | 설명 |
+| ?꾧뎄 | ?ㅻ챸 |
 |---|---|
-| `get_train_codes` | 열차 코드 조회 |
-| `get_train_run_plan` | 열차 운행 계획 조회 |
-| `get_train_run_info` | 열차 운행 정보 조회 |
-| `get_train_run_history` | 열차 운행 이력 조회 |
+| `get_train_codes` | ?댁감 肄붾뱶 議고쉶 |
+| `get_train_run_plan` | ?댁감 ?댄뻾 怨꾪쉷 議고쉶 |
+| `get_train_run_info` | ?댁감 ?댄뻾 ?뺣낫 議고쉶 |
+| `get_train_run_history` | ?댁감 ?댄뻾 ?대젰 議고쉶 |
