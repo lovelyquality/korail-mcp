@@ -45,3 +45,6 @@ test/
 # Temp logs
 startup_error.txt
 startup_out.txt
+
+# Cloudflare credentials
+cloudfire.txt

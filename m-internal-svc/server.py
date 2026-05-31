@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 from mcp.server.fastmcp import FastMCP
 import httpx
 from dotenv import load_dotenv
@@ -7,13 +7,13 @@ import json
 
 load_dotenv(encoding='utf-8-sig')
 
-API_KEY = os.getenv("DATA_GO_KR_API_KEY")
+PROXY_BASE = os.getenv("KORAIL_PROXY_URL", "https://korail-mcp-proxy.lovelymong.workers.dev") + "/proxy"
 
 # ── B551457 REST API (임대매장정보) ──────────────────────────────────────
-LEASE_BASE = "https://apis.data.go.kr/B551457/lease"
+LEASE_BASE = f"{PROXY_BASE}/apis/B551457/lease"
 
 # ── odcloud 파일 변환 API ────────────────────────────────────────────────
-ODCLOUD_BASE = "https://api.odcloud.kr/api"
+ODCLOUD_BASE = f"{PROXY_BASE}/odcloud"
 
 ENDPOINTS = {
     "leased_assets":          "/15048398/v1/uddi:daa8f21e-a08d-4b57-8d8f-ac9710467fab",
@@ -60,7 +60,7 @@ def _load(key: str) -> list:
     while True:
         r = httpx.get(
             f"{ODCLOUD_BASE}{path}",
-            params={"serviceKey": API_KEY, "page": page, "perPage": 1000},
+            params={"page": page, "perPage": 1000},
             timeout=30,
         )
         body = r.json()
@@ -88,7 +88,7 @@ def _wrap(data: list, key: str, extra_note: str = "") -> str:
 
 def _fetch_lease(endpoint: str, cond: dict = {}) -> list:
     """B551457 임대매장정보 REST API 호출."""
-    params = {"serviceKey": API_KEY, "pageNo": 1, "numOfRows": 1000}
+    params = {"pageNo": 1, "numOfRows": 1000}
     for k, v in cond.items():
         params[f"cond[{k}]"] = v
     r = httpx.get(f"{LEASE_BASE}/{endpoint}", params=params, timeout=15)

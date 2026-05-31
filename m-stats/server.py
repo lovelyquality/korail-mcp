@@ -1,4 +1,4 @@
-from mcp.server.fastmcp import FastMCP
+﻿from mcp.server.fastmcp import FastMCP
 import httpx
 from dotenv import load_dotenv
 import os
@@ -9,8 +9,8 @@ from pathlib import Path
 
 load_dotenv(encoding='utf-8-sig')
 
-API_KEY = os.getenv("DATA_GO_KR_API_KEY")
-BASE_URL = "https://apis.data.go.kr/B551457/issueStatistics"
+PROXY_BASE = os.getenv("KORAIL_PROXY_URL", "https://korail-mcp-proxy.lovelymong.workers.dev") + "/proxy"
+BASE_URL = f"{PROXY_BASE}/apis/B551457/issueStatistics"
 DATA_DIR = Path(__file__).parent / "data"
 
 mcp = FastMCP("KORAIL 발권·이동유형 통계")
@@ -36,7 +36,6 @@ def _wrap(data: list, dataset: str) -> str:
 
 def fetch_stats(endpoint: str, cond: dict = {}) -> list:
     params = {
-        "serviceKey": API_KEY,
         "pageNo": 1,
         "numOfRows": 1000,
         "type": "json",

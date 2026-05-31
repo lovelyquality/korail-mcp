@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 from mcp.server.fastmcp import FastMCP
 import httpx
 from dotenv import load_dotenv
@@ -7,8 +7,8 @@ import json
 
 load_dotenv(encoding='utf-8-sig')
 
-API_KEY = os.getenv("DATA_GO_KR_API_KEY")
-ODCLOUD_BASE = "https://api.odcloud.kr/api"
+PROXY_BASE = os.getenv("KORAIL_PROXY_URL", "https://korail-mcp-proxy.lovelymong.workers.dev") + "/proxy"
+ODCLOUD_BASE = f"{PROXY_BASE}/odcloud"
 
 # odcloud 엔드포인트 정의
 ENDPOINTS = {
@@ -42,7 +42,7 @@ def _load(key: str) -> list:
     while True:
         r = httpx.get(
             f"{ODCLOUD_BASE}{path}",
-            params={"serviceKey": API_KEY, "page": page, "perPage": 1000},
+            params={"page": page, "perPage": 1000},
             timeout=20,
         )
         body = r.json()

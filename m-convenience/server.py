@@ -1,4 +1,4 @@
-from mcp.server.fastmcp import FastMCP
+﻿from mcp.server.fastmcp import FastMCP
 import httpx
 from dotenv import load_dotenv
 import os
@@ -6,9 +6,9 @@ import json
 
 load_dotenv(encoding='utf-8-sig')
 
-API_KEY = os.getenv("DATA_GO_KR_API_KEY")
-BASE_URL = "https://apis.data.go.kr/B551457/convenience"
-ODCLOUD_BASE = "https://api.odcloud.kr/api"
+PROXY_BASE = os.getenv("KORAIL_PROXY_URL", "https://korail-mcp-proxy.lovelymong.workers.dev") + "/proxy"
+BASE_URL = f"{PROXY_BASE}/apis/B551457/convenience"
+ODCLOUD_BASE = f"{PROXY_BASE}/odcloud"
 
 mcp = FastMCP("KORAIL 편의시설·역 정보")
 
@@ -39,7 +39,7 @@ def _wrap(data: list, dataset: str, ref_date: str) -> str:
 def _fetch_all(endpoint: str) -> list:
     response = httpx.get(
         f"{BASE_URL}/{endpoint}",
-        params={"serviceKey": API_KEY, "pageNo": 1, "numOfRows": 1000},
+        params={"pageNo": 1, "numOfRows": 1000},
         timeout=15,
     )
     body = response.json().get("response", {}).get("body", {})
@@ -52,7 +52,7 @@ def _fetch_all(endpoint: str) -> list:
 def _odcloud_get(path: str, page: int = 1, per_page: int = 1000) -> dict:
     r = httpx.get(
         f"{ODCLOUD_BASE}{path}",
-        params={"serviceKey": API_KEY, "page": page, "perPage": per_page},
+        params={"page": page, "perPage": per_page},
         timeout=20,
     )
     return r.json()

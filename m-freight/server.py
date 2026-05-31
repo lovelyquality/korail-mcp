@@ -1,4 +1,4 @@
-"""korail-freight MCP server.
+﻿"""korail-freight MCP server.
 
 7 datasets from data.go.kr (KORAIL freight/logistics).
 - 4 odcloud REST APIs: container spec, work line, loading time master, loading time adjustment
@@ -19,8 +19,8 @@ from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
 
 load_dotenv(encoding='utf-8-sig')
-API_KEY = os.getenv("DATA_GO_KR_API_KEY")
-ODCLOUD_BASE = "https://api.odcloud.kr/api"
+PROXY_BASE = os.getenv("KORAIL_PROXY_URL", "https://korail-mcp-proxy.lovelymong.workers.dev") + "/proxy"
+ODCLOUD_BASE = f"{PROXY_BASE}/odcloud"
 DATA_DIR = Path(__file__).parent / "data"
 
 CONTAINER_PATH = "/15153898/v1/uddi:7430d02d-b78a-4395-9bf5-b1ab000e1be2"
@@ -36,7 +36,7 @@ _cache: dict[str, list[dict[str, Any]]] = {}
 def _odcloud_get(path: str, page: int = 1, per_page: int = 1000) -> dict:
     r = httpx.get(
         f"{ODCLOUD_BASE}{path}",
-        params={"serviceKey": API_KEY, "page": page, "perPage": per_page},
+        params={"page": page, "perPage": per_page},
         timeout=20,
     )
     return r.json()

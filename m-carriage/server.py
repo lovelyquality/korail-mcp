@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 from mcp.server.fastmcp import FastMCP
 import httpx
 from dotenv import load_dotenv
@@ -7,8 +7,8 @@ import json
 
 load_dotenv(encoding='utf-8-sig')
 
-API_KEY = os.getenv("DATA_GO_KR_API_KEY")
-BASE_URL = "https://apis.data.go.kr/B551457/carriageStatistics"
+PROXY_BASE = os.getenv("KORAIL_PROXY_URL", "https://korail-mcp-proxy.lovelymong.workers.dev") + "/proxy"
+BASE_URL = f"{PROXY_BASE}/apis/B551457/carriageStatistics"
 
 mcp = FastMCP("KORAIL 열차수송통계")
 
@@ -31,7 +31,7 @@ def _wrap(data: list, dataset: str) -> str:
 
 def fetch_carriage(endpoint: str, cond: dict = {}) -> list:
     """carriageStatistics 엔드포인트에서 데이터를 가져옵니다 (최대 1000건)."""
-    params = {"serviceKey": API_KEY, "pageNo": 1, "numOfRows": 1000}
+    params = {"pageNo": 1, "numOfRows": 1000}
     for k, v in cond.items():
         params[f"cond[{k}]"] = v
     response = httpx.get(f"{BASE_URL}/{endpoint}", params=params, timeout=15)
