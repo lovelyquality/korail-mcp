@@ -2,6 +2,8 @@
 
 KORAIL 철도차량 제원, 연도별 현황, 화차 적재 정보, 정비 장비를 조회하는 MCP 서버 (도구 6개)
 
+> 📌 등록명 `korail-rolling-stock` · 설치는 [루트 README](../README.md) 참고. 데이터 호출은 전용 Cloudflare Workers 프록시를 경유하여 **API 키가 필요 없습니다.**
+
 | 도구 | 설명 |
 |---|---|
 | `get_train_type_specs` | 차종별 제원 조회 |
