@@ -222,35 +222,24 @@ git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
 
 ## 🔌 4단계 — 클라이언트 연결
 
-`setup.bat`을 실행하면 설치 폴더에 **`mcp-config.json`** 파일이 자동 생성됩니다 (실제 설치 경로가 반영됨).
-**이 파일을 사용하는 도구의 설정 폴더로 옮기기만 하면 됩니다** — JSON을 직접 입력하거나 복사·붙여넣을 필요 없습니다.
-
-> GitHub에서 직접 받기: [**mcp-config.json**](mcp-config.json) *(이 파일은 `C:\korail-mcp` 기준 경로 — 다른 경로에 설치했다면 setup.bat이 만든 파일을 쓰세요.)*
-
-본인이 쓰는 도구의 토글만 펼쳐 따라 하세요.
+사용하는 도구의 항목을 펼쳐 따라 하세요.
 
 <details>
 <summary><b>① Claude Desktop</b></summary>
 
-**설정 폴더:** `%APPDATA%\Claude\`
-(파일 탐색기 주소창에 `%APPDATA%\Claude` 를 입력하면 바로 이동됩니다.)
+`C:\korail-mcp\mcp-config.json` 을 **`%APPDATA%\Claude\`** 폴더에 복사
+→ 이름을 **`claude_desktop_config.json`** 으로 변경 → Claude Desktop 재시작.
 
-1. 이 폴더에 **`mcp-config.json` 을 복사**합니다.
-2. 복사한 파일 이름을 **`claude_desktop_config.json`** 으로 변경합니다.
-   - 이미 같은 이름 파일이 있고 다른 MCP 서버가 들어있다면, 덮어쓰지 말고 `mcp-config.json` 안의 `korail-` 항목만 기존 파일의 `mcpServers`에 넣으세요.
-3. Claude Desktop을 **완전 종료 후 재시작**합니다.
-
-채팅창 우측 하단에 🔨(도구) 아이콘이 보이면 성공입니다.
+> 채팅창 우측 하단에 🔨 아이콘이 보이면 성공. *(이미 다른 MCP 서버가 있으면 `korail-` 항목만 기존 `mcpServers`에 추가)*
 </details>
 
 <details>
 <summary><b>② Cursor</b></summary>
 
-**설정 폴더:** `C:\Users\[사용자명]\.cursor\`  (전역) 또는 프로젝트의 `.cursor\` 폴더
+`C:\korail-mcp\mcp-config.json` 을 **`C:\Users\[사용자명]\.cursor\`** 폴더에 복사
+→ 이름을 **`mcp.json`** 으로 변경 → Cursor에서 **Refresh**.
 
-1. 이 폴더에 **`mcp-config.json` 을 복사**하고, 이름을 **`mcp.json`** 으로 변경합니다.
-   - 이미 `mcp.json`이 있으면 `mcp-config.json` 안의 `korail-` 항목만 기존 `mcpServers`에 넣으세요.
-2. 저장 후 Cursor 설정 → MCP 화면에서 **Refresh** 합니다.
+> *(이미 `mcp.json`이 있으면 `korail-` 항목만 기존 `mcpServers`에 추가)*
 </details>
 
 <details>
@@ -258,12 +247,10 @@ git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
 
 > 💡 Antigravity CLI는 무료로 설치 가능하며, KORAIL MCP 서버 연결에 별도 구독이 필요 없습니다.
 
-**설정 폴더:** `C:\Users\[사용자명]\.gemini\antigravity\`
-(또는 IDE에서 `…` 메뉴 → **Manage MCP Servers** → **View raw config**)
+`C:\korail-mcp\mcp-config.json` 을 **`C:\Users\[사용자명]\.gemini\antigravity\`** 폴더에 복사
+→ 이름을 **`mcp_config.json`** 으로 변경 → MCP Servers 패널에서 **Reload**.
 
-1. 이 폴더에 **`mcp-config.json` 을 복사**하고, 이름을 **`mcp_config.json`** 으로 변경합니다.
-   - 이미 있으면 `mcp-config.json` 안의 `korail-` 항목만 기존 `mcpServers`에 넣으세요.
-2. 저장 후 MCP Servers 패널에서 **Reload/Refresh** 합니다.
+> 또는 IDE에서 `…` 메뉴 → **Manage MCP Servers** → **View raw config** 로 직접 편집. *(이미 있으면 `korail-` 항목만 기존 `mcpServers`에 추가)*
 </details>
 
 <details>
