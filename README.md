@@ -222,138 +222,35 @@ git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
 
 ## 🔌 4단계 — 클라이언트 연결
 
-> 💾 **직접 입력할 필요 없습니다.** `setup.bat`을 실행하면 설치 폴더에 **`mcp-config.json`** 이 자동 생성됩니다 (실제 경로 반영). 이 파일 내용을 그대로 쓰면 됩니다.
-> GitHub에서 바로 받을 수도 있습니다 → [**mcp-config.json**](mcp-config.json) *(단, 이 파일은 `C:\korail-mcp` 기준 경로이니 다른 경로에 설치했다면 setup.bat이 만든 파일을 사용하세요.)*
+`setup.bat`을 실행하면 설치 폴더에 **`mcp-config.json`** 파일이 자동 생성됩니다 (실제 설치 경로가 반영됨).
+**이 파일을 사용하는 도구의 설정 폴더로 옮기기만 하면 됩니다** — JSON을 직접 입력하거나 복사·붙여넣을 필요 없습니다.
 
-아래에서 **본인이 쓰는 도구의 토글만 펼쳐** 따라 하세요.
-Claude·Antigravity·Cursor는 설정 형식이 **완전히 동일**하며, 파일 위치만 다릅니다.
-(아래 JSON은 참고용 — 실제로는 위 `mcp-config.json` 내용을 붙여넣으면 됩니다.)
+> GitHub에서 직접 받기: [**mcp-config.json**](mcp-config.json) *(이 파일은 `C:\korail-mcp` 기준 경로 — 다른 경로에 설치했다면 setup.bat이 만든 파일을 쓰세요.)*
+
+본인이 쓰는 도구의 토글만 펼쳐 따라 하세요.
 
 <details>
 <summary><b>① Claude Desktop</b></summary>
 
-**설정 파일 위치:**
-```
-C:\Users\[사용자명]\AppData\Roaming\Claude\claude_desktop_config.json
-```
+**설정 폴더:** `%APPDATA%\Claude\`
+(파일 탐색기 주소창에 `%APPDATA%\Claude` 를 입력하면 바로 이동됩니다.)
 
-기존 `mcpServers` 항목 안에 **`mcp-config.json`의 `mcpServers` 내용**을 붙여넣습니다.
-(기존에 다른 MCP 서버가 없다면 `mcp-config.json`을 통째로 이 위치에 저장해도 됩니다.)
+1. 이 폴더에 **`mcp-config.json` 을 복사**합니다.
+2. 복사한 파일 이름을 **`claude_desktop_config.json`** 으로 변경합니다.
+   - 이미 같은 이름 파일이 있고 다른 MCP 서버가 들어있다면, 덮어쓰지 말고 `mcp-config.json` 안의 `korail-` 항목만 기존 파일의 `mcpServers`에 넣으세요.
+3. Claude Desktop을 **완전 종료 후 재시작**합니다.
 
-```json
-"korail-convenience": {
-  "command": "C:\\korail-mcp\\m-convenience\\venv\\Scripts\\python.exe",
-  "args": ["C:\\korail-mcp\\m-convenience\\server.py"]
-},
-"korail-stats": {
-  "command": "C:\\korail-mcp\\m-stats\\venv\\Scripts\\python.exe",
-  "args": ["C:\\korail-mcp\\m-stats\\server.py"]
-},
-"korail-train-ops": {
-  "command": "C:\\korail-mcp\\m-train-ops\\venv\\Scripts\\python.exe",
-  "args": ["C:\\korail-mcp\\m-train-ops\\server.py"]
-},
-"korail-codebook": {
-  "command": "C:\\korail-mcp\\m-codebook\\venv\\Scripts\\python.exe",
-  "args": ["C:\\korail-mcp\\m-codebook\\server.py"]
-},
-"korail-carriage": {
-  "command": "C:\\korail-mcp\\m-carriage\\venv\\Scripts\\python.exe",
-  "args": ["C:\\korail-mcp\\m-carriage\\server.py"]
-},
-"korail-freight": {
-  "command": "C:\\korail-mcp\\m-freight\\venv\\Scripts\\python.exe",
-  "args": ["C:\\korail-mcp\\m-freight\\server.py"]
-},
-"korail-network": {
-  "command": "C:\\korail-mcp\\m-network\\venv\\Scripts\\python.exe",
-  "args": ["C:\\korail-mcp\\m-network\\server.py"]
-},
-"korail-rolling-stock": {
-  "command": "C:\\korail-mcp\\m-rolling-stock\\venv\\Scripts\\python.exe",
-  "args": ["C:\\korail-mcp\\m-rolling-stock\\server.py"]
-},
-"korail-voc-cs": {
-  "command": "C:\\korail-mcp\\m-voc-cs\\venv\\Scripts\\python.exe",
-  "args": ["C:\\korail-mcp\\m-voc-cs\\server.py"]
-},
-"korail-internal-svc": {
-  "command": "C:\\korail-mcp\\m-internal-svc\\venv\\Scripts\\python.exe",
-  "args": ["C:\\korail-mcp\\m-internal-svc\\server.py"]
-},
-"korail-procurement": {
-  "command": "C:\\korail-mcp\\m-procurement\\venv\\Scripts\\python.exe",
-  "args": ["C:\\korail-mcp\\m-procurement\\server.py"]
-}
-```
-
-설정 후 Claude Desktop을 **완전 종료 후 재시작**합니다.
 채팅창 우측 하단에 🔨(도구) 아이콘이 보이면 성공입니다.
 </details>
 
 <details>
 <summary><b>② Cursor</b></summary>
 
-Cursor는 Claude Desktop과 **동일한 형식**을 사용합니다.
+**설정 폴더:** `C:\Users\[사용자명]\.cursor\`  (전역) 또는 프로젝트의 `.cursor\` 폴더
 
-**설정 파일 위치:**
-- 전역: `C:\Users\[사용자명]\.cursor\mcp.json`
-- 프로젝트별: `<프로젝트>\.cursor\mcp.json`
-
-파일을 만들고 아래 전체 내용을 그대로 붙여넣습니다. (이미 기존 `mcpServers`가 있으면 11개 서버 항목만 그 안에 추가)
-
-```json
-{
-  "mcpServers": {
-    "korail-convenience": {
-      "command": "C:\\korail-mcp\\m-convenience\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-convenience\\server.py"]
-    },
-    "korail-stats": {
-      "command": "C:\\korail-mcp\\m-stats\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-stats\\server.py"]
-    },
-    "korail-train-ops": {
-      "command": "C:\\korail-mcp\\m-train-ops\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-train-ops\\server.py"]
-    },
-    "korail-codebook": {
-      "command": "C:\\korail-mcp\\m-codebook\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-codebook\\server.py"]
-    },
-    "korail-carriage": {
-      "command": "C:\\korail-mcp\\m-carriage\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-carriage\\server.py"]
-    },
-    "korail-freight": {
-      "command": "C:\\korail-mcp\\m-freight\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-freight\\server.py"]
-    },
-    "korail-network": {
-      "command": "C:\\korail-mcp\\m-network\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-network\\server.py"]
-    },
-    "korail-rolling-stock": {
-      "command": "C:\\korail-mcp\\m-rolling-stock\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-rolling-stock\\server.py"]
-    },
-    "korail-voc-cs": {
-      "command": "C:\\korail-mcp\\m-voc-cs\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-voc-cs\\server.py"]
-    },
-    "korail-internal-svc": {
-      "command": "C:\\korail-mcp\\m-internal-svc\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-internal-svc\\server.py"]
-    },
-    "korail-procurement": {
-      "command": "C:\\korail-mcp\\m-procurement\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-procurement\\server.py"]
-    }
-  }
-}
-```
-
-저장 후 Cursor 설정 → MCP 화면에서 **Refresh** 하면 도구가 로드됩니다.
+1. 이 폴더에 **`mcp-config.json` 을 복사**하고, 이름을 **`mcp.json`** 으로 변경합니다.
+   - 이미 `mcp.json`이 있으면 `mcp-config.json` 안의 `korail-` 항목만 기존 `mcpServers`에 넣으세요.
+2. 저장 후 Cursor 설정 → MCP 화면에서 **Refresh** 합니다.
 </details>
 
 <details>
@@ -361,66 +258,12 @@ Cursor는 Claude Desktop과 **동일한 형식**을 사용합니다.
 
 > 💡 Antigravity CLI는 무료로 설치 가능하며, KORAIL MCP 서버 연결에 별도 구독이 필요 없습니다.
 
-Antigravity도 Claude Desktop과 **동일한 `mcpServers` 형식**을 사용합니다.
-
-**설정 파일 위치:**
-```
-C:\Users\[사용자명]\.gemini\antigravity\mcp_config.json
-```
+**설정 폴더:** `C:\Users\[사용자명]\.gemini\antigravity\`
 (또는 IDE에서 `…` 메뉴 → **Manage MCP Servers** → **View raw config**)
 
-```json
-{
-  "mcpServers": {
-    "korail-convenience": {
-      "command": "C:\\korail-mcp\\m-convenience\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-convenience\\server.py"]
-    },
-    "korail-stats": {
-      "command": "C:\\korail-mcp\\m-stats\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-stats\\server.py"]
-    },
-    "korail-train-ops": {
-      "command": "C:\\korail-mcp\\m-train-ops\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-train-ops\\server.py"]
-    },
-    "korail-codebook": {
-      "command": "C:\\korail-mcp\\m-codebook\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-codebook\\server.py"]
-    },
-    "korail-carriage": {
-      "command": "C:\\korail-mcp\\m-carriage\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-carriage\\server.py"]
-    },
-    "korail-freight": {
-      "command": "C:\\korail-mcp\\m-freight\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-freight\\server.py"]
-    },
-    "korail-network": {
-      "command": "C:\\korail-mcp\\m-network\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-network\\server.py"]
-    },
-    "korail-rolling-stock": {
-      "command": "C:\\korail-mcp\\m-rolling-stock\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-rolling-stock\\server.py"]
-    },
-    "korail-voc-cs": {
-      "command": "C:\\korail-mcp\\m-voc-cs\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-voc-cs\\server.py"]
-    },
-    "korail-internal-svc": {
-      "command": "C:\\korail-mcp\\m-internal-svc\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-internal-svc\\server.py"]
-    },
-    "korail-procurement": {
-      "command": "C:\\korail-mcp\\m-procurement\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-procurement\\server.py"]
-    }
-  }
-}
-```
-
-저장 후 MCP Servers 패널에서 **Reload/Refresh** 합니다.
+1. 이 폴더에 **`mcp-config.json` 을 복사**하고, 이름을 **`mcp_config.json`** 으로 변경합니다.
+   - 이미 있으면 `mcp-config.json` 안의 `korail-` 항목만 기존 `mcpServers`에 넣으세요.
+2. 저장 후 MCP Servers 패널에서 **Reload/Refresh** 합니다.
 </details>
 
 <details>
