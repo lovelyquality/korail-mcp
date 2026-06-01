@@ -1,89 +1,89 @@
 @echo off
-chcp 65001 > nul
+chcp 949 > nul
 setlocal enabledelayedexpansion
 
 echo ================================================================
-echo   KORAIL MCP Agent ì„¤ì¹˜ ìŠ¤í¬ë¦½íŠ¸
+echo   KORAIL MCP Agent ¼³Ä¡ ½ºÅ©¸³Æ®
 echo ================================================================
 echo.
 
-:: í˜„ìž¬ ë””ë ‰í† ë¦¬ í™•ì¸
+:: ÇöÀç µð·ºÅä¸® È®ÀÎ
 set "ROOT=%~dp0"
 set "ROOT=%ROOT:~0,-1%"
-echo ì„¤ì¹˜ ê²½ë¡œ: %ROOT%
+echo ¼³Ä¡ °æ·Î: %ROOT%
 echo.
 
-:: Python í™•ì¸
+:: Python È®ÀÎ
 python --version > nul 2>&1
 if errorlevel 1 (
-    echo [ì˜¤ë¥˜] Pythonì´ ì„¤ì¹˜ë˜ì–´ ìžˆì§€ ì•ŠìŠµë‹ˆë‹¤.
-    echo https://www.python.org/downloads/ ì—ì„œ Python 3.12 ì´ìƒì„ ì„¤ì¹˜í•˜ì„¸ìš”.
-    echo ì„¤ì¹˜ ì‹œ "Add Python to PATH" ë¥¼ ë°˜ë“œì‹œ ì²´í¬í•˜ì„¸ìš”.
+    echo [¿À·ù] PythonÀÌ ¼³Ä¡µÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù.
+    echo https://www.python.org/downloads/ ¿¡¼­ Python 3.12 ÀÌ»óÀ» ¼³Ä¡ÇÏ¼¼¿ä.
+    echo ¼³Ä¡ ½Ã "Add Python to PATH" ¸¦ ¹Ýµå½Ã Ã¼Å©ÇÏ¼¼¿ä.
     pause
     exit /b 1
 )
 
 for /f "tokens=*" %%i in ('python --version 2^>^&1') do set PYVER=%%i
-echo Python í™•ì¸: %PYVER%
+echo Python È®ÀÎ: %PYVER%
 echo.
 
-:: ì„œë²„ ëª©ë¡
+:: ¼­¹ö ¸ñ·Ï
 set SERVERS=m-convenience m-stats m-train-ops m-codebook m-carriage m-freight m-network m-rolling-stock m-voc-cs m-internal-svc m-procurement
 
-:: ê° ì„œë²„ ì„¤ì¹˜
+:: °¢ ¼­¹ö ¼³Ä¡
 echo ----------------------------------------------------------------
-echo ê°€ìƒí™˜ê²½ ë° íŒ¨í‚¤ì§€ ì„¤ì¹˜ ì¤‘...
+echo °¡»óÈ¯°æ ¹× ÆÐÅ°Áö ¼³Ä¡ Áß...
 echo ----------------------------------------------------------------
 echo.
 
 for %%s in (%SERVERS%) do (
-    echo [%%s] ì„¤ì¹˜ ì¤‘...
+    echo [%%s] ¼³Ä¡ Áß...
     if exist "%ROOT%\%%s" (
         if not exist "%ROOT%\%%s\venv" (
             python -m venv "%ROOT%\%%s\venv" > nul 2>&1
             if errorlevel 1 (
-                echo   [ì˜¤ë¥˜] ê°€ìƒí™˜ê²½ ìƒì„± ì‹¤íŒ¨
+                echo   [¿À·ù] °¡»óÈ¯°æ »ý¼º ½ÇÆÐ
             ) else (
-                echo   ê°€ìƒí™˜ê²½ ìƒì„± ì™„ë£Œ
+                echo   °¡»óÈ¯°æ »ý¼º ¿Ï·á
             )
         ) else (
-            echo   ê°€ìƒí™˜ê²½ ì´ë¯¸ ì¡´ìž¬
+            echo   °¡»óÈ¯°æ ÀÌ¹Ì Á¸Àç
         )
 
         if exist "%ROOT%\%%s\requirements.txt" (
             "%ROOT%\%%s\venv\Scripts\pip.exe" install -r "%ROOT%\%%s\requirements.txt" -q
             if errorlevel 1 (
-                echo   [ì˜¤ë¥˜] íŒ¨í‚¤ì§€ ì„¤ì¹˜ ì‹¤íŒ¨
+                echo   [¿À·ù] ÆÐÅ°Áö ¼³Ä¡ ½ÇÆÐ
             ) else (
-                echo   íŒ¨í‚¤ì§€ ì„¤ì¹˜ ì™„ë£Œ
+                echo   ÆÐÅ°Áö ¼³Ä¡ ¿Ï·á
             )
         )
 
         if not exist "%ROOT%\%%s\.env" (
             if exist "%ROOT%\%%s\.env.example" (
                 copy "%ROOT%\%%s\.env.example" "%ROOT%\%%s\.env" > nul
-                echo   .env íŒŒì¼ ìƒì„± ì™„ë£Œ
+                echo   .env ÆÄÀÏ »ý¼º ¿Ï·á
             )
         ) else (
-            echo   .env íŒŒì¼ ì´ë¯¸ ì¡´ìž¬
+            echo   .env ÆÄÀÏ ÀÌ¹Ì Á¸Àç
         )
     ) else (
-        echo   [ê²½ê³ ] í´ë” ì—†ìŒ: %%s
+        echo   [°æ°í] Æú´õ ¾øÀ½: %%s
     )
     echo.
 )
 
 
-:: MCP ì„œë²„ ì„¤ì • ì¶œë ¥ (í´ë¼ì´ì–¸íŠ¸ ê³µí†µ)
+:: MCP ¼­¹ö ¼³Á¤ Ãâ·Â (Å¬¶óÀÌ¾ðÆ® °øÅë)
 echo ================================================================
-echo   MCP ì„œë²„ ì„¤ì • (Claude Desktop / Cursor / Antigravity ê³µí†µ)
+echo   MCP ¼­¹ö ¼³Á¤ (Claude Desktop / Cursor / Antigravity °øÅë)
 echo ================================================================
 echo.
-echo ì•„ëž˜ 11ê°œ ì„œë²„ ë¸”ë¡ì„ ì‚¬ìš©í•˜ëŠ” í´ë¼ì´ì–¸íŠ¸ì˜ mcpServers ì•ˆì— ë„£ìœ¼ì„¸ìš”.
-echo (ì–´ë–¤ í´ë¼ì´ì–¸íŠ¸ë“  í˜•ì‹ì€ ë™ì¼í•˜ë©°, ì„¤ì • íŒŒì¼ ìœ„ì¹˜ë§Œ ë‹¤ë¦…ë‹ˆë‹¤.)
+echo ¾Æ·¡ 11°³ ¼­¹ö ºí·ÏÀ» »ç¿ëÇÏ´Â Å¬¶óÀÌ¾ðÆ®ÀÇ mcpServers ¾È¿¡ ³ÖÀ¸¼¼¿ä.
+echo (¾î¶² Å¬¶óÀÌ¾ðÆ®µç Çü½ÄÀº µ¿ÀÏÇÏ¸ç, ¼³Á¤ ÆÄÀÏ À§Ä¡¸¸ ´Ù¸¨´Ï´Ù.)
 echo.
-echo í´ë¼ì´ì–¸íŠ¸ë³„ ì„¤ì • íŒŒì¼ ìœ„ì¹˜ì™€ ìžì„¸í•œ ë°©ë²•ì€ README.md ì˜
-echo "í´ë¼ì´ì–¸íŠ¸ ì—°ê²°" ì„¹ì…˜ì„ ì°¸ê³ í•˜ì„¸ìš”.
+echo Å¬¶óÀÌ¾ðÆ®º° ¼³Á¤ ÆÄÀÏ À§Ä¡¿Í ÀÚ¼¼ÇÑ ¹æ¹ýÀº README.md ÀÇ
+echo "Å¬¶óÀÌ¾ðÆ® ¿¬°á" ¼½¼ÇÀ» Âü°íÇÏ¼¼¿ä.
 echo.
 echo ----------------------------------------------------------------
 echo.
@@ -135,15 +135,15 @@ echo.
 echo ----------------------------------------------------------------
 echo.
 echo ================================================================
-echo   âœ… ì„¤ì¹˜ ì™„ë£Œ! (11ê°œ ì„œë²„ Â· 82ê°œ ë„êµ¬)
+echo   [OK] ¼³Ä¡ ¿Ï·á! (11°³ ¼­¹ö ¡¤ 82°³ µµ±¸)
 echo ================================================================
 echo.
-echo â„¹ API í‚¤ ìž…ë ¥ ë¶ˆí•„ìš” - í”„ë¡ì‹œ ì„œë²„ê°€ ëŒ€ì‹  ì²˜ë¦¬í•©ë‹ˆë‹¤.
-echo   .env íŒŒì¼ì— í”„ë¡ì‹œ URLì´ ìžë™ìœ¼ë¡œ ê¸°ìž…ë˜ì—ˆìŠµë‹ˆë‹¤.
+echo [i] API Å° ÀÔ·Â ºÒÇÊ¿ä - ÇÁ·Ï½Ã ¼­¹ö°¡ ´ë½Å Ã³¸®ÇÕ´Ï´Ù.
+echo   .env ÆÄÀÏ¿¡ ÇÁ·Ï½Ã URLÀÌ ÀÚµ¿À¸·Î ±âÀÔµÇ¾ú½À´Ï´Ù.
 echo.
-echo ë‹¤ìŒ ë‹¨ê³„:
-echo   1. ì‚¬ìš©í•˜ëŠ” í´ë¼ì´ì–¸íŠ¸(Claude Desktop / Cursor / Antigravity ë“±)ì˜
-echo      ì„¤ì • íŒŒì¼ì— ìœ„ ì„œë²„ ë¸”ë¡ì„ ì¶”ê°€  (ìœ„ì¹˜ëŠ” README.md ì°¸ê³ )
-echo   2. í•´ë‹¹ í´ë¼ì´ì–¸íŠ¸ ìž¬ì‹œìž‘
+echo ´ÙÀ½ ´Ü°è:
+echo   1. »ç¿ëÇÏ´Â Å¬¶óÀÌ¾ðÆ®(Claude Desktop / Cursor / Antigravity µî)ÀÇ
+echo      ¼³Á¤ ÆÄÀÏ¿¡ À§ ¼­¹ö ºí·ÏÀ» Ãß°¡  (À§Ä¡´Â README.md Âü°í)
+echo   2. ÇØ´ç Å¬¶óÀÌ¾ðÆ® Àç½ÃÀÛ
 echo.
 pause
