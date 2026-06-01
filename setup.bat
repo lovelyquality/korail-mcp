@@ -73,31 +73,6 @@ for %%s in (%SERVERS%) do (
     echo.
 )
 
-:: API 키 입력 스크립트 생성
-echo ----------------------------------------------------------------
-echo API 키 입력 스크립트 생성 중...
-echo ----------------------------------------------------------------
-
-(
-    echo @echo off
-    echo chcp 65001 ^> nul
-    echo.
-    echo set /p "APIKEY=data.go.kr API 키를 입력하세요: "
-    echo.
-    for %%s in (%SERVERS%) do (
-        echo if exist "%ROOT%\%%s\.env" ^(
-        echo     echo DATA_GO_KR_API_KEY=!APIKEY! ^> "%ROOT%\%%s\.env"
-        echo     echo [%%s] API 키 저장 완료
-        echo ^)
-    )
-    echo.
-    echo echo.
-    echo echo 모든 서버에 API 키 저장 완료^^!
-    echo pause
-) > "%ROOT%\set_api_key.bat"
-
-echo set_api_key.bat 생성 완료
-echo.
 
 :: Claude Desktop 설정 출력
 echo ================================================================
@@ -162,9 +137,11 @@ echo ================================================================
 echo   ✅ 설치 완료! (11개 서버 · 82개 도구)
 echo ================================================================
 echo.
+echo ℹ API 키 입력 불필요 - 프록시 서버가 대신 처리합니다.
+echo   .env 파일에 프록시 URL이 자동으로 기입되었습니다.
+echo.
 echo 다음 단계:
-echo   1. set_api_key.bat 를 더블클릭하여 API 키 입력
-echo   2. 위 설정을 Claude Desktop 설정 파일에 추가
-echo   3. Claude Desktop 재시작
+echo   1. 위 설정을 Claude Desktop 설정 파일에 추가
+echo   2. Claude Desktop 재시작
 echo.
 pause

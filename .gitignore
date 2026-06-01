@@ -48,3 +48,5 @@ startup_out.txt
 
 # Cloudflare credentials
 cloudfire.txt
+
+proxy-worker/.wrangler/
