@@ -296,7 +296,7 @@ Cursor는 Claude Desktop과 **동일한 형식**을 사용합니다.
 - 전역: `C:\Users\[사용자명]\.cursor\mcp.json`
 - 프로젝트별: `<프로젝트>\.cursor\mcp.json`
 
-파일을 만들고 아래 골격에 **① Claude Desktop의 11개 서버 블록을 그대로** `mcpServers` 안에 넣습니다.
+파일을 만들고 아래 전체 내용을 그대로 붙여넣습니다. (이미 기존 `mcpServers`가 있으면 11개 서버 항목만 그 안에 추가)
 
 ```json
 {
@@ -304,8 +304,47 @@ Cursor는 Claude Desktop과 **동일한 형식**을 사용합니다.
     "korail-convenience": {
       "command": "C:\\korail-mcp\\m-convenience\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-convenience\\server.py"]
+    },
+    "korail-stats": {
+      "command": "C:\\korail-mcp\\m-stats\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-stats\\server.py"]
+    },
+    "korail-train-ops": {
+      "command": "C:\\korail-mcp\\m-train-ops\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-train-ops\\server.py"]
+    },
+    "korail-codebook": {
+      "command": "C:\\korail-mcp\\m-codebook\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-codebook\\server.py"]
+    },
+    "korail-carriage": {
+      "command": "C:\\korail-mcp\\m-carriage\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-carriage\\server.py"]
+    },
+    "korail-freight": {
+      "command": "C:\\korail-mcp\\m-freight\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-freight\\server.py"]
+    },
+    "korail-network": {
+      "command": "C:\\korail-mcp\\m-network\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-network\\server.py"]
+    },
+    "korail-rolling-stock": {
+      "command": "C:\\korail-mcp\\m-rolling-stock\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-rolling-stock\\server.py"]
+    },
+    "korail-voc-cs": {
+      "command": "C:\\korail-mcp\\m-voc-cs\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-voc-cs\\server.py"]
+    },
+    "korail-internal-svc": {
+      "command": "C:\\korail-mcp\\m-internal-svc\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-internal-svc\\server.py"]
+    },
+    "korail-procurement": {
+      "command": "C:\\korail-mcp\\m-procurement\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-procurement\\server.py"]
     }
-    // ... 나머지 10개 서버 동일하게 추가
   }
 }
 ```
@@ -332,8 +371,47 @@ C:\Users\[사용자명]\.gemini\antigravity\mcp_config.json
     "korail-convenience": {
       "command": "C:\\korail-mcp\\m-convenience\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-convenience\\server.py"]
+    },
+    "korail-stats": {
+      "command": "C:\\korail-mcp\\m-stats\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-stats\\server.py"]
+    },
+    "korail-train-ops": {
+      "command": "C:\\korail-mcp\\m-train-ops\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-train-ops\\server.py"]
+    },
+    "korail-codebook": {
+      "command": "C:\\korail-mcp\\m-codebook\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-codebook\\server.py"]
+    },
+    "korail-carriage": {
+      "command": "C:\\korail-mcp\\m-carriage\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-carriage\\server.py"]
+    },
+    "korail-freight": {
+      "command": "C:\\korail-mcp\\m-freight\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-freight\\server.py"]
+    },
+    "korail-network": {
+      "command": "C:\\korail-mcp\\m-network\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-network\\server.py"]
+    },
+    "korail-rolling-stock": {
+      "command": "C:\\korail-mcp\\m-rolling-stock\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-rolling-stock\\server.py"]
+    },
+    "korail-voc-cs": {
+      "command": "C:\\korail-mcp\\m-voc-cs\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-voc-cs\\server.py"]
+    },
+    "korail-internal-svc": {
+      "command": "C:\\korail-mcp\\m-internal-svc\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-internal-svc\\server.py"]
+    },
+    "korail-procurement": {
+      "command": "C:\\korail-mcp\\m-procurement\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-procurement\\server.py"]
     }
-    // ... 나머지 10개 서버 동일하게 추가
   }
 }
 ```

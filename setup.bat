@@ -74,15 +74,16 @@ for %%s in (%SERVERS%) do (
 )
 
 
-:: Claude Desktop 설정 출력
+:: MCP 서버 설정 출력 (클라이언트 공통)
 echo ================================================================
-echo   Claude Desktop 설정
+echo   MCP 서버 설정 (Claude Desktop / Cursor / Antigravity 공통)
 echo ================================================================
 echo.
-echo 아래 내용을 Claude Desktop 설정 파일에 추가하세요.
+echo 아래 11개 서버 블록을 사용하는 클라이언트의 mcpServers 안에 넣으세요.
+echo (어떤 클라이언트든 형식은 동일하며, 설정 파일 위치만 다릅니다.)
 echo.
-echo 설정 파일 위치:
-echo   %%APPDATA%%\Claude\claude_desktop_config.json
+echo 클라이언트별 설정 파일 위치와 자세한 방법은 README.md 의
+echo "클라이언트 연결" 섹션을 참고하세요.
 echo.
 echo ----------------------------------------------------------------
 echo.
@@ -141,7 +142,8 @@ echo ℹ API 키 입력 불필요 - 프록시 서버가 대신 처리합니다.
 echo   .env 파일에 프록시 URL이 자동으로 기입되었습니다.
 echo.
 echo 다음 단계:
-echo   1. 위 설정을 Claude Desktop 설정 파일에 추가
-echo   2. Claude Desktop 재시작
+echo   1. 사용하는 클라이언트(Claude Desktop / Cursor / Antigravity 등)의
+echo      설정 파일에 위 서버 블록을 추가  (위치는 README.md 참고)
+echo   2. 해당 클라이언트 재시작
 echo.
 pause
