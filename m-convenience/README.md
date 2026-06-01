@@ -2,6 +2,8 @@
 
 KORAIL 역사 편의시설, 접근성 설비, 환승·위치 정보를 조회하는 MCP 서버 (도구 6개)
 
+> 📌 등록명 `korail-convenience` · 설치는 [루트 README](../README.md) 참고. 데이터 호출은 전용 Cloudflare Workers 프록시를 경유하여 **API 키가 필요 없습니다.**
+
 | 도구 | 설명 |
 |---|---|
 | `get_station_facilities` | 역 시설 목록 조회 |
