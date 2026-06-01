@@ -2,6 +2,8 @@
 
 KORAIL 자재 그룹·나라장터 품목·자재 속성 및 장비를 조회하는 MCP 서버 (도구 4개)
 
+> 📌 등록명 `korail-procurement` · 설치는 [루트 README](../README.md) 참고. 본 서버는 **로컬 CSV 전용**이라 외부 API·프록시를 사용하지 않습니다.
+
 | 도구 | 설명 |
 |---|---|
 | `search_material_group` | 자재 그룹 검색 |
