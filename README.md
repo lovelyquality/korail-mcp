@@ -214,16 +214,20 @@ git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
 - 11개 서버의 Python 가상환경(venv) 생성
 - 필요한 패키지 설치
 - `.env` 파일 생성 (프록시 URL 자동 기입 — **API 키 입력 불필요**)
-- 클라이언트 연결용 설정 내용 출력
+- **`mcp-config.json` 자동 생성** (실제 설치 경로가 반영된 클라이언트 연결 설정)
 
 > ⏳ 인터넷 속도에 따라 3~10분 소요됩니다.
 
 ---
 
-## 🔌 클라이언트 연결 (사용하는 도구 선택)
+## 🔌 4단계 — 클라이언트 연결
+
+> 💾 **직접 입력할 필요 없습니다.** `setup.bat`을 실행하면 설치 폴더에 **`mcp-config.json`** 이 자동 생성됩니다 (실제 경로 반영). 이 파일 내용을 그대로 쓰면 됩니다.
+> GitHub에서 바로 받을 수도 있습니다 → [**mcp-config.json**](mcp-config.json) *(단, 이 파일은 `C:\korail-mcp` 기준 경로이니 다른 경로에 설치했다면 setup.bat이 만든 파일을 사용하세요.)*
 
 아래에서 **본인이 쓰는 도구의 토글만 펼쳐** 따라 하세요.
 Claude·Antigravity·Cursor는 설정 형식이 **완전히 동일**하며, 파일 위치만 다릅니다.
+(아래 JSON은 참고용 — 실제로는 위 `mcp-config.json` 내용을 붙여넣으면 됩니다.)
 
 <details>
 <summary><b>① Claude Desktop</b></summary>
@@ -233,8 +237,8 @@ Claude·Antigravity·Cursor는 설정 형식이 **완전히 동일**하며, 파�
 C:\Users\[사용자명]\AppData\Roaming\Claude\claude_desktop_config.json
 ```
 
-기존 `mcpServers` 항목 안에 아래 11개 서버를 붙여넣습니다.
-(`setup.bat` 실행 시 실제 경로가 반영된 내용이 자동 출력됩니다.)
+기존 `mcpServers` 항목 안에 **`mcp-config.json`의 `mcpServers` 내용**을 붙여넣습니다.
+(기존에 다른 MCP 서버가 없다면 `mcp-config.json`을 통째로 이 위치에 저장해도 됩니다.)
 
 ```json
 "korail-convenience": {

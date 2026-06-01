@@ -74,6 +74,63 @@ for %%s in (%SERVERS%) do (
 )
 
 
+:: mcp-config.json 자동 생성 (실제 설치 경로 반영)
+echo ----------------------------------------------------------------
+echo mcp-config.json 생성 중...
+echo ----------------------------------------------------------------
+(
+echo {
+echo   "mcpServers": {
+echo     "korail-convenience": {
+echo       "command": "%ROOT:\=\\%\\m-convenience\\venv\\Scripts\\python.exe",
+echo       "args": ["%ROOT:\=\\%\\m-convenience\\server.py"]
+echo     },
+echo     "korail-stats": {
+echo       "command": "%ROOT:\=\\%\\m-stats\\venv\\Scripts\\python.exe",
+echo       "args": ["%ROOT:\=\\%\\m-stats\\server.py"]
+echo     },
+echo     "korail-train-ops": {
+echo       "command": "%ROOT:\=\\%\\m-train-ops\\venv\\Scripts\\python.exe",
+echo       "args": ["%ROOT:\=\\%\\m-train-ops\\server.py"]
+echo     },
+echo     "korail-codebook": {
+echo       "command": "%ROOT:\=\\%\\m-codebook\\venv\\Scripts\\python.exe",
+echo       "args": ["%ROOT:\=\\%\\m-codebook\\server.py"]
+echo     },
+echo     "korail-carriage": {
+echo       "command": "%ROOT:\=\\%\\m-carriage\\venv\\Scripts\\python.exe",
+echo       "args": ["%ROOT:\=\\%\\m-carriage\\server.py"]
+echo     },
+echo     "korail-freight": {
+echo       "command": "%ROOT:\=\\%\\m-freight\\venv\\Scripts\\python.exe",
+echo       "args": ["%ROOT:\=\\%\\m-freight\\server.py"]
+echo     },
+echo     "korail-network": {
+echo       "command": "%ROOT:\=\\%\\m-network\\venv\\Scripts\\python.exe",
+echo       "args": ["%ROOT:\=\\%\\m-network\\server.py"]
+echo     },
+echo     "korail-rolling-stock": {
+echo       "command": "%ROOT:\=\\%\\m-rolling-stock\\venv\\Scripts\\python.exe",
+echo       "args": ["%ROOT:\=\\%\\m-rolling-stock\\server.py"]
+echo     },
+echo     "korail-voc-cs": {
+echo       "command": "%ROOT:\=\\%\\m-voc-cs\\venv\\Scripts\\python.exe",
+echo       "args": ["%ROOT:\=\\%\\m-voc-cs\\server.py"]
+echo     },
+echo     "korail-internal-svc": {
+echo       "command": "%ROOT:\=\\%\\m-internal-svc\\venv\\Scripts\\python.exe",
+echo       "args": ["%ROOT:\=\\%\\m-internal-svc\\server.py"]
+echo     },
+echo     "korail-procurement": {
+echo       "command": "%ROOT:\=\\%\\m-procurement\\venv\\Scripts\\python.exe",
+echo       "args": ["%ROOT:\=\\%\\m-procurement\\server.py"]
+echo     }
+echo   }
+echo }
+) > "%ROOT%\mcp-config.json"
+echo   mcp-config.json 생성 완료: %ROOT%\mcp-config.json
+echo.
+
 :: MCP 서버 설정 출력 (클라이언트 공통)
 echo ================================================================
 echo   MCP 서버 설정 (Claude Desktop / Cursor / Antigravity 공통)
