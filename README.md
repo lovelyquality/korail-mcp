@@ -250,8 +250,7 @@ git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
 > 💡 Antigravity CLI는 무료로 설치 가능하며, KORAIL MCP 서버 연결에 별도 구독이 필요 없습니다.
 
 `C:\korail-mcp\mcp-config.json` 을 **`C:\Users\[사용자명]\.gemini\antigravity\`** 폴더에 복사
-→ 이름을 **`mcp_config.json`** 으로 변경 *(하이픈 `mcp-config` → 밑줄 `mcp_config`, 서로 다른 이름입니다)*
-→ MCP Servers 패널에서 **Reload**.
+→ 이름을 **`mcp_config.json`** 으로 변경 → MCP Servers 패널에서 **Reload**.
 
 > 또는 IDE에서 `…` 메뉴 → **Manage MCP Servers** → **View raw config** 로 직접 편집. *(이미 있으면 `korail-` 항목만 기존 `mcpServers`에 추가)*
 </details>
