@@ -1,4 +1,4 @@
-# KORAIL MCP Agent
+# KORAIL 공공데이터 MCP
 
 한국철도공사(KORAIL) 공공데이터를 AI에 연결하는 MCP(Model Context Protocol) 서버 모음입니다.
 설치 후 Claude·Cursor·Antigravity 등에서 자연어로 KORAIL 데이터를 조회할 수 있습니다.
