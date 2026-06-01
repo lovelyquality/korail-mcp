@@ -457,7 +457,7 @@ KTX_STATION_PATH = "/15127571/v1/uddi:ab540482-aa65-411d-908b-c961aadae08b"
 def get_ktx_stations(
     line_name: Optional[str] = None,
     station_name: Optional[str] = None,
-) -> list[dict]:
+) -> dict:
     """KTX 노선별 역 정보(역명, 도로명주소, 정차 순번)를 조회합니다. (총 102건)
 
     Args:
