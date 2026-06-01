@@ -2,6 +2,8 @@
 
 KORAIL 임대·사회공헌·구내식당·회의실·직급 등 사내 서비스를 조회하는 MCP 서버 (도구 14개)
 
+> 📌 등록명 `korail-internal-svc` · 설치는 [루트 README](../README.md) 참고. 데이터 호출은 전용 Cloudflare Workers 프록시를 경유하여 **API 키가 필요 없습니다.**
+
 | 도구 | 설명 |
 |---|---|
 | `get_lease_stores` | 임대 점포 조회 |
