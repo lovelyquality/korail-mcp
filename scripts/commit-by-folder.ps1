@@ -31,7 +31,6 @@ $ErrorActionPreference = "Stop"
 
 # 폴더 → 라벨 (단일 진실 공급원). 새 서버 추가 시 여기만 갱신.
 $labels = [ordered]@{
-  "m-carriage"      = "🚃 차량·화차 종류 조회"
   "m-codebook"      = "📖 역코드·노선 코드북"
   "m-convenience"   = "🏢 역 편의시설·접근성 조회"
   "m-freight"       = "📦 화물·위험물·물류 조회"
