@@ -157,7 +157,7 @@ ROUTE_PATH = "/15138455/v1/uddi:8aea9f31-7bd0-4870-9553-8f0fb49075ec"
 
 
 @mcp.tool()
-def search_routes(
+def search_operation_patterns(
     query: Optional[str] = None,
     electric_only: Optional[bool] = None,
 ) -> list[dict]:

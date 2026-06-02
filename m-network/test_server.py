@@ -5,7 +5,7 @@ sys.stdout.reconfigure(encoding="utf-8")
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 from server import (
-    search_routes,
+    search_operation_patterns,
     get_station_distance,
     get_freight_minimum_fare,
     get_freight_rate,
@@ -24,18 +24,18 @@ def check(name, cond, detail=""):
 
 results = []
 
-# ── 1. search_routes ─────────────────────────────────────────────────────────
-print("\n=== search_routes ===")
+# ── 1. search_operation_patterns ─────────────────────────────────────────────────────────
+print("\n=== search_operation_patterns ===")
 try:
-    all_routes = search_routes()
+    all_routes = search_operation_patterns()
     results.append(check("전체 노선 수 ≥ 2000", len(all_routes) >= 2000, f"count={len(all_routes)}"))
-    hs = search_routes(query="고속")
+    hs = search_operation_patterns(query="고속")
     results.append(check("고속 노선 검색", len(hs) > 0, f"count={len(hs)}"))
-    electric = search_routes(electric_only=True)
+    electric = search_operation_patterns(electric_only=True)
     results.append(check("전기 노선 필터", len(electric) > 0 and all(r.get("전기동력차운행여부(ELC_LCM_RUN_FLG)") == "Y" for r in electric[:5]),
                           f"count={len(electric)}"))
 except Exception as e:
-    results.append(check("search_routes 예외", False, str(e)))
+    results.append(check("search_operation_patterns 예외", False, str(e)))
 
 # ── 2. get_station_distance ───────────────────────────────────────────────────
 print("\n=== get_station_distance ===")
