@@ -264,14 +264,20 @@ git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
 </details>
 
 <details>
-<summary><b>③ Antigravity CLI</b></summary>
+<summary><b>③ Antigravity</b></summary>
 
-> 💡 Antigravity CLI는 무료로 설치 가능하며, KORAIL MCP 서버 연결에 별도 구독이 필요 없습니다.
+> 💡 Antigravity는 무료로 설치 가능하며, KORAIL MCP 서버 연결에 별도 구독이 필요 없습니다.
 
-`C:\korail-mcp\mcp-config.json` 을 **`C:\Users\[사용자명]\.gemini\antigravity\`** 폴더에 복사
-→ 이름을 **`mcp_config.json`** 으로 변경 → MCP Servers 패널에서 **Reload**.
+Antigravity는 **설정 창에서 직접 등록하는 방식**이 가장 쉽습니다. (파일을 복사·이름변경하는 방식이 아닙니다.)
 
-> 또는 IDE에서 `…` 메뉴 → **Manage MCP Servers** → **View raw config** 로 직접 편집. *(이미 있으면 `korail-` 항목만 기존 `mcpServers`에 추가)*
+1. **MCP 설정 파일 열기** — 다음 둘 중 하나:
+   - Antigravity **Settings(⚙️)** → **Customizations** 탭 → **Open MCP Config** 버튼 클릭, 또는
+   - 에이전트 사이드 패널 상단 **`…` 메뉴 → MCP Servers → Manage MCP Servers → View raw config**
+2. 열린 `mcp_config.json` 에 [mcp-config.json](https://github.com/lovelyquality/korail-mcp/blob/main/mcp-config.json) 의 **`mcpServers` 내용을 붙여넣기**
+   - 이미 다른 서버가 있으면 `korail-` 항목들만 기존 `mcpServers` 안에 추가하세요.
+3. 저장 후 **Installed MCP Servers** 섹션에서 **Refresh(새로고침)**
+
+> ⚠️ **이름 주의**: Antigravity의 설정 파일은 밑줄 `mcp_config.json` 이고, 우리 배포 파일은 하이픈 `mcp-config.json` 입니다 — **서로 다른 파일**이니, 파일을 옮기지 말고 **위 1~3단계로 내용만 복사**해 넣으세요.
 </details>
 
 <details>
