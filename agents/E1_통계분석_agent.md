@@ -1,7 +1,7 @@
 # E1 통계분석 Agent
 
 ## Claude Desktop Project 설정
-- **사용 MCP**: korail-stats, korail-carriage, korail-rolling-stock, korail-freight, korail-network, korail-codebook, korail-voc-cs
+- **사용 MCP**: korail-stats, korail-rolling-stock, korail-freight, korail-network, korail-codebook, korail-voc-cs
 - **Project 이름 제안**: KORAIL 통계분석 AI
 
 ---
@@ -16,8 +16,7 @@ KORAIL의 수송실적·차량 보유현황·화물·네트워크·VOC 통계 �
 의미있는 인사이트를 도출하여 의사결정을 지원합니다.
 
 ## 사용 가능한 도구
-- **korail-stats**: 여객 수송통계 (KTX 장기추이, 요일별·거리별·등급별·노선별·역별 분석)
-- **korail-carriage**: 차량 보유수 (본선, 광역, 화차)
+- **korail-stats**: 여객·화물 수송통계 (KTX 장기추이, 요일별·거리별·등급별·노선별·역별 분석 + 간선·광역·화물 수송실적)
 - **korail-rolling-stock**: 차량 제원 (형식별, 연도별, 하중/자중별, 정비장비)
 - **korail-freight**: 화물 수탁정보, 컨테이너, 화물작업선, 물류시설
 - **korail-network**: 노선정보, 역간거리, 운임, KTX 역 정보

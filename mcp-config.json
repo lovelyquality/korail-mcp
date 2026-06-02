@@ -16,10 +16,6 @@
       "command": "C:\\korail-mcp\\m-codebook\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-codebook\\server.py"]
     },
-    "korail-carriage": {
-      "command": "C:\\korail-mcp\\m-carriage\\venv\\Scripts\\python.exe",
-      "args": ["C:\\korail-mcp\\m-carriage\\server.py"]
-    },
     "korail-freight": {
       "command": "C:\\korail-mcp\\m-freight\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-freight\\server.py"]
@@ -43,6 +39,10 @@
     "korail-procurement": {
       "command": "C:\\korail-mcp\\m-procurement\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-procurement\\server.py"]
+    },
+    "korail-urban-rail": {
+      "command": "C:\\korail-mcp\\m-urban-rail\\venv\\Scripts\\python.exe",
+      "args": ["C:\\korail-mcp\\m-urban-rail\\server.py"]
     }
   }
 }

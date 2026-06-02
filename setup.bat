@@ -28,7 +28,7 @@ echo Python 확인: %PYVER%
 echo.
 
 :: 서버 목록
-set SERVERS=m-convenience m-stats m-train-ops m-codebook m-carriage m-freight m-network m-rolling-stock m-voc-cs m-internal-svc m-procurement
+set SERVERS=m-convenience m-stats m-train-ops m-codebook m-freight m-network m-rolling-stock m-voc-cs m-internal-svc m-procurement m-urban-rail
 
 :: 각 서버 설치
 echo ----------------------------------------------------------------
@@ -97,10 +97,6 @@ echo     "korail-codebook": {
 echo       "command": "%ROOT:\=\\%\\m-codebook\\venv\\Scripts\\python.exe",
 echo       "args": ["%ROOT:\=\\%\\m-codebook\\server.py"]
 echo     },
-echo     "korail-carriage": {
-echo       "command": "%ROOT:\=\\%\\m-carriage\\venv\\Scripts\\python.exe",
-echo       "args": ["%ROOT:\=\\%\\m-carriage\\server.py"]
-echo     },
 echo     "korail-freight": {
 echo       "command": "%ROOT:\=\\%\\m-freight\\venv\\Scripts\\python.exe",
 echo       "args": ["%ROOT:\=\\%\\m-freight\\server.py"]
@@ -124,6 +120,10 @@ echo     },
 echo     "korail-procurement": {
 echo       "command": "%ROOT:\=\\%\\m-procurement\\venv\\Scripts\\python.exe",
 echo       "args": ["%ROOT:\=\\%\\m-procurement\\server.py"]
+echo     },
+echo     "korail-urban-rail": {
+echo       "command": "%ROOT:\=\\%\\m-urban-rail\\venv\\Scripts\\python.exe",
+echo       "args": ["%ROOT:\=\\%\\m-urban-rail\\server.py"]
 echo     }
 echo   }
 echo }
@@ -136,7 +136,7 @@ echo ================================================================
 echo   MCP 서버 설정 (Claude Desktop / Cursor / Antigravity 공통)
 echo ================================================================
 echo.
-echo 아래 11개 서버 블록을 사용하는 클라이언트의 mcpServers 안에 넣으세요.
+echo 아래 12개 서버 블록을 사용하는 클라이언트의 mcpServers 안에 넣으세요.
 echo (어떤 클라이언트든 형식은 동일하며, 설정 파일 위치만 다릅니다.)
 echo.
 echo 클라이언트별 설정 파일 위치와 자세한 방법은 README.md 의
@@ -159,10 +159,6 @@ echo },
 echo "korail-codebook": {
 echo   "command": "%ROOT:\=\\%\\m-codebook\\venv\\Scripts\\python.exe",
 echo   "args": ["%ROOT:\=\\%\\m-codebook\\server.py"]
-echo },
-echo "korail-carriage": {
-echo   "command": "%ROOT:\=\\%\\m-carriage\\venv\\Scripts\\python.exe",
-echo   "args": ["%ROOT:\=\\%\\m-carriage\\server.py"]
 echo },
 echo "korail-freight": {
 echo   "command": "%ROOT:\=\\%\\m-freight\\venv\\Scripts\\python.exe",
@@ -187,12 +183,16 @@ echo },
 echo "korail-procurement": {
 echo   "command": "%ROOT:\=\\%\\m-procurement\\venv\\Scripts\\python.exe",
 echo   "args": ["%ROOT:\=\\%\\m-procurement\\server.py"]
+echo },
+echo "korail-urban-rail": {
+echo   "command": "%ROOT:\=\\%\\m-urban-rail\\venv\\Scripts\\python.exe",
+echo   "args": ["%ROOT:\=\\%\\m-urban-rail\\server.py"]
 echo }
 echo.
 echo ----------------------------------------------------------------
 echo.
 echo ================================================================
-echo   [OK] 설치 완료! (11개 서버 · 82개 도구)
+echo   [OK] 설치 완료! (12개 서버 · 98개 도구)
 echo ================================================================
 echo.
 echo [i] API 키 입력 불필요 - 프록시 서버가 대신 처리합니다.

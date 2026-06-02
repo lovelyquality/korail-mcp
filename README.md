@@ -8,21 +8,21 @@
 
 ---
 
-## 📦 제공 서버 (총 11개 · 82개 도구)
+## 📦 제공 서버 (총 11개 · 98개 도구)
 
 | 서버 | 도구 수 | 제공 데이터 |
 |---|:-:|---|
 | m-convenience | 6 | 역사 편의시설·접근성·엘리베이터·위치 정보 |
-| m-stats | 11 | 발권 통계·이용유형·KTX 장기 통계 |
+| m-stats | 15 | 수송실적·발권 통계·이용유형·KTX 장기 통계 |
 | m-train-ops | 4 | 열차 운행계획·운행이력 |
 | m-codebook | 4 | 역코드·노선코드 조회 |
-| m-carriage | 4 | 간선·광역·화물 수송실적 |
 | m-freight | 11 | 화물·컨테이너·물류시설·품목·위험물 |
 | m-network | 8 | 노선·역간거리·운임·역 선로제원 |
 | m-rolling-stock | 6 | 차량 보유현황·형별제원·차종별 운행실적 |
 | m-voc-cs | 10 | 고객서비스·정보공개 |
 | m-internal-svc | 14 | 임대매장·사회공헌·인사 정보 |
 | m-procurement | 4 | 자재그룹·G2B 품명·자재속성·대상장비 |
+| m-urban-rail | 16 | 전국 도시철도 역사·노선·차량 시설·접근성·안전·환경·시각표 |
 
 ### 서버별 도구 상세 (클릭하여 펼치기)
 
@@ -40,7 +40,7 @@
 </details>
 
 <details>
-<summary><b>m-stats</b> · 11개 도구 — 수송·이용 통계</summary>
+<summary><b>m-stats</b> · 15개 도구 — 여객·화물 수송통계</summary>
 
 | 도구 | 설명 |
 |---|---|
@@ -55,6 +55,10 @@
 | get_mainline_ticketing_stat | 간선열차 발권유형 통계 |
 | get_mainline_person_distance | 간선열차 노선별 인거리 통계 |
 | get_ktx_long_term_stats | KTX 장기 통계 |
+| get_mainline_carriage | 간선 여객열차 수송실적 조회 |
+| get_wide_area_carriage | 광역 여객열차 수송실적 조회 |
+| get_freight_carriage | 화물열차 수송실적 조회 |
+| get_transport_stat_codes | 수송실적 통계 코드정보 조회 |
 </details>
 
 <details>
@@ -80,17 +84,6 @@
 </details>
 
 <details>
-<summary><b>m-carriage</b> · 4개 도구 — 수송실적</summary>
-
-| 도구 | 설명 |
-|---|---|
-| get_mainline_carriage | 간선 여객열차 수송실적 조회 |
-| get_wide_area_carriage | 광역 여객열차 수송실적 조회 |
-| get_freight_carriage | 화물열차 수송실적 조회 |
-| get_carriage_codes | 열차수송통계 코드정보 조회 |
-</details>
-
-<details>
 <summary><b>m-freight</b> · 11개 도구 — 화물·물류</summary>
 
 | 도구 | 설명 |
@@ -113,7 +106,7 @@
 
 | 도구 | 설명 |
 |---|---|
-| search_routes | 전국 철도 노선 정보 검색 |
+| search_operation_patterns | 전국 철도 운행계통 검색 |
 | get_station_distance | 두 역 간 최단 운행거리 조회 |
 | get_freight_minimum_fare | 화물 운송 최저운임 기준 조회 |
 | get_freight_rate | 철도 화물 임율 정보 조회 |
@@ -183,6 +176,32 @@
 | search_g2b_item | G2B 분류번호·품명 검색 |
 | search_material_attr | 자재속성정보 조회 |
 | search_material_equipment | 자재대상장비 조회 |
+</details>
+
+<details>
+<summary><b>m-urban-rail</b> · 16개 도구 — 전국 도시철도 역사·노선·차량 정보 (국가철도공단)</summary>
+
+> 수도권 1~9호선·신분당·공항철도, 부산·대구·대전·광주·인천, 경전철·GTX 등 전국 22개 운영기관 1,108개 역.
+> 운영기관·선·역코드가 필요하므로 먼저 `search_urban_station`으로 역을 특정하세요. 환승역 등 동일 역명은 `operator`(운영기관)로 구분합니다.
+
+| 도구 | 설명 |
+|---|---|
+| search_urban_station | 역명으로 운영기관·선·역코드 검색 (다른 조회의 선행 단계) |
+| get_urban_station_info | 역사 기본정보 조회 (주소·좌표·다국어 역명) |
+| get_urban_accessibility | 역사 접근성 시설 조회 (엘리베이터·에스컬레이터·휠체어리프트 현황/위치·이동동선·안전발판·이격거리·점자·장애인화장실·인접계단 차량번호 등) |
+| get_urban_amenity | 역사 편의시설 조회 (화장실·수유실·물품보관함·ATM·유실물센터·무선인터넷) |
+| get_urban_safety | 역사 안전시설 조회 (제세동기·소화설비·비상콜폰·공기호흡기·스크린도어·승강장 안전펜스) |
+| get_urban_surroundings | 역 주변 시설 조회 (대중교통·주차장·자전거 주차/대여) |
+| get_urban_exit_info | 역사 출구정보 조회 (출구번호·주변시설·거리) |
+| get_urban_transfer_info | 역사 환승정보 조회 (환승노선·환승거리·동선) |
+| get_urban_movement | 교통약자 출입구→승강장 이동경로(무장애 동선) 조회 |
+| get_urban_platform | 역사 승강장 정보 조회 (승강장 유형·복합여부 등) |
+| get_urban_environment | 역사 환경측정 조회 (공기질·온도·습도·소음) |
+| get_urban_timetable | 역사별 운행시각표 조회 (평일/휴일·급행 선택) |
+| get_urban_route | 노선 전체 역 구성(상행~하행 순서) 조회 — 역 무관 |
+| get_urban_train_composition | 운영기관별 열차 편성종류(편성코드·호차) 조회 — 차량별 조회 선행 |
+| get_urban_train_facility | 차량(호차)별 시설 조회 (소화기·비상콜폰·제세동기·임산부석·노약자석·휠체어 등) |
+| get_urban_train_environment | 열차별 차내 환경정보 조회 (온도·습도·미세먼지 등) |
 </details>
 
 ---
@@ -282,13 +301,15 @@ git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
 2026년 4월 KTX 발권유형 비율을 알려주세요.        (stats)
 KTX 101 열차의 운행 계획을 알려주세요.            (train-ops)
 서울역 코드가 뭔가요?                             (codebook)
-2024년 간선철도 수송실적을 알려주세요.            (carriage)
+2024년 간선철도 수송실적을 알려주세요.            (stats)
 컨테이너 화물 운송 이력을 조회해주세요.           (freight)
 경부선 KTX 정차역과 역간 거리를 알려주세요.       (network)
 KTX 차량 형별 제원을 보여주세요.                  (rolling-stock)
 철도 고객센터 상담유형 코드를 알려주세요.         (voc-cs)
 역사 임대매장 현황을 알려주세요.                  (internal-svc)
 'EMU용품' 자재그룹코드를 검색해주세요.            (procurement)
+강남역(서울교통공사) 엘리베이터 위치를 알려주세요.  (urban-rail)
+서울역 도시철도 역사들의 운영기관을 찾아주세요.    (urban-rail)
 ```
 
 ---
@@ -296,6 +317,7 @@ KTX 차량 형별 제원을 보여주세요.                  (rolling-stock)
 ## 📚 데이터 출처
 
 - 한국철도공사 공공데이터포털 ([data.go.kr](https://www.data.go.kr))
+- 국가철도공단(KRIC) 철도산업정보센터 오픈API ([openapi.kric.go.kr](https://openapi.kric.go.kr)) — 도시철도 역사정보
 - REST API(B551457) · odcloud 파일변환 API · 로컬 CSV
 
 ## ⚠️ 주의사항
