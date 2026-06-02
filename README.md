@@ -249,7 +249,10 @@ git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
 <summary><b>① Claude Desktop</b></summary>
 
 `C:\korail-mcp\mcp-config.json` 을 **`%APPDATA%\Claude\`** 폴더에 복사
-→ 이름을 **`claude_desktop_config.json`** 으로 변경 → Claude Desktop 재시작.
+→ 이름을 **`claude_desktop_config.json`** 으로 변경
+
+> 🔁 **반드시 완전히 껐다 켜세요.** 창의 X를 눌러 닫아도 **시스템 트레이(작업표시줄 오른쪽 `^` 안)에 계속 실행 중**이라 적용되지 않습니다.
+> → 트레이의 Claude 아이콘 **우클릭 → Quit / 종료** 후 다시 실행하세요. (작업표시줄에서 사라졌는지 확인)
 
 > 채팅창 우측 하단에 🔨 아이콘이 보이면 성공. *(이미 다른 MCP 서버가 있으면 `korail-` 항목만 기존 `mcpServers`에 추가)*
 </details>
@@ -268,16 +271,18 @@ git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
 
 > 💡 Antigravity는 무료로 설치 가능하며, KORAIL MCP 서버 연결에 별도 구독이 필요 없습니다.
 
-Antigravity는 **설정 창에서 직접 등록하는 방식**이 가장 쉽습니다. (파일을 복사·이름변경하는 방식이 아닙니다.)
+Antigravity는 **에이전트에게 자연어로 시키는 방법**이 가장 쉽습니다. (직접 설정 파일을 만질 필요 없음)
 
-1. **MCP 설정 파일 열기** — 다음 둘 중 하나:
-   - Antigravity **Settings(⚙️)** → **Customizations** 탭 → **Open MCP Config** 버튼 클릭, 또는
-   - 에이전트 사이드 패널 상단 **`…` 메뉴 → MCP Servers → Manage MCP Servers → View raw config**
-2. 열린 `mcp_config.json` 에 [mcp-config.json](https://github.com/lovelyquality/korail-mcp/blob/main/mcp-config.json) 의 **`mcpServers` 내용을 붙여넣기**
-   - 이미 다른 서버가 있으면 `korail-` 항목들만 기존 `mcpServers` 안에 추가하세요.
-3. 저장 후 **Installed MCP Servers** 섹션에서 **Refresh(새로고침)**
+1. Antigravity 실행
+2. 채팅(에이전트)에 아래 문장을 그대로 입력:
+   ```
+   C:\korail-mcp\mcp-config.json 을 참고해서 MCP 서버들을 설치해줘
+   ```
+   → 에이전트가 알아서 `mcp_config.json` 에 등록해 줍니다.
+3. **반드시 완전히 껐다 켜세요** — 작업표시줄/트레이에서 Antigravity가 **완전히 종료됐는지 확인**한 뒤 다시 실행하세요. (창만 닫으면 적용되지 않을 수 있습니다.)
 
-> ⚠️ **이름 주의**: Antigravity의 설정 파일은 밑줄 `mcp_config.json` 이고, 우리 배포 파일은 하이픈 `mcp-config.json` 입니다 — **서로 다른 파일**이니, 파일을 옮기지 말고 **위 1~3단계로 내용만 복사**해 넣으세요.
+> 🛠️ **직접 등록하려면**: **Settings(⚙️) → Customizations → Open MCP Config** 를 열어 [mcp-config.json](https://github.com/lovelyquality/korail-mcp/blob/main/mcp-config.json) 의 `mcpServers` 내용을 붙여넣고 **Refresh**.
+> ⚠️ Antigravity 설정 파일명은 밑줄 `mcp_config.json` 으로, 우리 배포 파일 `mcp-config.json`(하이픈)과 **다른 파일**입니다.
 </details>
 
 <details>
