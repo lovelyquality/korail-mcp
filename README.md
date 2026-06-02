@@ -280,9 +280,6 @@ Antigravity는 **에이전트에게 자연어로 시키는 방법**이 가장 �
    ```
    → 에이전트가 알아서 `mcp_config.json` 에 등록해 줍니다.
 3. **반드시 완전히 껐다 켜세요** — 작업표시줄/트레이에서 Antigravity가 **완전히 종료됐는지 확인**한 뒤 다시 실행하세요. (창만 닫으면 적용되지 않을 수 있습니다.)
-
-> 🛠️ **직접 등록하려면**: **Settings(⚙️) → Customizations → Open MCP Config** 를 열어 [mcp-config.json](https://github.com/lovelyquality/korail-mcp/blob/main/mcp-config.json) 의 `mcpServers` 내용을 붙여넣고 **Refresh**.
-> ⚠️ Antigravity 설정 파일명은 밑줄 `mcp_config.json` 으로, 우리 배포 파일 `mcp-config.json`(하이픈)과 **다른 파일**입니다.
 </details>
 
 <details>
