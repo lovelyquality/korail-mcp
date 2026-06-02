@@ -1,0 +1,15 @@
+# 도커 빌드 컨텍스트에서 제외 (clean 설치 검증용)
+**/venv
+**/__pycache__
+**/*.pyc
+.git
+.claude
+kric_excel
+OpenAPI정보
+proxy-worker
+agents
+scripts
+KORAIL_MCP_*.md
+PPT_*.md
+project_*.md
+*.log
