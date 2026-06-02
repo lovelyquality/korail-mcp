@@ -1,15 +1,19 @@
 /**
  * KORAIL MCP Proxy Worker
- * data.go.kr / odcloud API 키를 서버에서 보관하고 중계합니다.
+ * data.go.kr / odcloud / KRIC openapi API 키를 서버에서 보관하고 중계합니다.
  *
  * 라우팅:
- *   /proxy/apis/B551457/...  →  https://apis.data.go.kr/B551457/...
- *   /proxy/odcloud/...       →  https://api.odcloud.kr/api/...
+ *   /proxy/apis/B551457/...  →  https://apis.data.go.kr/B551457/...   (DATA_GO_KR_API_KEY)
+ *   /proxy/odcloud/...       →  https://api.odcloud.kr/api/...        (DATA_GO_KR_API_KEY)
+ *   /proxy/kric/{svc}/{op}   →  https://openapi.kric.go.kr/openapi/{svc}/{op}  (KRIC_API_KEY)
+ *
+ * KRIC은 서비스키가 2개라 stPlf(역사별 승강장 정보) 오퍼레이션만 별도 키(KRIC_API_KEY_STPLF) 사용.
  */
 
 const ROUTES = [
-  { prefix: "/proxy/apis/",    target: "https://apis.data.go.kr/" },
-  { prefix: "/proxy/odcloud/", target: "https://api.odcloud.kr/api/" },
+  { prefix: "/proxy/apis/",    target: "https://apis.data.go.kr/",            key: "DATA_GO_KR_API_KEY" },
+  { prefix: "/proxy/odcloud/", target: "https://api.odcloud.kr/api/",         key: "DATA_GO_KR_API_KEY" },
+  { prefix: "/proxy/kric/",    target: "https://openapi.kric.go.kr/openapi/", key: "KRIC_API_KEY" },
 ];
 
 export default {
@@ -46,7 +50,13 @@ export default {
     // 타깃 URL 구성
     const subPath = url.pathname.slice(route.prefix.length);
     const params = new URLSearchParams(url.search);
-    params.set("serviceKey", env.DATA_GO_KR_API_KEY);
+
+    // 라우트별 서비스키 선택. KRIC stPlf 오퍼레이션만 별도 키.
+    let keyName = route.key;
+    if (route.prefix === "/proxy/kric/" && /(^|\/)stPlf(\/|$|\?)/.test(subPath)) {
+      keyName = "KRIC_API_KEY_STPLF";
+    }
+    params.set("serviceKey", env[keyName]);
 
     const targetUrl = `${route.target}${subPath}?${params.toString()}`;
 
