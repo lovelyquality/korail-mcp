@@ -300,6 +300,25 @@ Antigravity는 **에이전트에게 자연어로 시키는 방법**이 가장 �
 > 개인 PC에서 간편하게 쓰려면 **Claude Desktop·Cursor·Antigravity** 사용을 권장합니다.
 </details>
 
+<details>
+<summary><b>⑤ Grok (고급 — 원격 연결 필요)</b></summary>
+
+⚠️ Grok도 **로컬 stdio MCP 서버를 지원하지 않습니다.** 공개 HTTPS 엔드포인트만 커넥터로 추가할 수 있습니다.
+
+`grok-connect.bat`를 실행하면 서버를 SSE 모드로 켜고, Cloudflare Tunnel로 공개 URL을 자동 발급해 줍니다.
+(Cloudflare 계정 불필요 — `cloudflared.exe`는 첫 실행 시 자동 다운로드)
+
+1. `C:\korail-mcp\grok-connect.bat` **더블클릭**
+2. 연결할 서버 번호 선택 (1~11)
+3. 창에 `https://xxxx.trycloudflare.com` 형태의 URL이 출력되면 끝에 `/sse`를 붙여 복사
+   → 예: `https://abc-def-123.trycloudflare.com/sse`
+4. [grok.com/connectors](https://grok.com/connectors) → **New Connector** → **Custom** → URL 붙여넣기
+
+> 배치 실행 창을 닫으면 터널이 종료되어 Grok 연결이 끊깁니다. 사용 중에는 창을 유지하세요.
+> 서버는 한 번에 하나씩 연결됩니다. 여러 서버를 연결하려면 배치를 여러 번 실행하세요.
+> 💡 Grok 커넥터 기능은 **유료 계정**이 필요합니다.
+</details>
+
 ---
 
 ## 💬 사용 예시
