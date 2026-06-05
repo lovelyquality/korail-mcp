@@ -248,13 +248,25 @@ git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
 <details>
 <summary><b>① Claude Desktop</b></summary>
 
-`C:\korail-mcp\mcp-config.json` 을 **`%APPDATA%\Claude\`** 폴더에 복사
-→ 이름을 **`claude_desktop_config.json`** 으로 변경
+`C:\korail-mcp\claude-connect.bat` **더블클릭** → 설정 파일이 자동 복사됩니다.
+(Claude 폴더가 없으면 자동 생성, 기존 설정은 `.bak`으로 백업 후 덮어쓰기)
 
 > 🔁 **반드시 완전히 껐다 켜세요.** 창의 X를 눌러 닫아도 **시스템 트레이(작업표시줄 오른쪽 `^` 안)에 계속 실행 중**이라 적용되지 않습니다.
 > → 트레이의 Claude 아이콘 **우클릭 → Quit / 종료** 후 다시 실행하세요. (작업표시줄에서 사라졌는지 확인)
 
 > 채팅창 우측 하단에 🔨 아이콘이 보이면 성공. *(이미 다른 MCP 서버가 있으면 `korail-` 항목만 기존 `mcpServers`에 추가)*
+
+<details>
+<summary>배치 파일이 안 될 때 — 수동 설정 방법</summary>
+
+1. 탐색기 주소창에 `%APPDATA%\Claude` 입력 → Enter
+   - 폴더가 없으면 `AppData\Roaming` 안에 `Claude` 폴더를 직접 만드세요
+   - `AppData`가 안 보이면 탐색기 → 보기 → **숨긴 항목** 체크
+2. `C:\korail-mcp\mcp-config.json` 파일을 위 폴더에 복사
+3. 파일 이름을 `claude_desktop_config.json` 으로 변경
+4. Claude Desktop 완전히 종료(트레이 → Quit) 후 다시 실행
+
+</details>
 </details>
 
 <details>
