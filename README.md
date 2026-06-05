@@ -4,8 +4,11 @@
 설치 후 Claude·Cursor·Antigravity 등에서 자연어로 KORAIL 데이터를 조회할 수 있습니다.
 
 > ✅ **API 키 신청 불필요** — 전용 프록시 서버가 공공데이터 API 호출을 대신 처리합니다.
+>
 > 💻 **로컬 설치형 (stdio)** — 별도 서버 없이 개인 PC에서 직접 실행됩니다. Claude Desktop·Cursor·Antigravity 등 로컬 MCP 클라이언트에 연결합니다. ChatGPT·Grok 같은 웹 서비스는 원격 연결이 필요합니다(하단 고급 항목 참고).
+>
 > 📦 **필요 디스크 공간** — 저장소 clone 약 200MB, `setup.bat` 완료 후 총 **약 1.1GB** (Python 가상환경 11개 포함)
+>
 > 직원은 내려받아 `setup.bat`만 실행하면 됩니다.
 
 ---
