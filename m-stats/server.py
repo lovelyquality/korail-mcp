@@ -1,4 +1,4 @@
-﻿from mcp.server.fastmcp import FastMCP
+﻿from mcp.server.mcpserver import MCPServer
 import httpx
 from dotenv import load_dotenv
 import os
@@ -14,7 +14,7 @@ BASE_URL = f"{PROXY_BASE}/apis/B551457/issueStatistics"
 CARRIAGE_BASE = f"{PROXY_BASE}/apis/B551457/carriageStatistics"
 DATA_DIR = Path(__file__).parent / "data"
 
-mcp = FastMCP("KORAIL 여객·화물 수송통계")
+mcp = MCPServer("KORAIL 여객·화물 수송통계")
 
 _ktx_cache: dict = {}
 
@@ -494,7 +494,13 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=8002)
     args = parser.parse_args()
     if args.transport == "sse":
-        mcp.settings.host = "0.0.0.0"
-        mcp.settings.port = args.port
-        mcp.settings.transport_security = None
-    mcp.run(transport=args.transport)
+        # mcp 2.0: settings.host/port/transport_security 가 제거되어
+        # run() 의 키워드 인자로 전달한다.
+        mcp.run(
+            transport="sse",
+            host="0.0.0.0",
+            port=args.port,
+            transport_security=None,
+        )
+    else:
+        mcp.run(transport="stdio")
