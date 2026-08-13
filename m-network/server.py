@@ -1,4 +1,5 @@
 ﻿import csv
+import gzip
 import json
 import os
 from pathlib import Path
@@ -48,8 +49,9 @@ def _load_csv(filename: str) -> list[dict]:
 
 
 def _load_station_distance_index() -> dict:
-    """역간최단거리 CSV → {출발역명: [행 목록]} 인덱스"""
-    data = _load_csv("station_distance.csv")
+    """역간최단거리 CSV(gzip 압축, 44MB→4.6MB) → {출발역명: [행 목록]} 인덱스"""
+    with gzip.open(DATA_DIR / "station_distance.csv.gz", "rt", encoding="utf-8-sig", newline="") as f:
+        data = list(csv.DictReader(f))
     idx: dict[str, list] = {}
     for row in data:
         dep = row.get("출발역명", "")
