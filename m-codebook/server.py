@@ -1,5 +1,5 @@
 ﻿# -*- coding: utf-8 -*-
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 import httpx
 from dotenv import load_dotenv
 import os
@@ -19,7 +19,7 @@ ENDPOINTS = {
     "station_region":"/15154148/v1/uddi:a360f730-9fd5-4a1b-90a5-fd1b571b232b",  # 역별코드+지역본부 (1161행)
 }
 
-mcp = FastMCP("KORAIL 코드북")
+mcp = MCPServer("KORAIL 코드북")
 
 # ── 데이터셋 기준일 ────────────────────────────────────
 _DATASETS = {
@@ -229,7 +229,13 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=8004)
     args = parser.parse_args()
     if args.transport == "sse":
-        mcp.settings.host = "0.0.0.0"
-        mcp.settings.port = args.port
-        mcp.settings.transport_security = None
-    mcp.run(transport=args.transport)
+        # mcp 2.0: settings.host/port/transport_security 가 제거되어
+        # run() 의 키워드 인자로 전달한다.
+        mcp.run(
+            transport="sse",
+            host="0.0.0.0",
+            port=args.port,
+            transport_security=None,
+        )
+    else:
+        mcp.run(transport="stdio")
