@@ -10,11 +10,11 @@ Local CSV files from data.go.kr (KORAIL procurement/material data).
 import csv
 from pathlib import Path
 from typing import Any
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 
 DATA_DIR = Path(__file__).parent / "data"
 
-mcp = FastMCP("korail-procurement")
+mcp = MCPServer("korail-procurement")
 
 _cache: dict[str, list[dict[str, Any]]] = {}
 
@@ -146,7 +146,13 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=8011)
     args = parser.parse_args()
     if args.transport == "sse":
-        mcp.settings.host = "0.0.0.0"
-        mcp.settings.port = args.port
-        mcp.settings.transport_security = None
-    mcp.run(transport=args.transport)
+        # mcp 2.0: settings.host/port/transport_security 가 제거되어
+        # run() 의 키워드 인자로 전달한다.
+        mcp.run(
+            transport="sse",
+            host="0.0.0.0",
+            port=args.port,
+            transport_security=None,
+        )
+    else:
+        mcp.run(transport="stdio")
