@@ -1,11 +1,37 @@
-# 도커 빌드 컨텍스트에서 제외 (clean 설치 검증용)
+# 도커 빌드 컨텍스트에서 제외
+# (docker-test 클린 설치 검증 + Cloud Run 배포 공용)
+#
+# ⚠️ Cloud Run 은 이 컨텍스트를 업로드해서 빌드한다.
+#    큰 폴더를 빼지 않으면 배포마다 수백 MB 를 올리게 되므로 반드시 유지할 것.
+
+# 가상환경·캐시
 **/venv
 **/__pycache__
 **/*.pyc
+
+# 개인 설정 (이미지에 절대 넣지 않는다)
+**/.env
+
+# 버전관리·에디터
 .git
 .claude
+
+# 발표·문서 자산 (실행에 불필요, 총 60MB 이상)
+PPT
+presentation
+presentation_*.zip
+output
 kric_excel
 OpenAPI정보
+*.zip
+*.pdf
+
+# 빌드 산출물
+dist
+build
+*.egg-info
+
+# 실행에 불필요한 코드·문서
 proxy-worker
 agents
 scripts
