@@ -30,48 +30,56 @@ echo.
 :: 서버 목록
 set SERVERS=m-convenience m-stats m-train-ops m-codebook m-freight m-network m-rolling-stock m-voc-cs m-internal-svc m-procurement m-urban-rail
 
-:: 각 서버 설치
+:: 공용 가상환경 1개 생성 (11개 서버가 공유 - 중복 설치 제거로 약 900MB 절약)
 echo ----------------------------------------------------------------
-echo 가상환경 및 패키지 설치 중...
+echo 공용 가상환경 및 패키지 설치 중...
 echo ----------------------------------------------------------------
 echo.
 
+if not exist "%ROOT%\venv" (
+    python -m venv "%ROOT%\venv" > nul 2>&1
+    if errorlevel 1 (
+        echo [오류] 가상환경 생성 실패
+        pause
+        exit /b 1
+    )
+    echo 공용 가상환경 생성 완료: %ROOT%\venv
+) else (
+    echo 공용 가상환경 이미 존재
+)
+echo.
+
+:: 서버별 requirements.txt 를 공용 가상환경에 설치 (중복 패키지는 자동으로 건너뜀)
 for %%s in (%SERVERS%) do (
-    echo [%%s] 설치 중...
+    if exist "%ROOT%\%%s\requirements.txt" (
+        echo [%%s] 패키지 확인 중...
+        "%ROOT%\venv\Scripts\pip.exe" install -r "%ROOT%\%%s\requirements.txt" -q
+        if errorlevel 1 (
+            echo   [오류] 패키지 설치 실패: %%s
+            pause
+            exit /b 1
+        )
+    )
+)
+echo 패키지 설치 완료
+echo.
+
+:: 서버별 .env 생성
+for %%s in (%SERVERS%) do (
     if exist "%ROOT%\%%s" (
-        if not exist "%ROOT%\%%s\venv" (
-            python -m venv "%ROOT%\%%s\venv" > nul 2>&1
-            if errorlevel 1 (
-                echo   [오류] 가상환경 생성 실패
-            ) else (
-                echo   가상환경 생성 완료
-            )
-        ) else (
-            echo   가상환경 이미 존재
-        )
-
-        if exist "%ROOT%\%%s\requirements.txt" (
-            "%ROOT%\%%s\venv\Scripts\pip.exe" install -r "%ROOT%\%%s\requirements.txt" -q
-            if errorlevel 1 (
-                echo   [오류] 패키지 설치 실패
-            ) else (
-                echo   패키지 설치 완료
-            )
-        )
-
         if not exist "%ROOT%\%%s\.env" (
             if exist "%ROOT%\%%s\.env.example" (
                 copy "%ROOT%\%%s\.env.example" "%ROOT%\%%s\.env" > nul
-                echo   .env 파일 생성 완료
+                echo   [%%s] .env 생성 완료
             )
         ) else (
-            echo   .env 파일 이미 존재
+            echo   [%%s] .env 이미 존재
         )
     ) else (
         echo   [경고] 폴더 없음: %%s
     )
-    echo.
 )
+echo.
 
 
 :: mcp-config.json 자동 생성 (실제 설치 경로 반영)
@@ -82,47 +90,47 @@ echo ----------------------------------------------------------------
 echo {
 echo   "mcpServers": {
 echo     "korail-convenience": {
-echo       "command": "%ROOT:\=\\%\\m-convenience\\venv\\Scripts\\python.exe",
+echo       "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo       "args": ["%ROOT:\=\\%\\m-convenience\\server.py"]
 echo     },
 echo     "korail-stats": {
-echo       "command": "%ROOT:\=\\%\\m-stats\\venv\\Scripts\\python.exe",
+echo       "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo       "args": ["%ROOT:\=\\%\\m-stats\\server.py"]
 echo     },
 echo     "korail-train-ops": {
-echo       "command": "%ROOT:\=\\%\\m-train-ops\\venv\\Scripts\\python.exe",
+echo       "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo       "args": ["%ROOT:\=\\%\\m-train-ops\\server.py"]
 echo     },
 echo     "korail-codebook": {
-echo       "command": "%ROOT:\=\\%\\m-codebook\\venv\\Scripts\\python.exe",
+echo       "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo       "args": ["%ROOT:\=\\%\\m-codebook\\server.py"]
 echo     },
 echo     "korail-freight": {
-echo       "command": "%ROOT:\=\\%\\m-freight\\venv\\Scripts\\python.exe",
+echo       "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo       "args": ["%ROOT:\=\\%\\m-freight\\server.py"]
 echo     },
 echo     "korail-network": {
-echo       "command": "%ROOT:\=\\%\\m-network\\venv\\Scripts\\python.exe",
+echo       "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo       "args": ["%ROOT:\=\\%\\m-network\\server.py"]
 echo     },
 echo     "korail-rolling-stock": {
-echo       "command": "%ROOT:\=\\%\\m-rolling-stock\\venv\\Scripts\\python.exe",
+echo       "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo       "args": ["%ROOT:\=\\%\\m-rolling-stock\\server.py"]
 echo     },
 echo     "korail-voc-cs": {
-echo       "command": "%ROOT:\=\\%\\m-voc-cs\\venv\\Scripts\\python.exe",
+echo       "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo       "args": ["%ROOT:\=\\%\\m-voc-cs\\server.py"]
 echo     },
 echo     "korail-internal-svc": {
-echo       "command": "%ROOT:\=\\%\\m-internal-svc\\venv\\Scripts\\python.exe",
+echo       "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo       "args": ["%ROOT:\=\\%\\m-internal-svc\\server.py"]
 echo     },
 echo     "korail-procurement": {
-echo       "command": "%ROOT:\=\\%\\m-procurement\\venv\\Scripts\\python.exe",
+echo       "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo       "args": ["%ROOT:\=\\%\\m-procurement\\server.py"]
 echo     },
 echo     "korail-urban-rail": {
-echo       "command": "%ROOT:\=\\%\\m-urban-rail\\venv\\Scripts\\python.exe",
+echo       "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo       "args": ["%ROOT:\=\\%\\m-urban-rail\\server.py"]
 echo     }
 echo   }
@@ -136,7 +144,7 @@ echo ================================================================
 echo   MCP 서버 설정 (Claude Desktop / Cursor / Antigravity 공통)
 echo ================================================================
 echo.
-echo 아래 12개 서버 블록을 사용하는 클라이언트의 mcpServers 안에 넣으세요.
+echo 아래 11개 서버 블록을 사용하는 클라이언트의 mcpServers 안에 넣으세요.
 echo (어떤 클라이언트든 형식은 동일하며, 설정 파일 위치만 다릅니다.)
 echo.
 echo 클라이언트별 설정 파일 위치와 자세한 방법은 README.md 의
@@ -145,54 +153,54 @@ echo.
 echo ----------------------------------------------------------------
 echo.
 echo "korail-convenience": {
-echo   "command": "%ROOT:\=\\%\\m-convenience\\venv\\Scripts\\python.exe",
+echo   "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo   "args": ["%ROOT:\=\\%\\m-convenience\\server.py"]
 echo },
 echo "korail-stats": {
-echo   "command": "%ROOT:\=\\%\\m-stats\\venv\\Scripts\\python.exe",
+echo   "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo   "args": ["%ROOT:\=\\%\\m-stats\\server.py"]
 echo },
 echo "korail-train-ops": {
-echo   "command": "%ROOT:\=\\%\\m-train-ops\\venv\\Scripts\\python.exe",
+echo   "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo   "args": ["%ROOT:\=\\%\\m-train-ops\\server.py"]
 echo },
 echo "korail-codebook": {
-echo   "command": "%ROOT:\=\\%\\m-codebook\\venv\\Scripts\\python.exe",
+echo   "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo   "args": ["%ROOT:\=\\%\\m-codebook\\server.py"]
 echo },
 echo "korail-freight": {
-echo   "command": "%ROOT:\=\\%\\m-freight\\venv\\Scripts\\python.exe",
+echo   "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo   "args": ["%ROOT:\=\\%\\m-freight\\server.py"]
 echo },
 echo "korail-network": {
-echo   "command": "%ROOT:\=\\%\\m-network\\venv\\Scripts\\python.exe",
+echo   "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo   "args": ["%ROOT:\=\\%\\m-network\\server.py"]
 echo },
 echo "korail-rolling-stock": {
-echo   "command": "%ROOT:\=\\%\\m-rolling-stock\\venv\\Scripts\\python.exe",
+echo   "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo   "args": ["%ROOT:\=\\%\\m-rolling-stock\\server.py"]
 echo },
 echo "korail-voc-cs": {
-echo   "command": "%ROOT:\=\\%\\m-voc-cs\\venv\\Scripts\\python.exe",
+echo   "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo   "args": ["%ROOT:\=\\%\\m-voc-cs\\server.py"]
 echo },
 echo "korail-internal-svc": {
-echo   "command": "%ROOT:\=\\%\\m-internal-svc\\venv\\Scripts\\python.exe",
+echo   "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo   "args": ["%ROOT:\=\\%\\m-internal-svc\\server.py"]
 echo },
 echo "korail-procurement": {
-echo   "command": "%ROOT:\=\\%\\m-procurement\\venv\\Scripts\\python.exe",
+echo   "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo   "args": ["%ROOT:\=\\%\\m-procurement\\server.py"]
 echo },
 echo "korail-urban-rail": {
-echo   "command": "%ROOT:\=\\%\\m-urban-rail\\venv\\Scripts\\python.exe",
+echo   "command": "%ROOT:\=\\%\\venv\\Scripts\\python.exe",
 echo   "args": ["%ROOT:\=\\%\\m-urban-rail\\server.py"]
 echo }
 echo.
 echo ----------------------------------------------------------------
 echo.
 echo ================================================================
-echo   [OK] 설치 완료! (12개 서버 · 98개 도구)
+echo   [OK] 설치 완료! (11개 서버 · 98개 도구)
 echo ================================================================
 echo.
 echo [i] API 키 입력 불필요 - 프록시 서버가 대신 처리합니다.

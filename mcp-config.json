@@ -1,47 +1,47 @@
 {
   "mcpServers": {
     "korail-convenience": {
-      "command": "C:\\korail-mcp\\m-convenience\\venv\\Scripts\\python.exe",
+      "command": "C:\\korail-mcp\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-convenience\\server.py"]
     },
     "korail-stats": {
-      "command": "C:\\korail-mcp\\m-stats\\venv\\Scripts\\python.exe",
+      "command": "C:\\korail-mcp\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-stats\\server.py"]
     },
     "korail-train-ops": {
-      "command": "C:\\korail-mcp\\m-train-ops\\venv\\Scripts\\python.exe",
+      "command": "C:\\korail-mcp\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-train-ops\\server.py"]
     },
     "korail-codebook": {
-      "command": "C:\\korail-mcp\\m-codebook\\venv\\Scripts\\python.exe",
+      "command": "C:\\korail-mcp\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-codebook\\server.py"]
     },
     "korail-freight": {
-      "command": "C:\\korail-mcp\\m-freight\\venv\\Scripts\\python.exe",
+      "command": "C:\\korail-mcp\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-freight\\server.py"]
     },
     "korail-network": {
-      "command": "C:\\korail-mcp\\m-network\\venv\\Scripts\\python.exe",
+      "command": "C:\\korail-mcp\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-network\\server.py"]
     },
     "korail-rolling-stock": {
-      "command": "C:\\korail-mcp\\m-rolling-stock\\venv\\Scripts\\python.exe",
+      "command": "C:\\korail-mcp\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-rolling-stock\\server.py"]
     },
     "korail-voc-cs": {
-      "command": "C:\\korail-mcp\\m-voc-cs\\venv\\Scripts\\python.exe",
+      "command": "C:\\korail-mcp\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-voc-cs\\server.py"]
     },
     "korail-internal-svc": {
-      "command": "C:\\korail-mcp\\m-internal-svc\\venv\\Scripts\\python.exe",
+      "command": "C:\\korail-mcp\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-internal-svc\\server.py"]
     },
     "korail-procurement": {
-      "command": "C:\\korail-mcp\\m-procurement\\venv\\Scripts\\python.exe",
+      "command": "C:\\korail-mcp\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-procurement\\server.py"]
     },
     "korail-urban-rail": {
-      "command": "C:\\korail-mcp\\m-urban-rail\\venv\\Scripts\\python.exe",
+      "command": "C:\\korail-mcp\\venv\\Scripts\\python.exe",
       "args": ["C:\\korail-mcp\\m-urban-rail\\server.py"]
     }
   }
