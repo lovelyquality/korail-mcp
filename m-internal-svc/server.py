@@ -1,5 +1,5 @@
 ﻿# -*- coding: utf-8 -*-
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 import httpx
 from dotenv import load_dotenv
 import os
@@ -45,7 +45,7 @@ _DATASETS = {
     "cafeteria_menu_stats":("한국철도공사_구내식당 메뉴 건수 현황",     "2025.04.01"),
 }
 
-mcp = FastMCP("KORAIL 내부서비스")
+mcp = MCPServer("KORAIL 내부서비스")
 
 _cache: dict = {}
 
@@ -482,7 +482,13 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=8010)
     args = parser.parse_args()
     if args.transport == "sse":
-        mcp.settings.host = "0.0.0.0"
-        mcp.settings.port = args.port
-        mcp.settings.transport_security = None
-    mcp.run(transport=args.transport)
+        # mcp 2.0: settings.host/port/transport_security 가 제거되어
+        # run() 의 키워드 인자로 전달한다.
+        mcp.run(
+            transport="sse",
+            host="0.0.0.0",
+            port=args.port,
+            transport_security=None,
+        )
+    else:
+        mcp.run(transport="stdio")
