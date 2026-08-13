@@ -7,7 +7,7 @@
 >
 > 💻 **로컬 설치형 (stdio)** — 별도 서버 없이 개인 PC에서 직접 실행됩니다. Claude Desktop·Cursor·Antigravity 등 로컬 MCP 클라이언트에 연결합니다. ChatGPT·Grok 같은 웹 서비스는 원격 연결이 필요합니다(하단 고급 항목 참고).
 >
-> 📦 **필요 디스크 공간** — 저장소 clone 약 200MB, `setup.bat` 완료 후 총 **약 300MB** (11개 서버가 공용 가상환경 1개를 공유)
+> 📦 **필요 디스크 공간** — 간편 설치(uvx)는 **약 100MB**, 직접 설치는 저장소 clone 약 200MB + `setup.bat` 완료 후 총 **약 300MB**
 
 ---
 
@@ -209,15 +209,65 @@
 
 ---
 
-## ⚙️ 설치 (Windows · 공통 3단계)
+## ⚙️ 설치
 
-### 1단계 — Python 설치
+두 가지 방법이 있습니다. **처음 쓰신다면 방법 A를 권장합니다.**
+
+| | **방법 A — uvx** | **방법 B — 직접 설치** |
+|---|---|---|
+| Python 설치 | **불필요** (uv가 자동 관리) | 필요 (PATH 체크 주의) |
+| 저장소 다운로드 | **불필요** | 필요 |
+| `setup.bat` 실행 | **불필요** | 필요 (3~10분) |
+| 디스크 사용 | 약 100MB (uv 캐시) | 약 300MB |
+| 서버 구성 | 게이트웨이 1개 (98개 도구) | 서버 11개 |
+| 장애 영향 | 하나가 멈추면 98개 도구 전부 중단 | 하나가 멈춰도 나머지는 동작 |
+
+---
+
+### 방법 A — uvx (Python 설치 불필요 · 권장)
+
+#### A-1. uv 설치 (최초 1회)
+
+PowerShell을 열고 아래를 붙여넣습니다. **관리자 권한이 필요 없습니다.**
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+설치 후 PowerShell을 **새로 열고** `uv --version`이 출력되면 성공입니다.
+
+#### A-2. 클라이언트 설정에 붙여넣기
+
+설정 파일의 `mcpServers` 안에 아래 한 블록만 넣습니다. **경로를 직접 수정할 필요가 없습니다.**
+
+```json
+{
+  "mcpServers": {
+    "korail": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/lovelyquality/korail-mcp.git", "korail-mcp"]
+    }
+  }
+}
+```
+
+설정 파일 위치는 [4단계 — 클라이언트 연결](#-4단계--클라이언트-연결)의 각 항목을 참고하세요. 붙여넣은 뒤 클라이언트를 **완전히 종료했다가 다시 실행**합니다.
+
+> ⏳ **첫 실행은 1~3분 걸립니다.** uv가 Python과 필요한 패키지를 자동으로 받아 준비하기 때문입니다. 이때 클라이언트에 서버가 잠시 나타나지 않을 수 있으나 정상입니다. 두 번째 실행부터는 즉시 시작됩니다.
+>
+> 🔄 **최신 버전으로 갱신** — uv는 받아둔 버전을 캐시에 두고 재사용합니다. 최신 코드를 강제로 받으려면 `args`의 `--from` 앞에 `"--refresh"`를 추가하거나, 터미널에서 `uv cache clean`을 한 번 실행하세요.
+
+---
+
+### 방법 B — 직접 설치 (Windows · 3단계)
+
+#### 1단계 — Python 설치
 
 1. [python.org/downloads](https://www.python.org/downloads/) → **Python 3.12.x** 다운로드
 2. 설치 시 **"Add Python to PATH"** 반드시 체크 ✅
 3. 명령 프롬프트에서 `python --version` → `Python 3.12.x` 출력되면 성공
 
-### 2단계 — 저장소 다운로드
+#### 2단계 — 저장소 다운로드
 
 **Git 사용 (권장):**
 ```bash
@@ -228,7 +278,7 @@ git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
 1. [github.com/lovelyquality/korail-mcp](https://github.com/lovelyquality/korail-mcp) → **Code** → **Download ZIP**
 2. 압축 해제 후 폴더명을 `korail-mcp`로, `C:\korail-mcp` 위치로 이동
 
-### 3단계 — 자동 설치 스크립트 실행
+#### 3단계 — 자동 설치 스크립트 실행
 
 `C:\korail-mcp\setup.bat` 를 **더블클릭**합니다. 다음이 자동 처리됩니다:
 
@@ -245,7 +295,9 @@ git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
 
 본인이 쓰는 도구의 항목을 펼쳐, **그 안에 적힌 대로만** 따라 하면 됩니다.
 
-> 💾 [mcp-config.json 다운로드](https://github.com/lovelyquality/korail-mcp/blob/main/mcp-config.json) — `setup.bat` 실행 시 `C:\korail-mcp` 폴더에도 자동 생성됩니다.
+> 🅰️ **방법 A(uvx)로 설치했다면** — 아래 항목에서 **설정 파일 위치만** 참고해서, 그 파일에 [A-2의 JSON 블록](#a-2-클라이언트-설정에-붙여넣기)을 넣으세요. `claude-connect.bat` 등 배치 파일이나 `mcp-config.json`은 방법 B 전용이라 사용하지 않습니다.
+>
+> 💾 **방법 B(직접 설치)라면** — [mcp-config.json 다운로드](https://github.com/lovelyquality/korail-mcp/blob/main/mcp-config.json) · `setup.bat` 실행 시 `C:\korail-mcp` 폴더에도 자동 생성됩니다.
 
 <details>
 <summary><b>① Claude Desktop</b></summary>
@@ -336,7 +388,9 @@ Antigravity는 **에이전트에게 자연어로 시키는 방법**이 가장 �
 <details>
 <summary><b>⑥ 통합 게이트웨이 (고급 — 98개 도구를 서버 1개로)</b></summary>
 
-11개 서버를 각각 등록하는 대신, [gateway/](gateway/README.md) 하나만 등록해도 같은 98개 도구를 전부 쓸 수 있습니다. 설정이 11줄에서 1줄로 줄고, 상주 메모리도 실측 기준 약 600MB → 약 66MB로 줄어듭니다. 대신 게이트웨이 하나가 죽으면 98개 도구가 전부 중단되므로(11개 방식은 하나가 죽어도 나머지는 살아있음), 기본 설치 방식은 여전히 11개 개별 서버입니다 — 게이트웨이는 원하는 경우의 대안입니다.
+11개 서버를 각각 등록하는 대신, [gateway/](gateway/README.md) 하나만 등록해도 같은 98개 도구를 전부 쓸 수 있습니다. 설정이 11줄에서 1줄로 줄고, 상주 메모리도 실측 기준 약 600MB → 약 66MB로 줄어듭니다. 대신 게이트웨이 하나가 멈추면 98개 도구가 전부 중단됩니다(11개 방식은 하나가 멈춰도 나머지는 동작).
+
+> 위 **방법 A(uvx)가 바로 이 게이트웨이를 사용**합니다. 방법 A로 설치했다면 이 항목은 따로 설정할 필요가 없습니다. 아래는 **방법 B(직접 설치)로 받아둔 저장소에서** 게이트웨이를 쓰는 방법입니다.
 
 로컬(stdio):
 ```bash
