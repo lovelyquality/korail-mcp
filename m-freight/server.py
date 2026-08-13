@@ -16,7 +16,7 @@ import httpx
 from pathlib import Path
 from typing import Any
 from dotenv import load_dotenv
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 
 load_dotenv(encoding='utf-8-sig')
 PROXY_BASE = os.getenv("KORAIL_PROXY_URL", "https://korail-mcp-proxy.lovelymong.workers.dev") + "/proxy"
@@ -28,7 +28,7 @@ WORK_LINE_PATH = "/15153559/v1/uddi:a369ea3f-6493-441a-9a5d-b4da591cbeb3"
 LOAD_TIME_PATH = "/15153575/v1/uddi:106d1522-6c05-4f5a-b95d-9fe4c9453361"
 ADJUSTMENT_PATH = "/15153818/v1/uddi:02a37f71-0988-43ca-9dc3-fe4b1bb88a7a"
 
-mcp = FastMCP("korail-freight")
+mcp = MCPServer("korail-freight")
 
 _cache: dict[str, list[dict[str, Any]]] = {}
 
@@ -415,7 +415,13 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=8006)
     args = parser.parse_args()
     if args.transport == "sse":
-        mcp.settings.host = "0.0.0.0"
-        mcp.settings.port = args.port
-        mcp.settings.transport_security = None
-    mcp.run(transport=args.transport)
+        # mcp 2.0: settings.host/port/transport_security 가 제거되어
+        # run() 의 키워드 인자로 전달한다.
+        mcp.run(
+            transport="sse",
+            host="0.0.0.0",
+            port=args.port,
+            transport_security=None,
+        )
+    else:
+        mcp.run(transport="stdio")
