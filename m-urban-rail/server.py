@@ -25,7 +25,7 @@ from typing import Any
 
 import httpx
 from dotenv import load_dotenv
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 
 load_dotenv(encoding="utf-8-sig")
 
@@ -34,7 +34,7 @@ PROXY_URL = os.getenv(
 ).rstrip("/")
 KRIC_BASE = f"{PROXY_URL}/proxy/kric"
 
-mcp = FastMCP("korail-urban-rail")
+mcp = MCPServer("korail-urban-rail")
 
 # ── 역 코드표 로드 (역명 검색용) ─────────────────────────────────────────────
 _DATA_DIR = Path(__file__).parent / "data"
@@ -749,7 +749,13 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=8013)
     args = parser.parse_args()
     if args.transport == "sse":
-        mcp.settings.host = "0.0.0.0"
-        mcp.settings.port = args.port
-        mcp.settings.transport_security = None
-    mcp.run(transport=args.transport)
+        # mcp 2.0: settings.host/port/transport_security 가 제거되어
+        # run() 의 키워드 인자로 전달한다.
+        mcp.run(
+            transport="sse",
+            host="0.0.0.0",
+            port=args.port,
+            transport_security=None,
+        )
+    else:
+        mcp.run(transport="stdio")
