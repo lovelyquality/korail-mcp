@@ -1,4 +1,4 @@
-﻿from mcp.server.fastmcp import FastMCP
+﻿from mcp.server.mcpserver import MCPServer
 import httpx
 from dotenv import load_dotenv
 import os
@@ -9,7 +9,7 @@ load_dotenv(encoding='utf-8-sig')
 PROXY_BASE = os.getenv("KORAIL_PROXY_URL", "https://korail-mcp-proxy.lovelymong.workers.dev") + "/proxy"
 ODCLOUD_BASE = f"{PROXY_BASE}/odcloud"
 
-mcp = FastMCP("KORAIL 차량·장비 정보")
+mcp = MCPServer("KORAIL 차량·장비 정보")
 
 _cache: dict[str, list] = {}
 
@@ -251,7 +251,13 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=8008)
     args = parser.parse_args()
     if args.transport == "sse":
-        mcp.settings.host = "0.0.0.0"
-        mcp.settings.port = args.port
-        mcp.settings.transport_security = None
-    mcp.run(transport=args.transport)
+        # mcp 2.0: settings.host/port/transport_security 가 제거되어
+        # run() 의 키워드 인자로 전달한다.
+        mcp.run(
+            transport="sse",
+            host="0.0.0.0",
+            port=args.port,
+            transport_security=None,
+        )
+    else:
+        mcp.run(transport="stdio")
