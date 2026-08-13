@@ -68,7 +68,44 @@ else:
     print(f"[OK]    도구 수 검증 통과")
 
 print("\n" + "=" * 60)
-print("2) 프록시 경유 실제 호출 샘플 (인터넷 필요)")
+print("2) 반환 타입 선언 검증 (MCP 출력 스키마 정합성)")
+print("=" * 60)
+# mcp SDK 는 @mcp.tool() 함수의 반환 타입 선언으로 출력 스키마를 만들어 검증한다.
+# 선언이 list 인데 실제로 dict 를 반환하면 MCP 경유 호출에서만 실패하고,
+# 파이썬으로 함수를 직접 호출하는 검사에서는 통과해버린다.
+# (2026-08-13: m-network 4개 도구가 이 상태로 방치돼 있었음)
+import typing
+
+schema_bad = []
+for s, mod in loaded.items():
+    tm = getattr(mod.mcp, "_tool_manager", None)
+    tools = getattr(tm, "_tools", {}) if tm else {}
+    for tname, tool in tools.items():
+        fn = getattr(tool, "fn", None)
+        if fn is None:
+            continue
+        ann = typing.get_type_hints(fn).get("return")
+        origin = typing.get_origin(ann) or ann
+        # 실제 반환값을 확인할 수 없는 도구(인자 필요)는 선언만 본다.
+        # list 로 선언한 도구는 반드시 list 를 반환해야 하므로, dict 반환 헬퍼를
+        # 쓰는지 소스에서 교차 확인한다.
+        if origin in (list, tuple):
+            import inspect
+            try:
+                src = inspect.getsource(fn)
+            except OSError:
+                continue
+            if "_wrap_list(" in src or "_wrap(" in src:
+                schema_bad.append(f"{s}.{tname} (선언 {ann}, 실제 dict)")
+
+if schema_bad:
+    for b in schema_bad:
+        print(f"[FAIL] {b}")
+else:
+    print(f"[OK]    반환 타입 선언 검증 통과 ({total_tools}개 도구)")
+
+print("\n" + "=" * 60)
+print("3) 프록시 경유 실제 호출 샘플 (인터넷 필요)")
 print("=" * 60)
 
 
@@ -93,7 +130,7 @@ if "m-network" in loaded:
             lambda: loaded["m-network"].search_operation_patterns(query="고속"))
 
 print("\n" + "=" * 60)
-print("3) 최종 검증 결과")
+print("4) 최종 검증 결과")
 print("=" * 60)
 
 # 최종 status 판정
@@ -103,6 +140,9 @@ if import_success != len(servers):
 
 if total_tools != EXPECTED_TOOLS:
     failures.append(f"도구 수 불일치: {total_tools}개 != {EXPECTED_TOOLS}개")
+
+if schema_bad:
+    failures.append(f"반환 타입 선언 불일치: {len(schema_bad)}개 도구 ({', '.join(schema_bad)})")
 
 if failures:
     for f in failures:

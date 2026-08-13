@@ -1,3 +1,14 @@
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#     "mcp>=1.27.1,<2",
+#     "httpx>=0.25.0,<1",
+#     "python-dotenv>=1.0.0,<2",
+#     "openpyxl>=3.1.0,<4",
+#     "uvicorn>=0.30.0,<1",
+#     "starlette>=0.40.0,<1",
+# ]
+# ///
 """
 KORAIL MCP Gateway
 11개 FastMCP 서버(98개 도구)를 단일 서버로 통합. 로컬(stdio)·원격(Streamable HTTP) 둘 다 지원.
@@ -42,7 +53,15 @@ from starlette.responses import Response
 load_dotenv(Path(__file__).parent / ".env", encoding="utf-8-sig")
 load_dotenv(Path(__file__).parent.parent / ".env", encoding="utf-8-sig")
 
-ROOT = Path(__file__).parent.parent  # E:\AI\MCP
+# ── m-* 서버 위치 판별 ─────────────────────────────────────────────
+# 두 가지 배치를 모두 지원한다.
+#   1) 저장소에서 직접 실행: gateway/ 의 상위(저장소 루트)에 m-* 가 있음
+#   2) uvx/pip 로 패키지 설치: 휠에 번들된 gateway/_bundled/m-* 를 사용
+_HERE = Path(__file__).parent
+if (_HERE / "_bundled" / "m-codebook").is_dir():
+    ROOT = _HERE / "_bundled"
+else:
+    ROOT = _HERE.parent
 
 # ── Gateway FastMCP 인스턴스 ───────────────────────────────────────
 gateway = FastMCP("KORAIL MCP")
@@ -132,11 +151,12 @@ app = gateway.streamable_http_app()
 app.add_middleware(BearerAuthMiddleware)
 
 
-# ── 직접 실행 ─────────────────────────────────────────────────────
-if __name__ == "__main__":
+# ── 진입점 ────────────────────────────────────────────────────────
+def main() -> None:
+    """콘솔 스크립트 진입점. uvx/pip 설치 시 `korail-mcp` 명령으로 호출된다."""
     import argparse
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(prog="korail-mcp")
     parser.add_argument("--transport", default="stdio", choices=["stdio", "http"])
     parser.add_argument("--port", type=int, default=int(os.getenv("PORT", "8080")))
     args = parser.parse_args()
@@ -146,9 +166,10 @@ if __name__ == "__main__":
     else:
         import uvicorn
 
-        uvicorn.run(
-            "gateway.server:app",
-            host="0.0.0.0",
-            port=args.port,
-            log_level="info",
-        )
+        # 패키지로 설치된 경우 "gateway.server:app" 문자열 import 가 가능하지만,
+        # 파일 경로로 직접 실행하면 실패하므로 app 객체를 그대로 넘긴다.
+        uvicorn.run(app, host="0.0.0.0", port=args.port, log_level="info")
+
+
+if __name__ == "__main__":
+    main()

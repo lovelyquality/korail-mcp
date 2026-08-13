@@ -1,0 +1,60 @@
+[project]
+name = "korail-mcp"
+version = "1.0.0"
+description = "한국철도공사(KORAIL) 공공데이터 MCP 서버 — 11개 서버 98개 도구를 단일 게이트웨이로 통합"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp>=1.27.1,<2",
+    "httpx>=0.25.0,<1",
+    "python-dotenv>=1.0.0,<2",
+    "openpyxl>=3.1.0,<4",
+    "uvicorn>=0.30.0,<1",
+    "starlette>=0.40.0,<1",
+]
+
+[project.scripts]
+korail-mcp = "gateway.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["gateway"]
+# venv·캐시·개인 설정은 절대 휠에 넣지 않는다.
+# (예전 개별 venv 가 m-*/venv 에 남아 있으면 휠이 260MB 넘게 부풀었던 이력 있음)
+exclude = [
+    "**/venv",
+    "**/__pycache__",
+    "**/*.pyc",
+    "**/.env",
+]
+
+# m-* 폴더는 하이픈 때문에 파이썬 모듈이 될 수 없어 휠 안의
+# gateway/_bundled/ 아래로 복사해 데이터로 포함한다.
+# (gateway/server.py 가 이 위치를 먼저 확인해 ROOT 로 사용)
+#
+# ⚠️ 폴더를 통째로 지정하면 안 된다. force-include 는 위 exclude 를 무시하므로
+#    m-*/venv(예전 개별 가상환경)와 m-*/.env(개인 설정)까지 휠에 들어간다.
+#    실제로 그렇게 했을 때 휠이 264MB(venv 파일 32,227개)로 부풀고 .env 11개가
+#    포함됐다. 그래서 필요한 경로만 아래처럼 명시한다.
+[tool.hatch.build.targets.wheel.force-include]
+"m-codebook/server.py" = "gateway/_bundled/m-codebook/server.py"
+"m-convenience/server.py" = "gateway/_bundled/m-convenience/server.py"
+"m-freight/server.py" = "gateway/_bundled/m-freight/server.py"
+"m-internal-svc/server.py" = "gateway/_bundled/m-internal-svc/server.py"
+"m-network/server.py" = "gateway/_bundled/m-network/server.py"
+"m-procurement/server.py" = "gateway/_bundled/m-procurement/server.py"
+"m-rolling-stock/server.py" = "gateway/_bundled/m-rolling-stock/server.py"
+"m-stats/server.py" = "gateway/_bundled/m-stats/server.py"
+"m-train-ops/server.py" = "gateway/_bundled/m-train-ops/server.py"
+"m-urban-rail/server.py" = "gateway/_bundled/m-urban-rail/server.py"
+"m-voc-cs/server.py" = "gateway/_bundled/m-voc-cs/server.py"
+# 로컬 데이터 파일을 쓰는 6개 서버만 data 디렉토리 포함
+"m-freight/data" = "gateway/_bundled/m-freight/data"
+"m-network/data" = "gateway/_bundled/m-network/data"
+"m-procurement/data" = "gateway/_bundled/m-procurement/data"
+"m-rolling-stock/data" = "gateway/_bundled/m-rolling-stock/data"
+"m-stats/data" = "gateway/_bundled/m-stats/data"
+"m-urban-rail/data" = "gateway/_bundled/m-urban-rail/data"
