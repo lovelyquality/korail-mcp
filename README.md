@@ -333,6 +333,24 @@ Antigravity는 **에이전트에게 자연어로 시키는 방법**이 가장 �
 > 💡 Grok 커넥터 기능은 **유료 계정**이 필요합니다.
 </details>
 
+<details>
+<summary><b>⑥ 통합 게이트웨이 (고급 — 98개 도구를 서버 1개로)</b></summary>
+
+11개 서버를 각각 등록하는 대신, [gateway/](gateway/README.md) 하나만 등록해도 같은 98개 도구를 전부 쓸 수 있습니다. 설정이 11줄에서 1줄로 줄고, 상주 메모리도 실측 기준 약 600MB → 약 66MB로 줄어듭니다. 대신 게이트웨이 하나가 죽으면 98개 도구가 전부 중단되므로(11개 방식은 하나가 죽어도 나머지는 살아있음), 기본 설치 방식은 여전히 11개 개별 서버입니다 — 게이트웨이는 원하는 경우의 대안입니다.
+
+로컬(stdio):
+```bash
+python gateway/server.py
+```
+
+원격(Streamable HTTP, ChatGPT·Grok 등):
+```bash
+python -m gateway.server --transport http --port 8080
+```
+
+상세 실행법·클라이언트 연결 형식은 [gateway/README.md](gateway/README.md) 참고.
+</details>
+
 ---
 
 ## 💬 사용 예시

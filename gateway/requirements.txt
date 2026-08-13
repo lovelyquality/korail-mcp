@@ -1,0 +1,6 @@
+mcp>=1.27.1,<2
+httpx>=0.25.0,<1
+python-dotenv>=1.0.0,<2
+openpyxl>=3.1.0,<4
+uvicorn>=0.30.0,<1
+starlette>=0.40.0,<1
