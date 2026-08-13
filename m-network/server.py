@@ -162,7 +162,7 @@ ROUTE_PATH = "/15138455/v1/uddi:8aea9f31-7bd0-4870-9553-8f0fb49075ec"
 def search_operation_patterns(
     query: Optional[str] = None,
     electric_only: Optional[bool] = None,
-) -> list[dict]:
+) -> dict:
     """전국 철도 노선 정보를 검색합니다. (총 2,146개)
 
     ⚠️ 여기서 "노선"은 물리적 선로(경부선·호남선 등)가 아니라 열차 운행계통 코드입니다.
@@ -199,7 +199,7 @@ def get_station_distance(
     from_station: str,
     to_station: Optional[str] = None,
     current_only: bool = True,
-) -> list[dict]:
+) -> dict:
     """두 역 간 최단 운행거리(km)를 조회합니다. 여객·화물 거리를 구분하며 경유역 정보 포함.
 
     Args:
@@ -241,7 +241,7 @@ def get_freight_minimum_fare(
     fare_type: Optional[str] = None,
     classification_no: Optional[str] = None,
     current_only: bool = False,
-) -> list[dict]:
+) -> dict:
     """화물 운송 최저운임 기준 정보를 조회합니다. (총 7건 — 역사적 이력 포함)
 
     Args:
@@ -273,7 +273,7 @@ def get_freight_rate(
     category: Optional[str] = None,
     classification_no: Optional[str] = None,
     current_only: bool = True,
-) -> list[dict]:
+) -> dict:
     """철도 화물 임율(ton-km 기준 운임 요율) 정보를 조회합니다. (전체 249건, 현재 유효 약 123건)
 
     Args:
