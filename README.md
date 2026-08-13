@@ -7,7 +7,7 @@
 >
 > 💻 **로컬 설치형 (stdio)** — 별도 서버 없이 개인 PC에서 직접 실행됩니다. Claude Desktop·Cursor·Antigravity 등 로컬 MCP 클라이언트에 연결합니다. ChatGPT·Grok 같은 웹 서비스는 원격 연결이 필요합니다(하단 고급 항목 참고).
 >
-> 📦 **필요 디스크 공간** — 저장소 clone 약 200MB, `setup.bat` 완료 후 총 **약 1.1GB** (Python 가상환경 11개 포함)
+> 📦 **필요 디스크 공간** — 저장소 clone 약 200MB, `setup.bat` 완료 후 총 **약 300MB** (11개 서버가 공용 가상환경 1개를 공유)
 
 ---
 
@@ -221,7 +221,6 @@
 
 **Git 사용 (권장):**
 ```bash
-git lfs install   # 최초 1회 (44MB 대용량 파일용)
 git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
 ```
 
@@ -365,7 +364,6 @@ KTX 차량 형별 제원을 보여주세요.                  (rolling-stock)
 ## ⚠️ 주의사항
 
 - 데이터 호출은 전용 **Cloudflare Workers 프록시**를 경유하므로 직원 개인 API 키가 필요 없습니다.
-- `m-network/data/station_distance.csv`(44MB)는 **Git LFS**로 관리됩니다. `git clone` 전 `git lfs install`을 실행하세요.
 - 각 데이터셋의 기준일·갱신주기는 도구 응답의 `_meta` 항목에 표시됩니다.
 
 ---
