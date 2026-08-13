@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """클린 컨테이너에서 11개 MCP 서버가 설치·기동·호출되는지 검증.
 1) 각 server.py import (= 설치된 의존성으로 정상 로드되는가)
-2) FastMCP 도구 등록 수
+2) 도구 등록 수
 3) 프록시 경유 실제 호출 샘플 3건 (인터넷 가능 시)
 """
 import importlib.util

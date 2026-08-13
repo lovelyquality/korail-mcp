@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.11"
 # dependencies = [
-#     "mcp>=1.27.1,<2",
+#     "mcp>=2.0.0,<3",
 #     "httpx>=0.25.0,<1",
 #     "python-dotenv>=1.0.0,<2",
 #     "openpyxl>=3.1.0,<4",
@@ -11,7 +11,7 @@
 # ///
 """
 KORAIL MCP Gateway
-11개 FastMCP 서버(98개 도구)를 단일 서버로 통합. 로컬(stdio)·원격(Streamable HTTP) 둘 다 지원.
+11개 MCP 서버(98개 도구)를 단일 서버로 통합. 로컬(stdio)·원격(Streamable HTTP) 둘 다 지원.
 
 로컬 실행 (Claude Desktop 등 stdio 클라이언트, 기본값):
   python gateway/server.py
@@ -43,7 +43,7 @@ import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
@@ -63,9 +63,11 @@ if (_HERE / "_bundled" / "m-codebook").is_dir():
 else:
     ROOT = _HERE.parent
 
-# ── Gateway FastMCP 인스턴스 ───────────────────────────────────────
-gateway = FastMCP("KORAIL MCP")
-gateway.settings.stateless_http = True   # 세션 불필요 (도구 호출만)
+# ── Gateway MCPServer 인스턴스 ─────────────────────────────────────
+# version 을 명시하지 않으면 serverInfo.version 이 빈 문자열로 나간다
+# (mcp 1.x 는 SDK 버전을 자동으로 채웠으나 2.0 은 채우지 않음).
+gateway = MCPServer("KORAIL MCP", version="1.0.0")
+# mcp 2.0: settings.stateless_http 가 제거되어 streamable_http_app() 인자로 전달한다.
 
 # ── 11개 서버 동적 로드 후 도구 통합 ──────────────────────────────
 SERVERS = [
@@ -124,7 +126,7 @@ class BearerAuthMiddleware(BaseHTTPMiddleware):
         return await call_next(request)
 
 
-# ── 헬스체크 엔드포인트 (FastMCP custom_route로 /mcp 앱 내부에 등록) ───
+# ── 헬스체크 엔드포인트 (custom_route로 /mcp 앱 내부에 등록) ───
 import json as _json
 
 
@@ -147,7 +149,9 @@ async def health(request: Request) -> Response:
 # ── ASGI 앱 조립 ──────────────────────────────────────────────────
 # streamable_http_app()이 반환하는 Starlette 앱 자체에 미들웨어 추가.
 # Mount() 감싸기를 피해 307 리다이렉트 문제를 방지.
-app = gateway.streamable_http_app()
+# stateless_http=True: 세션 불필요(도구 호출만) — 원격 배포 시 인스턴스가
+# 바뀌어도 세션 유실 문제가 없다.
+app = gateway.streamable_http_app(stateless_http=True, host="0.0.0.0")
 app.add_middleware(BearerAuthMiddleware)
 
 

@@ -5,7 +5,7 @@ description = "한국철도공사(KORAIL) 공공데이터 MCP 서버 — 11개 �
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "mcp>=1.27.1,<2",
+    "mcp>=2.0.0,<3",
     "httpx>=0.25.0,<1",
     "python-dotenv>=1.0.0,<2",
     "openpyxl>=3.1.0,<4",
