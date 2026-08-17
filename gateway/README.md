@@ -10,7 +10,9 @@
 python gateway/server.py
 ```
 
-`mcp-config.json`에서 11개 서버 블록 대신 이 파일 하나만 등록하면 됩니다. Claude Desktop 등 stdio 클라이언트 전용이며, API 키·인증 설정이 필요 없습니다.
+Claude Desktop 등 stdio 클라이언트가 이 방식으로 연결합니다. API 키·인증 설정이 필요 없습니다.
+
+일반 사용자는 [루트 README](../README.md)의 `uv tool install` 안내를 따르면 되고, 아래는 **저장소를 직접 받아 개발할 때** 쓰는 방법입니다.
 
 ## 원격 실행 (대국민 공개 등)
 

@@ -30,8 +30,8 @@ KORAIL MCP Agent는 Claude Desktop의 **Project 기능**을 활용한 역할별 
   - `## 시스템 프롬프트` 섹션의 코드블록 내용을 복사·붙여넣기
 
 ### 3단계: 사용할 MCP 서버 확인
-- Claude Desktop 설정에 관련 MCP 서버들이 등록되어 있어야 합니다.
-- `setup.bat`으로 설치했다면 기본 등록되어 있습니다.
+- Claude Desktop 설정에 `korail-mcp` 가 등록되어 있어야 합니다([루트 README](../README.md) 참고).
+- 서버 하나에 98개 도구가 모두 들어 있으므로, 등록되어 있으면 어떤 Agent든 필요한 도구를 쓸 수 있습니다.
 
 ### 4단계: 사용 시작
 - 생성한 Project를 선택하면 지정된 역할로 동작합니다.

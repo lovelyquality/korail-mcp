@@ -15,9 +15,9 @@ KORAIL MCP Gateway
 
 로컬 실행 (Claude Desktop 등 stdio 클라이언트, 기본값):
   python gateway/server.py
-  mcp-config.json 에서 11개 서버 대신 이 파일 하나만 등록하면 됨
+  일반 사용자는 `uv tool install` 로 설치한 korail-mcp 실행파일을 등록한다(루트 README 참고).
 
-원격 실행 (Streamable HTTP) — 저장소 루트(E:\AI\MCP)에서 -m 으로 실행할 것:
+원격 실행 (Streamable HTTP) — 저장소 루트에서 -m 으로 실행할 것:
   python -m gateway.server --transport http --port 8080
   또는
   uvicorn gateway.server:app --host 0.0.0.0 --port 8080

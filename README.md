@@ -7,7 +7,7 @@
 >
 > 💻 **로컬 설치형 (stdio)** — 별도 서버 없이 개인 PC에서 직접 실행됩니다. Claude Desktop·Cursor·Antigravity 등 로컬 MCP 클라이언트에 연결합니다. ChatGPT·Grok 같은 웹 서비스는 원격 연결이 필요합니다(하단 고급 항목 참고).
 >
-> 📦 **필요 디스크 공간** — 간편 설치(uv)는 **약 100MB**, 직접 설치는 저장소 clone 약 200MB + `setup.bat` 완료 후 총 **약 300MB**
+> 📦 **필요 디스크 공간** — 약 **100MB** (`uv`가 관리하는 Python과 패키지 포함)
 
 ---
 
@@ -209,26 +209,11 @@
 
 ---
 
-## ⚙️ 설치
+## ⚙️ 설치 (Windows · 2단계)
 
-두 가지 방법이 있습니다. **처음 쓰신다면 방법 A를 권장합니다.**
+Python을 따로 설치하거나 저장소를 다운로드할 필요가 없습니다. **`uv`가 필요한 것을 알아서 준비합니다.**
 
-| | **방법 A — uv** | **방법 B — 직접 설치** |
-|---|---|---|
-| Python 설치 | **불필요** (uv가 자동 관리) | 필요 (PATH 체크 주의) |
-| 저장소 다운로드 | **불필요** | 필요 |
-| `setup.bat` 실행 | **불필요** | 필요 (3~10분) |
-| 디스크 사용 | 약 100MB | 약 300MB |
-| 서버 구성 | 게이트웨이 1개 (98개 도구) | 서버 11개 |
-| 기동 시간(실측) | **약 5초** | 즉시 |
-| 장애 영향 | 하나가 멈추면 98개 도구 전부 중단 | 하나가 멈춰도 나머지는 동작 |
-| 업데이트 | `uv tool upgrade korail-mcp` | 저장소 다시 받고 `setup.bat` |
-
----
-
-### 방법 A — uv (Python 설치 불필요 · 권장)
-
-#### A-1. uv 설치 (최초 1회)
+### 1단계 — uv 설치 (최초 1회)
 
 PowerShell을 열고 아래를 붙여넣습니다. **관리자 권한이 필요 없습니다.**
 
@@ -238,17 +223,23 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 
 설치 후 PowerShell을 **새로 열고** `uv --version`이 출력되면 성공입니다.
 
-#### A-2. KORAIL MCP 설치 (최초 1회)
+### 2단계 — KORAIL MCP 설치 (최초 1회)
 
 ```powershell
 uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korail-mcp
 ```
 
-마지막 줄에 `Installed 1 executable: korail-mcp` 가 나오면 성공입니다. 설치 위치는 `C:\Users\<사용자명>\.local\bin\korail-mcp.exe` 입니다.
+마지막에 `Installed 1 executable: korail-mcp` 가 나오면 성공입니다.
 
-#### A-3. 클라이언트 설정에 붙여넣기
+> ⏳ 첫 설치는 1~3분 걸립니다(Python과 패키지를 받는 시간). 설치 후 실행은 **약 5초**입니다.
+>
+> 🔄 **최신 버전으로 갱신** — `uv tool upgrade korail-mcp` 실행 후 클라이언트를 재시작하세요.
 
-설정 파일의 `mcpServers` 안에 아래 블록을 넣고, **`<사용자명>` 부분만 본인 윈도우 계정명으로 바꿉니다.**
+---
+
+## 🔌 3단계 — 클라이언트 연결
+
+아래 JSON을 클라이언트 설정 파일의 `mcpServers` 안에 넣고, **`<사용자명>` 부분만 본인 윈도우 계정명으로 바꿉니다.**
 
 ```json
 {
@@ -261,18 +252,58 @@ uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korai
 ```
 
 > 💡 계정명을 모르면 PowerShell에 `echo $env:USERNAME` 을 입력하세요. 경로의 역슬래시는 JSON 규칙상 **두 개(`\\`)** 로 씁니다.
+>
+> ⚠️ 이미 다른 MCP 서버를 쓰고 있다면 **`korail-mcp` 항목만** 기존 `mcpServers` 안에 추가하세요(전체를 덮어쓰면 기존 서버가 사라집니다).
 
-설정 파일 위치는 [4단계 — 클라이언트 연결](#-4단계--클라이언트-연결)의 각 항목을 참고하세요. 붙여넣은 뒤 클라이언트를 **완전히 종료했다가 다시 실행**합니다.
+### 설정 파일 위치
 
-> 🔄 **최신 버전으로 갱신** — 코드가 업데이트되면 아래를 실행하고 클라이언트를 재시작하세요.
-> ```powershell
-> uv tool upgrade korail-mcp
-> ```
+| 클라이언트 | 설정 파일 |
+|---|---|
+| **Claude Desktop** | `%APPDATA%\Claude\claude_desktop_config.json` |
+| **Cursor** | `C:\Users\<사용자명>\.cursor\mcp.json` |
+| **Antigravity** | `C:\Users\<사용자명>\.gemini\antigravity\mcp_config.json` |
 
 <details>
-<summary>참고 — `uvx` 로도 쓸 수 있지만 권장하지 않는 이유</summary>
+<summary>Claude Desktop — 폴더가 없을 때</summary>
 
-설치 없이 `uvx` 로 바로 실행할 수도 있습니다.
+1. 탐색기 주소창에 `%APPDATA%` 입력 → Enter
+2. `Claude` 폴더가 없으면 직접 만드세요
+3. 그 안에 `claude_desktop_config.json` 파일을 만들고 위 JSON을 넣으세요
+
+`AppData`가 안 보이면 탐색기 → 보기 → **숨긴 항목**을 체크하세요.
+</details>
+
+<details>
+<summary>Antigravity — 자연어로 설정하기</summary>
+
+Antigravity는 에이전트에게 시키는 방법이 더 쉽습니다. 채팅에 위 JSON을 붙여넣고 "이 MCP 서버를 등록해줘" 라고 요청하세요.
+
+> 💡 Antigravity는 무료로 설치 가능하며, KORAIL MCP 연결에 별도 구독이 필요 없습니다.
+</details>
+
+### 연결 후 반드시 — 클라이언트를 완전히 종료했다 다시 실행
+
+창의 X를 눌러 닫아도 **트레이(작업표시줄 오른쪽 `^` 안)에 계속 실행 중**이라 설정이 적용되지 않습니다.
+→ 트레이 아이콘 **우클릭 → Quit / 종료** 후 다시 실행하세요.
+
+정상 연결되면 설정의 MCP 서버 목록에 `korail-mcp`가 **running** 으로 표시되고, 98개 도구를 쓸 수 있습니다.
+
+---
+
+## 🧩 그 밖의 방식
+
+<details>
+<summary>ChatGPT · Grok — 원격 연결이 필요합니다</summary>
+
+ChatGPT와 Grok은 **로컬 MCP 서버를 지원하지 않습니다.** 공개 HTTPS 엔드포인트만 커넥터로 추가할 수 있어, 위 방법으로는 연결되지 않습니다.
+
+게이트웨이에 원격(Streamable HTTP) 모드가 내장되어 있어 **공개 주소로 노출하면** 연결이 가능합니다. 다만 서버 운영과 공개 범위 문제가 따르므로 상세는 [gateway/README.md](gateway/README.md)를 참고하세요.
+</details>
+
+<details>
+<summary>uvx 로 설치 없이 실행 — 권장하지 않습니다</summary>
+
+설치 과정 없이 `uvx` 로 바로 실행할 수도 있습니다.
 
 ```json
 {
@@ -285,162 +316,31 @@ uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korai
 }
 ```
 
-이 방식은 계정명을 넣을 필요가 없다는 장점이 있으나, **실행할 때마다 GitHub에 최신 커밋이 있는지 확인**하기 때문에 클라이언트를 켤 때마다 서버 기동이 느립니다.
+계정명을 넣지 않아도 되는 장점이 있으나, **실행할 때마다 GitHub에 최신 커밋이 있는지 확인**하기 때문에 클라이언트를 켤 때마다 기동이 느립니다.
 
 | 방식 | 기동 시간(실측) |
 |---|---|
 | `uv tool install` 후 실행 | **약 5초** |
 | `uvx` (매번 원격 확인) | 약 40초 |
 
-기동이 느리면 클라이언트가 서버를 기다리다 놓쳐 도구가 나타나지 않을 수 있어, **A-2 방식을 권장**합니다.
+기동이 느리면 클라이언트가 서버를 기다리다 놓쳐 도구가 나타나지 않을 수 있습니다.
 </details>
 
----
+<details>
+<summary>개발자용 — 저장소를 직접 받아서 실행</summary>
 
-### 방법 B — 직접 설치 (Windows · 3단계)
+서버 코드를 수정하려면 저장소를 clone 해서 실행합니다.
 
-#### 1단계 — Python 설치
-
-1. [python.org/downloads](https://www.python.org/downloads/) → **Python 3.12.x** 다운로드
-2. 설치 시 **"Add Python to PATH"** 반드시 체크 ✅
-3. 명령 프롬프트에서 `python --version` → `Python 3.12.x` 출력되면 성공
-
-#### 2단계 — 저장소 다운로드
-
-**Git 사용 (권장):**
 ```bash
-git clone https://github.com/lovelyquality/korail-mcp.git C:\korail-mcp
+git clone https://github.com/lovelyquality/korail-mcp.git
+cd korail-mcp
+uv run gateway/server.py
 ```
 
-**Git 미사용:**
-1. [github.com/lovelyquality/korail-mcp](https://github.com/lovelyquality/korail-mcp) → **Code** → **Download ZIP**
-2. 압축 해제 후 폴더명을 `korail-mcp`로, `C:\korail-mcp` 위치로 이동
+의존성은 `gateway/server.py` 상단에 선언되어 있어 `uv`가 자동으로 준비합니다. 변경 후에는
+`python docker-test/smoke_test.py` 로 11개 서버·98개 도구·반환 타입 선언을 한 번에 검증하세요.
 
-#### 3단계 — 자동 설치 스크립트 실행
-
-`C:\korail-mcp\setup.bat` 를 **더블클릭**합니다. 다음이 자동 처리됩니다:
-
-- 11개 서버의 Python 가상환경(venv) 생성
-- 필요한 패키지 설치
-- `.env` 파일 생성 (프록시 URL 자동 기입 — **API 키 입력 불필요**)
-- **`mcp-config.json` 자동 생성** (실제 설치 경로가 반영된 클라이언트 연결 설정)
-
-> ⏳ 인터넷 속도에 따라 3~10분 소요됩니다.
-
----
-
-## 🔌 4단계 — 클라이언트 연결
-
-본인이 쓰는 도구의 항목을 펼쳐, **그 안에 적힌 대로만** 따라 하면 됩니다.
-
-> 🅰️ **방법 A(uv)로 설치했다면** — 아래 항목에서 **설정 파일 위치만** 참고해서, 그 파일에 [A-3의 JSON 블록](#a-3-클라이언트-설정에-붙여넣기)을 넣으세요. `claude-connect.bat` 등 배치 파일이나 `mcp-config.json`은 방법 B 전용이라 사용하지 않습니다.
->
-> 💾 **방법 B(직접 설치)라면** — [mcp-config.json 다운로드](https://github.com/lovelyquality/korail-mcp/blob/main/mcp-config.json) · `setup.bat` 실행 시 `C:\korail-mcp` 폴더에도 자동 생성됩니다.
-
-<details>
-<summary><b>① Claude Desktop</b></summary>
-
-`C:\korail-mcp\claude-connect.bat` **더블클릭** → 설정 파일이 자동 복사됩니다.
-(Claude 폴더가 없으면 자동 생성, 기존 설정은 `.bak`으로 백업 후 덮어쓰기)
-
-> 🔁 **반드시 완전히 껐다 켜세요.** 창의 X를 눌러 닫아도 **시스템 트레이(작업표시줄 오른쪽 `^` 안)에 계속 실행 중**이라 적용되지 않습니다.
-> → 트레이의 Claude 아이콘 **우클릭 → Quit / 종료** 후 다시 실행하세요. (작업표시줄에서 사라졌는지 확인)
-
-> 채팅창 우측 하단에 🔨 아이콘이 보이면 성공. *(이미 다른 MCP 서버가 있으면 `korail-` 항목만 기존 `mcpServers`에 추가)*
-
-<details>
-<summary>배치 파일이 안 될 때 — 수동 설정 방법</summary>
-
-1. 탐색기 주소창에 `%APPDATA%\Claude` 입력 → Enter
-   - 폴더가 없으면 `AppData\Roaming` 안에 `Claude` 폴더를 직접 만드세요
-   - `AppData`가 안 보이면 탐색기 → 보기 → **숨긴 항목** 체크
-2. `C:\korail-mcp\mcp-config.json` 파일을 위 폴더에 복사
-3. 파일 이름을 `claude_desktop_config.json` 으로 변경
-4. Claude Desktop 완전히 종료(트레이 → Quit) 후 다시 실행
-
-</details>
-</details>
-
-<details>
-<summary><b>② Cursor</b></summary>
-
-`C:\korail-mcp\mcp-config.json` 을 **`C:\Users\[사용자명]\.cursor\`** 폴더에 복사
-→ 이름을 **`mcp.json`** 으로 변경 → Cursor에서 **Refresh**.
-
-> *(이미 `mcp.json`이 있으면 `korail-` 항목만 기존 `mcpServers`에 추가)*
-</details>
-
-<details>
-<summary><b>③ Antigravity</b></summary>
-
-> 💡 Antigravity는 무료로 설치 가능하며, KORAIL MCP 서버 연결에 별도 구독이 필요 없습니다.
-
-Antigravity는 **에이전트에게 자연어로 시키는 방법**이 가장 쉽습니다. (직접 설정 파일을 만질 필요 없음)
-
-1. Antigravity 실행
-2. 채팅(에이전트)에 아래 문장을 그대로 입력:
-   ```
-   C:\korail-mcp\mcp-config.json 을 참고해서 MCP 서버들을 설치해줘
-   ```
-   → 에이전트가 알아서 `mcp_config.json` 에 등록해 줍니다.
-3. **반드시 완전히 껐다 켜세요** — 작업표시줄/트레이에서 Antigravity가 **완전히 종료됐는지 확인**한 뒤 다시 실행하세요. (창만 닫으면 적용되지 않을 수 있습니다.)
-</details>
-
-<details>
-<summary><b>④ ChatGPT (고급 — 원격 연결 필요)</b></summary>
-
-⚠️ ChatGPT는 **로컬 stdio MCP 서버를 지원하지 않습니다.** 원격(HTTPS) 엔드포인트만 커넥터로 추가할 수 있어, 위 3개 도구처럼 파일 붙여넣기만으로는 연결되지 않습니다.
-
-본 서버들은 SSE 전송 모드를 내장하고 있어 **원격 노출 시** 연결이 가능합니다. (네트워크 구성이 필요한 고급 방법)
-
-1. 서버를 SSE 모드로 실행:
-   ```bash
-   C:\korail-mcp\m-codebook\venv\Scripts\python.exe C:\korail-mcp\m-codebook\server.py --transport sse --port 8008
-   ```
-2. 해당 포트를 **공개 HTTPS 주소로 노출** (예: Cloudflare Tunnel, ngrok 등)
-3. ChatGPT → **Settings → Connectors → Advanced → Developer Mode** 활성화
-4. **Add connector** 에서 `https://<공개주소>/sse` 입력
-
-> 개인 PC에서 간편하게 쓰려면 **Claude Desktop·Cursor·Antigravity** 사용을 권장합니다.
-</details>
-
-<details>
-<summary><b>⑤ Grok (고급 — 원격 연결 필요)</b></summary>
-
-⚠️ Grok도 **로컬 stdio MCP 서버를 지원하지 않습니다.** 공개 HTTPS 엔드포인트만 커넥터로 추가할 수 있습니다.
-
-`grok-connect.bat`를 실행하면 서버를 SSE 모드로 켜고, Cloudflare Tunnel로 공개 URL을 자동 발급해 줍니다.
-(Cloudflare 계정 불필요 — `cloudflared.exe`는 첫 실행 시 자동 다운로드)
-
-1. `C:\korail-mcp\grok-connect.bat` **더블클릭**
-2. 연결할 서버 번호 선택 (1~11)
-3. 창에 `https://xxxx.trycloudflare.com` 형태의 URL이 출력되면 끝에 `/sse`를 붙여 복사
-   → 예: `https://abc-def-123.trycloudflare.com/sse`
-4. [grok.com/connectors](https://grok.com/connectors) → **New Connector** → **Custom** → URL 붙여넣기
-
-> 배치 실행 창을 닫으면 터널이 종료되어 Grok 연결이 끊깁니다. 사용 중에는 창을 유지하세요.
-> 서버는 한 번에 하나씩 연결됩니다. 여러 서버를 연결하려면 배치를 여러 번 실행하세요.
-> 💡 Grok 커넥터 기능은 **유료 계정**이 필요합니다.
-</details>
-
-<details>
-<summary><b>⑥ 통합 게이트웨이 (고급 — 98개 도구를 서버 1개로)</b></summary>
-
-11개 서버를 각각 등록하는 대신, [gateway/](gateway/README.md) 하나만 등록해도 같은 98개 도구를 전부 쓸 수 있습니다. 설정이 11줄에서 1줄로 줄고, 상주 메모리도 실측 기준 약 600MB → 약 66MB로 줄어듭니다. 대신 게이트웨이 하나가 멈추면 98개 도구가 전부 중단됩니다(11개 방식은 하나가 멈춰도 나머지는 동작).
-
-> 위 **방법 A(uv)가 바로 이 게이트웨이를 사용**합니다. 방법 A로 설치했다면 이 항목은 따로 설정할 필요가 없습니다. 아래는 **방법 B(직접 설치)로 받아둔 저장소에서** 게이트웨이를 쓰는 방법입니다.
-
-로컬(stdio):
-```bash
-python gateway/server.py
-```
-
-원격(Streamable HTTP, ChatGPT·Grok 등):
-```bash
-python -m gateway.server --transport http --port 8080
-```
-
-상세 실행법·클라이언트 연결 형식은 [gateway/README.md](gateway/README.md) 참고.
+상세는 [gateway/README.md](gateway/README.md) 참고.
 </details>
 
 ---
