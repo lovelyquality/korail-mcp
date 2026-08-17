@@ -2,7 +2,7 @@
 
 KORAIL 간선·광역 여객 수송 통계, 화물 수송실적, KTX 장기 통계를 조회하는 MCP 서버 (도구 15개)
 
-> 📌 등록명 `korail-stats` · 설치는 [루트 README](../README.md) 참고. 데이터 호출은 전용 Cloudflare Workers 프록시를 경유하여 **API 키가 필요 없습니다.**
+> 📌 이 폴더의 도구는 통합 서버 `korail-mcp` 에 포함되어 함께 제공됩니다(개별 등록 불필요). 설치는 [루트 README](../README.md) 참고. 데이터 호출은 전용 Cloudflare Workers 프록시를 경유하여 **API 키가 필요 없습니다.**
 
 | 도구 | 설명 |
 |---|---|
