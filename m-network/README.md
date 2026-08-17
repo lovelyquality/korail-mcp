@@ -2,7 +2,7 @@
 
 KORAIL 노선·역간 거리, 화물 운임, 선로 정보를 조회하는 MCP 서버 (도구 8개)
 
-> 📌 등록명 `korail-network` · 설치는 [루트 README](../README.md) 참고. 데이터 호출은 전용 Cloudflare Workers 프록시를 경유하여 **API 키가 필요 없습니다.** (`data/station_distance.csv.gz` 4.6MB, gzip 압축)
+> 📌 이 폴더의 도구는 통합 서버 `korail-mcp` 에 포함되어 함께 제공됩니다(개별 등록 불필요). 설치는 [루트 README](../README.md) 참고. 데이터 호출은 전용 Cloudflare Workers 프록시를 경유하여 **API 키가 필요 없습니다.** (`data/station_distance.csv.gz` 4.6MB, gzip 압축)
 
 | 도구 | 설명 |
 |---|---|
