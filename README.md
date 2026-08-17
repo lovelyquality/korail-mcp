@@ -253,7 +253,7 @@ uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korai
 ```json
 {
   "mcpServers": {
-    "korail": {
+    "korail-mcp": {
       "command": "C:\\Users\\<사용자명>\\.local\\bin\\korail-mcp.exe"
     }
   }
@@ -277,7 +277,7 @@ uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korai
 ```json
 {
   "mcpServers": {
-    "korail": {
+    "korail-mcp": {
       "command": "uvx",
       "args": ["--from", "git+https://github.com/lovelyquality/korail-mcp.git", "korail-mcp"]
     }
