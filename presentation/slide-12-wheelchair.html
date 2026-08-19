@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>데모④ 수원역 EV·휠체어 동선 · As-Is/To-Be · KORAIL MCP</title>
+<link rel="stylesheet" href="fonts/fonts.css" />
+<style>
+  @font-face{font-family:'SUIT Variable';font-weight:100 900;font-display:swap;
+    src:url('fonts/SUIT-Variable.woff2') format('woff2-variations');}
+  :root{
+    --korail:#0064cb; --korail-b:#2b8fff; --cyan:#22d3ee;
+    --bg0:#060a1a; --bg1:#0c1330; --ink:#eaf1ff; --dim:#9fb2d8;
+    --line:rgba(120,160,230,.18); --bad:#ff7a7a; --good:#34d399;
+    --head:'SUIT Variable','Pretendard',sans-serif; --body:'Pretendard',sans-serif;
+    --num:'Space Grotesk','Pretendard',sans-serif; --mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;background:#04060f;overflow:hidden;}
+  body{font-family:var(--body);color:var(--ink);display:flex;align-items:center;justify-content:center;
+    word-break:keep-all;overflow-wrap:break-word;}
+
+  #deck{position:relative;width:1280px;height:720px;flex:none;transform-origin:center center;
+    background:
+      radial-gradient(1100px 700px at 80% -12%,rgba(0,100,203,.30),transparent 60%),
+      radial-gradient(820px 600px at 8% 112%,rgba(34,211,238,.14),transparent 55%),
+      linear-gradient(160deg,var(--bg1),var(--bg0));
+    overflow:hidden;}
+  #deck::after{content:"";position:absolute;inset:0;z-index:0;opacity:.28;pointer-events:none;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:48px 48px;mask-image:radial-gradient(circle at 50% 32%,#000,transparent 88%);}
+  #deck > .head,#deck > .stage{position:relative;z-index:1;}
+
+  .ci{position:absolute;z-index:50;top:17px;right:26px;display:flex;align-items:center;
+    background:rgba(255,255,255,.95);border:1px solid rgba(255,255,255,.7);border-radius:11px;
+    padding:7px 16px;box-shadow:0 6px 20px rgba(0,40,110,.35);}
+  .ci .wm{font-family:var(--head);font-weight:800;font-size:18px;letter-spacing:.05em;line-height:1;color:#0064cb;}
+
+  .head{padding:18px 34px 2px;}
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;letter-spacing:.26em;
+    text-transform:uppercase;color:var(--cyan);padding:5px 12px;border:1px solid rgba(34,211,238,.35);
+    border-radius:999px;background:rgba(34,211,238,.06);}
+  h1{font-family:var(--head);font-size:32px;font-weight:800;letter-spacing:-.02em;margin:9px 0 0;}
+  h1 .q{color:var(--korail-b);}
+
+  .stage{display:flex;gap:20px;padding:8px 30px 0;height:474px;align-items:stretch;}
+  .panel{flex:1 1 0;min-width:0;border-radius:16px;border:1px solid var(--line);
+    background:rgba(10,16,38,.6);display:flex;flex-direction:column;overflow:hidden;position:relative;}
+  .ptag{display:flex;align-items:center;gap:9px;padding:11px 15px;border-bottom:1px solid var(--line);font-size:13px;}
+  .ptag .icon{width:22px;height:22px;flex:none;}
+  .ptag .who{font-weight:700;}
+  .ptag .sub{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
+    margin-left:auto;padding:3px 8px;border-radius:6px;border:1px solid var(--line);}
+
+  /* 좌: Gemini */
+  .asis{filter:grayscale(.55) brightness(.9);}
+  .asis .ptag{background:rgba(120,130,150,.08);}
+  .asis .body{padding:12px 15px;overflow:hidden;font-size:12px;line-height:1.55;color:#c7cede;display:flex;flex-direction:column;}
+  .ububble{align-self:flex-end;max-width:90%;background:#2a2f3e;color:#e8ecf5;padding:8px 13px;border-radius:14px 14px 4px 14px;
+    font-size:12px;margin:0 0 10px auto;width:fit-content;}
+  .gpara{margin:0 0 9px;}
+  .gphase{margin:0 0 8px;padding-left:11px;border-left:2px solid rgba(255,255,255,.14);}
+  .gphase b{color:#e6eaf2;}
+  .asis .gmeta{margin-top:auto;font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:#8b93a4;padding-top:6px;}
+
+  /* 우: MCP */
+  .tobe{box-shadow:0 0 0 1px rgba(43,143,255,.35),0 18px 50px rgba(0,80,180,.18);
+    border-color:rgba(43,143,255,.5);background:linear-gradient(180deg,rgba(16,28,60,.66),rgba(10,16,38,.66));}
+  .tobe .ptag{background:rgba(43,143,255,.12);border-bottom-color:rgba(43,143,255,.35);}
+  .tobe .who{color:#dbe9ff;}
+  .tobe .body{position:relative;flex:1;overflow:hidden;}
+
+  #mcpWork{position:absolute;inset:0;padding:16px 17px;font-family:var(--mono);font-size:12px;line-height:1.8;color:#bcd2f5;}
+  #mcpWork .l{opacity:0;}
+  #mcpWork .ok{color:var(--cyan);} #mcpWork .dim{color:#7f93bb;} #mcpWork .cur{color:var(--korail-b);}
+
+  #mcpResult{position:absolute;inset:0;padding:11px 14px 12px;display:flex;flex-direction:column;opacity:0;}
+  .ctitle{font-size:12.5px;font-weight:700;color:#eaf1ff;margin-bottom:8px;}
+  .ctitle span{font-weight:500;font-size:10.5px;color:var(--dim);margin-left:5px;}
+  .statrow{display:flex;gap:7px;margin-bottom:10px;}
+  .stat{flex:1;border:1px solid var(--line);border-radius:10px;padding:6px 9px;background:rgba(43,143,255,.06);text-align:center;}
+  .stat .sv{font-family:var(--num);font-weight:700;font-size:19px;color:#fff;line-height:1.05;}
+  .stat .sv .u{font-size:10px;color:var(--dim);font-weight:500;margin-left:1px;}
+  .stat .sl{font-size:9.5px;color:var(--dim);margin-top:1px;}
+  .stat.hl{background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.4);}
+  .stat.hl .sv{color:var(--cyan);font-size:15px;}
+
+  .route{flex:1;display:flex;flex-direction:column;gap:0;}
+  .rstep{display:flex;align-items:center;gap:10px;padding:6px 9px;border-radius:9px;background:rgba(43,143,255,.06);border:1px solid var(--line);}
+  .rstep .lv{font-family:var(--num);font-weight:700;font-size:12px;min-width:32px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:6px;background:rgba(43,143,255,.2);color:#cfe0ff;flex:none;}
+  .rstep .rtx b{font-size:12px;color:#eaf1ff;display:block;line-height:1.25;}
+  .rstep .rtx em{font-size:10px;color:var(--dim);font-style:normal;}
+  .rstep.end{background:rgba(34,211,238,.15);border-color:rgba(34,211,238,.5);}
+  .rstep.end .lv{background:var(--cyan);color:#06121f;}
+  .rstep.end .rtx b{color:#fff;}
+  .rconn{display:flex;align-items:center;gap:9px;margin-left:24px;height:24px;}
+  .rconn .bar{width:3px;height:18px;background:linear-gradient(var(--korail-b),var(--cyan));border-radius:2px;transform-origin:top;}
+  .rconn .ev{font-family:var(--mono);font-size:10px;color:var(--korail-b);font-weight:700;}
+  .rconn small{font-family:var(--mono);font-size:9.5px;color:var(--dim);}
+  .rnote{font-size:9.5px;color:#8597b8;margin-top:8px;line-height:1.4;}
+  .claude-mark{position:absolute;right:12px;bottom:9px;width:18px;height:18px;opacity:.85;}
+
+  .foot{position:absolute;z-index:2;left:30px;right:30px;bottom:16px;height:84px;display:flex;align-items:center;gap:18px;
+    border-radius:16px;border:1px solid var(--line);background:rgba(8,12,30,.72);padding:0 26px;}
+  .score{display:flex;align-items:center;gap:13px;}
+  .score .v{font-family:var(--head);font-weight:800;font-size:28px;line-height:1;}
+  .score .v.num{font-family:var(--num);}
+  .score .x{color:var(--bad);} .score .o{color:var(--good);}
+  .score .cap{font-size:11.5px;color:var(--dim);line-height:1.25;}
+  .score .cap b{display:block;font-size:13px;color:var(--ink);}
+  .foot .msg{margin:0 6px;flex:1;text-align:center;font-size:14.5px;font-weight:600;color:#dbe6ff;letter-spacing:-.01em;}
+  .foot .msg span{color:var(--cyan);}
+
+  #clawdWrap{position:absolute;z-index:40;left:26px;bottom:150px;width:72px;height:48px;display:flex;align-items:flex-end;justify-content:center;}
+  #clawd{display:block;image-rendering:pixelated;filter:drop-shadow(0 6px 12px rgba(0,0,0,.5));}
+  #bubble{position:absolute;z-index:41;left:104px;bottom:150px;max-width:285px;opacity:0;word-break:keep-all;
+    background:#fff;color:#0a1430;font-size:13px;font-weight:600;line-height:1.5;padding:11px 14px;border-radius:14px;
+    box-shadow:0 12px 30px rgba(0,0,0,.4);}
+  #bubble::after{content:"";position:absolute;left:-9px;top:50%;transform:translateY(-50%);
+    border:9px solid transparent;border-right-color:#fff;border-left:0;}
+
+  #replay{position:fixed;left:50%;transform:translateX(-50%);top:8px;z-index:99;font-family:var(--mono);font-size:11px;color:var(--dim);
+    background:rgba(20,32,68,.55);border:1px solid var(--line);border-radius:8px;padding:5px 11px;cursor:pointer;opacity:.6;}
+  #replay:hover{border-color:var(--korail-b);background:rgba(43,143,255,.18);}
+</style>
+</head>
+<body>
+<button id="replay">▶ 다시 재생</button>
+
+<div id="deck">
+  <div class="ci"><span class="wm">KORAIL</span></div>
+  <div class="head">
+    <span class="kicker">DEMO ④ · AS-IS / TO-BE · 수원역 휠체어 동선</span>
+    <h1>휠체어로 수원역, <span class="q">어떻게 탈까요?</span></h1>
+  </div>
+
+  <div class="stage">
+    <!-- 좌: As-Is (Gemini) -->
+    <div class="panel asis" id="asis">
+      <div class="ptag">
+        <svg class="icon" viewBox="0 0 24 24"><defs><linearGradient id="gemg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#4285f4"/><stop offset=".5" stop-color="#9b72cb"/><stop offset="1" stop-color="#d96570"/></linearGradient></defs>
+          <path d="M12 2c.55 5.4 2.6 7.45 8 8-5.4 .55-7.45 2.6-8 8-.55-5.4-2.6-7.45-8-8 5.4-.55 7.45-2.6 8-8z" fill="url(#gemg)"/></svg>
+        <span class="who">그냥 AI</span>
+        <span class="sub">Gemini 3.5 Flash</span>
+      </div>
+      <div class="body">
+        <div class="ububble">수원역 엘리베이터 어디 있는지, 휠체어로 이용 가능한지 알려줘</div>
+        <p class="gpara">수원역은 1호선·수인분당선 환승역으로, 엘리베이터가 <b>잘 갖추어져 있습니다.</b></p>
+        <p class="gpara">휠체어로 <b>대부분의 승강장·출입구까지 원활하게</b> 이동하실 수 있습니다.</p>
+        <div class="gphase"><b>외부 ↔ 대합실</b><br>역 광장·환승센터 방향에 엘리베이터가 설치되어 있습니다</div>
+        <div class="gphase"><b>대합실 ↔ 승강장</b><br>각 승강장으로 연결되는 엘리베이터를 이용하시면 됩니다</div>
+        <div class="gphase"><b>노선 간 환승</b><br>환승 시에도 엘리베이터 이용이 가능한 것으로 보입니다</div>
+        <div class="gmeta">EV 대수·정확 위치 없음 · 단계별 경로 없음 · 추정 안내</div>
+      </div>
+    </div>
+
+    <!-- 우: To-Be (MCP) -->
+    <div class="panel tobe" id="tobe">
+      <div class="ptag">
+        <svg class="icon" viewBox="0 0 24 24"><g fill="#D97757">
+          <rect x="11" y="2" width="2" height="20" rx="1"/><rect x="11" y="2" width="2" height="20" rx="1" transform="rotate(60 12 12)"/>
+          <rect x="11" y="2" width="2" height="20" rx="1" transform="rotate(120 12 12)"/></g></svg>
+        <span class="who">MCP</span>
+        <span class="sub">Claude + korail-urban-rail</span>
+      </div>
+      <div class="body">
+        <div id="mcpWork">
+          <div class="l"><span class="dim">$</span> <span class="cur">korail-urban-rail</span> 로딩…</div>
+          <div class="l"><span class="cur">›</span> search_urban_station("수원")</div>
+          <div class="l"><span class="cur">›</span> get_urban_accessibility(1호선 · 수인분당선)</div>
+          <div class="l"><span class="ok">‹ EV 12대</span> · 휠체어 동선 데이터 수신</div>
+          <div class="l ok">✓ 출구→승강장 경로 계산 완료</div>
+        </div>
+        <div id="mcpResult">
+          <div class="ctitle">휠체어 이동 동선 — 수인분당선 (지상 → B4)<span>엘리베이터만으로</span></div>
+          <div class="statrow">
+            <div class="stat"><div class="sv"><span class="n" id="s1">0</span><span class="u">대</span></div><div class="sl">1호선 EV</div></div>
+            <div class="stat"><div class="sv"><span class="n" id="s2">0</span><span class="u">대</span></div><div class="sl">수인분당선 EV</div></div>
+            <div class="stat hl"><div class="sv">EV 전용</div><div class="sl">노선 간 환승</div></div>
+          </div>
+          <div class="route" id="route">
+            <div class="rstep"><span class="lv">1F</span><div class="rtx"><b>5·7·10번 출구 옆 EV</b><em>지상에서 진입</em></div></div>
+            <div class="rconn"><span class="bar"></span><span class="ev">▼ EV</span><small>1F → B1</small></div>
+            <div class="rstep"><span class="lv">B1</span><div class="rtx"><b>대합실 → 개찰</b><em>수인분당선 방향 엘리베이터</em></div></div>
+            <div class="rconn"><span class="bar"></span><span class="ev">▼ EV</span><small>B1 → B3</small></div>
+            <div class="rstep"><span class="lv">B3</span><div class="rtx"><b>대합실 → 개찰</b><em>매교·고색 방면 엘리베이터</em></div></div>
+            <div class="rconn"><span class="bar"></span><span class="ev">▼ EV</span><small>B3 → B4</small></div>
+            <div class="rstep end"><span class="lv">B4</span><div class="rtx"><b>승강장 → 휠체어칸 탑승 ♿</b><em>도착</em></div></div>
+          </div>
+          <div class="rnote">※ 1호선도 동일 방식 · 1호선↔수인분당선 환승도 EV만으로 가능 · 출처 KRIC 레일포털(현장 변경 시 1544-7788)</div>
+        </div>
+        <svg class="claude-mark" viewBox="0 0 24 24"><g fill="#D97757">
+          <rect x="11" y="3" width="2" height="18" rx="1"/><rect x="11" y="3" width="2" height="18" rx="1" transform="rotate(60 12 12)"/>
+          <rect x="11" y="3" width="2" height="18" rx="1" transform="rotate(120 12 12)"/></g></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="score">
+      <span class="v x">막연</span>
+      <div class="cap"><b>그냥 AI</b>'잘 돼 있어요' 추정 ✗</div>
+    </div>
+    <div class="msg">휠체어 이동 — AI는 <span>'잘 갖춰져 있어요'</span>로 끝, MCP는 <span>출구→승강장 단계별 동선</span>까지</div>
+    <div class="score">
+      <span class="v o num">EV 12대</span>
+      <div class="cap"><b>MCP</b>위치·동선·환승까지 정확 ✓</div>
+    </div>
+  </div>
+
+  <div id="bubble">휠체어로 어떻게 가는지, 출구부터 승강장까지 <b>단계별로</b> 안내해요 ♿</div>
+  <div id="clawdWrap"><svg id="clawd"></svg></div>
+</div>
+
+<script src="clawd-sprites.js"></script>
+<script src="lib/gsap.min.js"></script>
+<script>
+/* ---------- 무대 스케일 ---------- */
+const deck=document.getElementById('deck');
+let scale=1;
+function fit(){scale=Math.min(window.innerWidth/1280, window.innerHeight/720);deck.style.transform=`scale(${scale})`;}
+window.addEventListener('resize',fit); fit();
+
+/* ---------- 픽셀 Clawd ---------- */
+const svg=document.getElementById('clawd');
+let cur='idle_breathe',frameIdx=0,timer=null,PX=4;
+const SY=0.75, CROP={x:2,y:3,w:16,h:14};
+function renderGrid(grid,pal){
+  const vbH=CROP.h*PX*SY;
+  svg.setAttribute('viewBox',`${CROP.x*PX} ${(CROP.y*PX*SY).toFixed(2)} ${CROP.w*PX} ${vbH.toFixed(2)}`);
+  svg.setAttribute('width',CROP.w*PX); svg.setAttribute('height',vbH.toFixed(2));
+  svg.setAttribute('shape-rendering','crispEdges');
+  const h=grid.length,w=grid[0].length,o=0.7; let s='';
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const v=grid[y][x];
+    if(v>0&&pal[v]&&pal[v]!=='transparent')
+      s+=`<rect x="${x*PX}" y="${(y*PX*SY).toFixed(2)}" width="${PX+o}" height="${(PX*SY+o).toFixed(2)}" fill="${pal[v]}"/>`;}
+  svg.innerHTML=s;
+}
+function step(){const sp=window.CLAWD&&window.CLAWD[cur];if(!sp)return;
+  const fr=sp.frames[frameIdx%sp.frames.length];renderGrid(fr.grid,sp.palette);frameIdx++;
+  timer=setTimeout(step,fr.hold||120);}
+function play(name){if(!window.CLAWD||!window.CLAWD[name])return;cur=name;frameIdx=0;clearTimeout(timer);step();}
+
+/* ---------- 타임라인 ---------- */
+const work=document.getElementById('mcpWork');
+const result=document.getElementById('mcpResult');
+const bubble=document.getElementById('bubble');
+const route=document.getElementById('route');
+
+function buildTimeline(){
+  const tl=gsap.timeline();
+  const workLines=work.querySelectorAll('.l');
+  const seq=[...route.children]; // step,conn,step,conn,...
+
+  tl.set('.head',{opacity:0,y:-14});
+  tl.set('#asis',{opacity:0,x:-26}); tl.set('#tobe',{opacity:0,x:26}); tl.set('.foot',{opacity:0,y:20});
+  tl.set('.ububble',{opacity:0,y:8}); tl.set('.gpara,.gphase,.gmeta',{opacity:0,x:-6});
+  tl.set(workLines,{opacity:0,x:-8}); tl.set(result,{opacity:0}); tl.set(work,{opacity:1});
+  tl.set(seq,{opacity:0,x:-10}); tl.set('.rconn .bar',{scaleY:0});
+  tl.set('#s1',{innerText:'0'}); tl.set('#s2',{innerText:'0'});
+  tl.set(bubble,{opacity:0,y:10,scale:.9});
+
+  // 1) 등장
+  tl.to('.head',{opacity:1,y:0,duration:.5,ease:'power2.out'})
+    .to('#asis',{opacity:1,x:0,duration:.5,ease:'power2.out'},'-=.2')
+    .to('#tobe',{opacity:1,x:0,duration:.5,ease:'power2.out'},'<')
+    .to('.foot',{opacity:1,y:0,duration:.5,ease:'power2.out'},'<');
+
+  // 2) 좌: Gemini 막연한 안심
+  tl.to('.ububble',{opacity:1,y:0,duration:.35},'+=.1')
+    .to('.gpara',{opacity:1,x:0,duration:.3,stagger:.12},'+=.05')
+    .to('.gphase',{opacity:1,x:0,duration:.3,stagger:.16},'-=.05')
+    .to('.gmeta',{opacity:1,x:0,duration:.3},'-=.05');
+
+  // 3) 우: MCP 작동
+  tl.add(()=>play('work_think'),'-=.2');
+  tl.to(workLines,{opacity:1,x:0,duration:.3,stagger:.38,ease:'power1.out'},'+=.05');
+
+  // 4) 작동 → 결과
+  tl.to(work,{opacity:0,duration:.4},'+=.3').to(result,{opacity:1,duration:.4},'-=.1');
+
+  // 5) 스탯 카운트업 (EV 대수)
+  const a={v:0},b={v:0};
+  tl.to(a,{v:5,duration:.5,onUpdate:()=>document.getElementById('s1').textContent=Math.round(a.v)},'+=.05')
+    .to(b,{v:7,duration:.6,onUpdate:()=>document.getElementById('s2').textContent=Math.round(b.v)},'<');
+
+  // 6) 휠체어 동선: 지상→B4 단계별 드로잉
+  seq.forEach((el,i)=>{
+    tl.to(el,{opacity:1,x:0,duration:.3,ease:'power1.out'}, i===0?'+=.1':'-=.12');
+    if(el.classList.contains('rconn')) tl.to(el.querySelector('.bar'),{scaleY:1,duration:.22,ease:'none'},'-=.18');
+  });
+
+  // 7) 도착(B4) 강조
+  tl.add(()=>play('expression_surprise'),'-=.05');
+  tl.to('.rstep.end',{boxShadow:'0 0 16px rgba(34,211,238,.6)',duration:.35,yoyo:true,repeat:1},'<');
+
+  // 8) Clawd
+  tl.fromTo('#clawdWrap',{y:0},{y:-14,duration:.3,yoyo:true,repeat:1,ease:'power2.out'},'+=.05');
+  tl.to(bubble,{opacity:1,y:0,scale:1,duration:.45,ease:'back.out(1.7)'},'-=.2');
+  tl.add(()=>play('idle_look_around'),'+=1.2');
+
+  return tl;
+}
+
+function composeFinal(){
+  gsap.set('#mcpWork',{opacity:0}); gsap.set('#mcpResult',{opacity:1});
+  gsap.set('.ububble,.gpara,.gphase,.gmeta,.head,#asis,#tobe,.foot',{opacity:1,x:0,y:0});
+  gsap.set([...route.children],{opacity:1,x:0}); gsap.set('.rconn .bar',{scaleY:1});
+  document.getElementById('s1').textContent='5'; document.getElementById('s2').textContent='7';
+  gsap.set('#bubble',{opacity:1,y:0,scale:1});
+  clearTimeout(timer); const sp=window.CLAWD&&window.CLAWD['expression_surprise']; if(sp) renderGrid(sp.frames[0].grid,sp.palette);
+}
+
+let tl=null;
+function startAuto(){ if(tl)tl.kill(); clearTimeout(timer); frameIdx=0; if(window.CLAWD) play('idle_breathe'); tl=buildTimeline(); window.tl=tl; }
+document.getElementById('replay').addEventListener('click',()=>{ location.hash=''; startAuto(); });
+if(location.hash==='#still'){ composeFinal(); } else if(window.self===window.top){ startAuto(); }
+</script>
+</body>
+</html>

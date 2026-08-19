@@ -1,0 +1,17 @@
+/* 로컬 폰트 (오프라인 대비 — CDN 불필요) */
+
+/* Pretendard (본문) */
+@font-face{font-family:'Pretendard';font-weight:400;font-display:swap;src:url('Pretendard-Regular.woff2') format('woff2');}
+@font-face{font-family:'Pretendard';font-weight:500;font-display:swap;src:url('Pretendard-Medium.woff2') format('woff2');}
+@font-face{font-family:'Pretendard';font-weight:600;font-display:swap;src:url('Pretendard-SemiBold.woff2') format('woff2');}
+@font-face{font-family:'Pretendard';font-weight:700;font-display:swap;src:url('Pretendard-Bold.woff2') format('woff2');}
+@font-face{font-family:'Pretendard';font-weight:800;font-display:swap;src:url('Pretendard-ExtraBold.woff2') format('woff2');}
+
+/* JetBrains Mono (코드) */
+@font-face{font-family:'JetBrains Mono';font-weight:400;font-display:swap;src:url('JetBrainsMono-400.woff2') format('woff2');}
+
+/* Space Grotesk (숫자) */
+@font-face{font-family:'Space Grotesk';font-weight:400;font-display:swap;src:url('SpaceGrotesk-400.woff2') format('woff2');}
+@font-face{font-family:'Space Grotesk';font-weight:500;font-display:swap;src:url('SpaceGrotesk-500.woff2') format('woff2');}
+@font-face{font-family:'Space Grotesk';font-weight:600;font-display:swap;src:url('SpaceGrotesk-600.woff2') format('woff2');}
+@font-face{font-family:'Space Grotesk';font-weight:700;font-display:swap;src:url('SpaceGrotesk-700.woff2') format('woff2');}

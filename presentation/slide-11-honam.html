@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>데모③ 호남선 추이 · As-Is/To-Be · KORAIL MCP</title>
+<link rel="stylesheet" href="fonts/fonts.css" />
+<style>
+  @font-face{font-family:'SUIT Variable';font-weight:100 900;font-display:swap;
+    src:url('fonts/SUIT-Variable.woff2') format('woff2-variations');}
+  :root{
+    --korail:#0064cb; --korail-b:#2b8fff; --cyan:#22d3ee;
+    --bg0:#060a1a; --bg1:#0c1330; --ink:#eaf1ff; --dim:#9fb2d8;
+    --line:rgba(120,160,230,.18); --bad:#ff7a7a; --good:#34d399;
+    --head:'SUIT Variable','Pretendard',sans-serif; --body:'Pretendard',sans-serif;
+    --num:'Space Grotesk','Pretendard',sans-serif; --mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;background:#04060f;overflow:hidden;}
+  body{font-family:var(--body);color:var(--ink);display:flex;align-items:center;justify-content:center;
+    word-break:keep-all;overflow-wrap:break-word;}
+
+  #deck{position:relative;width:1280px;height:720px;flex:none;transform-origin:center center;
+    background:
+      radial-gradient(1100px 700px at 80% -12%,rgba(0,100,203,.30),transparent 60%),
+      radial-gradient(820px 600px at 8% 112%,rgba(34,211,238,.14),transparent 55%),
+      linear-gradient(160deg,var(--bg1),var(--bg0));
+    overflow:hidden;}
+  #deck::after{content:"";position:absolute;inset:0;z-index:0;opacity:.28;pointer-events:none;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:48px 48px;mask-image:radial-gradient(circle at 50% 32%,#000,transparent 88%);}
+  #deck > .head,#deck > .stage{position:relative;z-index:1;}
+
+  .ci{position:absolute;z-index:50;top:17px;right:26px;display:flex;align-items:center;
+    background:rgba(255,255,255,.95);border:1px solid rgba(255,255,255,.7);border-radius:11px;
+    padding:7px 16px;box-shadow:0 6px 20px rgba(0,40,110,.35);}
+  .ci .wm{font-family:var(--head);font-weight:800;font-size:18px;letter-spacing:.05em;line-height:1;color:#0064cb;}
+
+  .head{padding:18px 34px 2px;}
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;letter-spacing:.26em;
+    text-transform:uppercase;color:var(--cyan);padding:5px 12px;border:1px solid rgba(34,211,238,.35);
+    border-radius:999px;background:rgba(34,211,238,.06);}
+  h1{font-family:var(--head);font-size:32px;font-weight:800;letter-spacing:-.02em;margin:9px 0 0;}
+  h1 .q{color:var(--korail-b);}
+
+  .stage{display:flex;gap:20px;padding:8px 30px 0;height:474px;align-items:stretch;}
+  .panel{flex:1 1 0;min-width:0;border-radius:16px;border:1px solid var(--line);
+    background:rgba(10,16,38,.6);display:flex;flex-direction:column;overflow:hidden;position:relative;}
+  .ptag{display:flex;align-items:center;gap:9px;padding:11px 15px;border-bottom:1px solid var(--line);font-size:13px;}
+  .ptag .icon{width:22px;height:22px;flex:none;}
+  .ptag .who{font-weight:700;}
+  .ptag .sub{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
+    margin-left:auto;padding:3px 8px;border-radius:6px;border:1px solid var(--line);}
+
+  /* 좌: Gemini (회색·흐림) — 줄글 서술 */
+  .asis{filter:grayscale(.55) brightness(.9);}
+  .asis .ptag{background:rgba(120,130,150,.08);}
+  .asis .body{padding:12px 15px;overflow:hidden;font-size:12px;line-height:1.55;color:#c7cede;display:flex;flex-direction:column;}
+  .ububble{align-self:flex-end;max-width:84%;background:#2a2f3e;color:#e8ecf5;padding:8px 13px;border-radius:14px 14px 4px 14px;
+    font-size:12px;margin:0 0 10px auto;width:fit-content;}
+  .gpara{margin:0 0 9px;}
+  .gphase{margin:0 0 8px;padding-left:11px;border-left:2px solid rgba(255,255,255,.14);}
+  .gphase b{color:#e6eaf2;}
+  .gphase .vague{color:#9aa3b6;font-family:var(--num);}
+  .asis .gmeta{margin-top:auto;font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:#8b93a4;padding-top:6px;}
+
+  /* 우: MCP — 차트 */
+  .tobe{box-shadow:0 0 0 1px rgba(43,143,255,.35),0 18px 50px rgba(0,80,180,.18);
+    border-color:rgba(43,143,255,.5);background:linear-gradient(180deg,rgba(16,28,60,.66),rgba(10,16,38,.66));}
+  .tobe .ptag{background:rgba(43,143,255,.12);border-bottom-color:rgba(43,143,255,.35);}
+  .tobe .who{color:#dbe9ff;}
+  .tobe .body{position:relative;flex:1;overflow:hidden;}
+
+  #mcpWork{position:absolute;inset:0;padding:16px 17px;font-family:var(--mono);font-size:12px;line-height:1.85;color:#bcd2f5;}
+  #mcpWork .l{opacity:0;}
+  #mcpWork .ok{color:var(--cyan);} #mcpWork .dim{color:#7f93bb;} #mcpWork .cur{color:var(--korail-b);}
+
+  #mcpResult{position:absolute;inset:0;padding:11px 14px 12px;display:flex;flex-direction:column;opacity:0;}
+  .ctitle{font-size:12.5px;font-weight:700;color:#eaf1ff;margin-bottom:8px;}
+  .ctitle span{font-weight:500;font-size:10.5px;color:var(--dim);margin-left:5px;}
+  .statrow{display:flex;gap:7px;margin-bottom:8px;}
+  .stat{flex:1;border:1px solid var(--line);border-radius:10px;padding:6px 9px;background:rgba(43,143,255,.06);text-align:center;}
+  .stat .sv{font-family:var(--num);font-weight:700;font-size:19px;color:#fff;line-height:1.05;}
+  .stat .sv .u{font-size:10px;color:var(--dim);font-weight:500;margin-left:1px;}
+  .stat .sl{font-size:9.5px;color:var(--dim);margin-top:1px;}
+  .stat.hl{background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.4);}
+  .stat.hl .sv{color:var(--cyan);}
+  #chart{width:100%;height:184px;display:block;}
+  #chart .ax{font-family:var(--num);font-size:9px;fill:#7f93bb;}
+  #chart .pl{font-family:var(--num);font-size:9.5px;font-weight:700;fill:#cfe0ff;}
+  .legend{display:flex;gap:14px;justify-content:center;margin-top:4px;font-size:10px;color:var(--dim);}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .legend i{width:8px;height:8px;border-radius:2px;}
+  .rnote{font-size:9.5px;color:#8597b8;margin-top:auto;padding-top:6px;}
+  .claude-mark{position:absolute;right:12px;bottom:9px;width:18px;height:18px;opacity:.85;}
+
+  .foot{position:absolute;z-index:2;left:30px;right:30px;bottom:16px;height:84px;display:flex;align-items:center;gap:18px;
+    border-radius:16px;border:1px solid var(--line);background:rgba(8,12,30,.72);padding:0 26px;}
+  .score{display:flex;align-items:center;gap:13px;}
+  .score .v{font-family:var(--head);font-weight:800;font-size:30px;line-height:1;}
+  .score .v.num{font-family:var(--num);}
+  .score .x{color:var(--bad);} .score .o{color:var(--good);}
+  .score .cap{font-size:11.5px;color:var(--dim);line-height:1.25;}
+  .score .cap b{display:block;font-size:13px;color:var(--ink);}
+  .foot .msg{margin:0 6px;flex:1;text-align:center;font-size:15px;font-weight:600;color:#dbe6ff;letter-spacing:-.01em;}
+  .foot .msg span{color:var(--cyan);}
+
+  #clawdWrap{position:absolute;z-index:40;left:26px;bottom:150px;width:72px;height:48px;display:flex;align-items:flex-end;justify-content:center;}
+  #clawd{display:block;image-rendering:pixelated;filter:drop-shadow(0 6px 12px rgba(0,0,0,.5));}
+  #bubble{position:absolute;z-index:41;left:104px;bottom:150px;max-width:280px;opacity:0;word-break:keep-all;
+    background:#fff;color:#0a1430;font-size:13px;font-weight:600;line-height:1.5;padding:11px 14px;border-radius:14px;
+    box-shadow:0 12px 30px rgba(0,0,0,.4);}
+  #bubble::after{content:"";position:absolute;left:-9px;top:50%;transform:translateY(-50%);
+    border:9px solid transparent;border-right-color:#fff;border-left:0;}
+
+  #replay{position:fixed;left:50%;transform:translateX(-50%);top:8px;z-index:99;font-family:var(--mono);font-size:11px;color:var(--dim);
+    background:rgba(20,32,68,.55);border:1px solid var(--line);border-radius:8px;padding:5px 11px;cursor:pointer;opacity:.6;}
+  #replay:hover{border-color:var(--korail-b);background:rgba(43,143,255,.18);}
+</style>
+</head>
+<body>
+<button id="replay">▶ 다시 재생</button>
+
+<div id="deck">
+  <div class="ci"><span class="wm">KORAIL</span></div>
+  <div class="head">
+    <span class="kicker">DEMO ③ · AS-IS / TO-BE · 호남선 추이</span>
+    <h1>호남선 20년, <span class="q">얼마나 컸을까요?</span></h1>
+  </div>
+
+  <div class="stage">
+    <!-- 좌: As-Is (Gemini) -->
+    <div class="panel asis" id="asis">
+      <div class="ptag">
+        <svg class="icon" viewBox="0 0 24 24"><defs><linearGradient id="gemg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#4285f4"/><stop offset=".5" stop-color="#9b72cb"/><stop offset="1" stop-color="#d96570"/></linearGradient></defs>
+          <path d="M12 2c.55 5.4 2.6 7.45 8 8-5.4 .55-7.45 2.6-8 8-.55-5.4-2.6-7.45-8-8 5.4-.55 7.45-2.6 8-8z" fill="url(#gemg)"/></svg>
+        <span class="who">그냥 AI</span>
+        <span class="sub">Gemini 3.5 Flash</span>
+      </div>
+      <div class="body">
+        <div class="ububble">호남선 KTX 이용객 추이 2004~2023년 알려줘</div>
+        <p class="gpara">호남선 KTX 이용객 추이를 <b>시기별</b>로 정리하면 다음과 같습니다.</p>
+        <div class="gphase"><b>2004~2014 · 도입·정체기</b><br>개통 초기 <span class="vague">약 1,300만~1,500만</span> 수준에서 정체</div>
+        <div class="gphase"><b>2015~2019 · 폭발적 성장기</b><br>호남고속선 개통 후 전년 대비 <span class="vague">50% 이상</span> 급증, <span class="vague">약 2천만</span>대 진입</div>
+        <div class="gphase"><b>2020~2021 · 코로나 충격</b><br>팬데믹으로 <span class="vague">크게</span> 감소</div>
+        <div class="gphase"><b>2023 · 완전 회복·신기록</b><br><span class="vague">1,800만~2,000만</span> 수준으로 회복</div>
+        <div class="gmeta">차트 없음 · 수치 범위·추정 · 출처 — · 연도별 정확값 없음</div>
+      </div>
+    </div>
+
+    <!-- 우: To-Be (MCP) -->
+    <div class="panel tobe" id="tobe">
+      <div class="ptag">
+        <svg class="icon" viewBox="0 0 24 24"><g fill="#D97757">
+          <rect x="11" y="2" width="2" height="20" rx="1"/><rect x="11" y="2" width="2" height="20" rx="1" transform="rotate(60 12 12)"/>
+          <rect x="11" y="2" width="2" height="20" rx="1" transform="rotate(120 12 12)"/></g></svg>
+        <span class="who">MCP</span>
+        <span class="sub">Claude + korail-stats</span>
+      </div>
+      <div class="body">
+        <div id="mcpWork">
+          <div class="l"><span class="dim">$</span> <span class="cur">korail-stats</span> 로딩…</div>
+          <div class="l"><span class="cur">›</span> get_mainline_route_per(<span class="dim">line=</span>"호남선", 2004–2023)</div>
+          <div class="l"><span class="ok">‹ 20개년</span> 수신</div>
+          <div class="l"><span class="cur">›</span> 추이 분석 · 차트 생성</div>
+          <div class="l ok">✓ 완료 · 20년 +174% 성장</div>
+        </div>
+        <div id="mcpResult">
+          <div class="ctitle">호남선 KTX 이용객 추이 (2004–2023)<span>용산↔목포 · 천명/년</span></div>
+          <div class="statrow">
+            <div class="stat"><div class="sv"><span class="n" id="s1">0</span></div><div class="sl">2004 첫해</div></div>
+            <div class="stat hl"><div class="sv"><span class="n" id="s2">0</span></div><div class="sl">2023 최고</div></div>
+            <div class="stat"><div class="sv"><span class="n" id="s3">0</span></div><div class="sl">2020 코로나</div></div>
+            <div class="stat hl"><div class="sv"><span class="n" id="s4">0</span></div><div class="sl">20년 성장률</div></div>
+          </div>
+          <svg id="chart" viewBox="0 0 560 240" preserveAspectRatio="none"></svg>
+          <div class="legend">
+            <span><i style="background:#34d399"></i>2015 호남고속선 개통</span>
+            <span><i style="background:#f59e0b"></i>2016 SRT 개통</span>
+            <span><i style="background:#ff7a7a"></i>2020 코로나19</span>
+          </div>
+          <div class="rnote">※ 용산–목포 기준 · 천명/년(월평균 환산) · 출처 한국철도공사 공공데이터포털</div>
+        </div>
+        <svg class="claude-mark" viewBox="0 0 24 24"><g fill="#D97757">
+          <rect x="11" y="3" width="2" height="18" rx="1"/><rect x="11" y="3" width="2" height="18" rx="1" transform="rotate(60 12 12)"/>
+          <rect x="11" y="3" width="2" height="18" rx="1" transform="rotate(120 12 12)"/></g></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="score">
+      <span class="v x">줄글</span>
+      <div class="cap"><b>그냥 AI</b>수치 모호 · 차트 없음 ✗</div>
+    </div>
+    <div class="msg">호남선 20년 — AI는 <span>줄글로 추정</span>, MCP는 <span>정확한 수치·차트</span>로 한눈에</div>
+    <div class="score">
+      <span class="v o num">+174%</span>
+      <div class="cap"><b>MCP</b>3,636 → 9,984 천명/년 · 출처 명확 ✓</div>
+    </div>
+  </div>
+
+  <div id="bubble">기존 생성형 AI는 흐름만 대충, MCP는 연도별 <b>정확한 수치</b>까지! 📈</div>
+  <div id="clawdWrap"><svg id="clawd"></svg></div>
+</div>
+
+<script src="clawd-sprites.js"></script>
+<script src="lib/gsap.min.js"></script>
+<script>
+/* ---------- 데이터 ---------- */
+// 천명/년 = 실측 월평균(천명/월) × 12 (MCP get_ktx_long_term_stats 2004~2023 실데이터)
+const SERIES=[
+ {y:2004,v:3636},{y:2005,v:6696},{y:2006,v:7512},{y:2007,v:7596},{y:2008,v:8256},
+ {y:2009,v:7704},{y:2010,v:7584},{y:2011,v:7524},{y:2012,v:6576},{y:2013,v:6480},
+ {y:2014,v:6096},{y:2015,v:7584},{y:2016,v:8640},{y:2017,v:7932},{y:2018,v:8316},
+ {y:2019,v:8928},{y:2020,v:5652},{y:2021,v:6396},{y:2022,v:8796},{y:2023,v:9984},
+];
+const MARKERS=[{y:2015,c:'#34d399'},{y:2016,c:'#f59e0b'},{y:2020,c:'#ff7a7a'}];
+
+/* ---------- 차트 빌드 ---------- */
+const chart=document.getElementById('chart');
+const W=560,H=240,padL=48,padR=14,padT=16,padB=24;
+const x0=padL,x1=W-padR,y0=H-padB,yTop=padT,vMin=3000,vMax=10200;
+const xOf=i=>x0+i/(SERIES.length-1)*(x1-x0);
+const yOf=v=>y0-(v-vMin)/(vMax-vMin)*(y0-yTop);
+function buildChart(){
+  let grid='';[4000,6000,8000,10000].forEach(v=>{const y=yOf(v);
+    grid+=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="rgba(120,160,230,.12)"/><text class="ax" x="${x0-5}" y="${y+3}" text-anchor="end">${v.toLocaleString()}</text>`;});
+  let xl='';[2004,2008,2012,2016,2020,2023].forEach(yr=>{const i=SERIES.findIndex(s=>s.y===yr);
+    xl+=`<text class="ax" x="${xOf(i)}" y="${y0+14}" text-anchor="middle">'${String(yr).slice(2)}</text>`;});
+  let line='';SERIES.forEach((s,i)=>{line+=(i?'L':'M')+xOf(i).toFixed(1)+','+yOf(s.v).toFixed(1)+' ';});
+  const area=`M${xOf(0).toFixed(1)},${y0} `+SERIES.map((s,i)=>'L'+xOf(i).toFixed(1)+','+yOf(s.v).toFixed(1)).join(' ')+` L${xOf(SERIES.length-1).toFixed(1)},${y0} Z`;
+  let mk='';MARKERS.forEach(m=>{const i=SERIES.findIndex(s=>s.y===m.y);const x=xOf(i),y=yOf(SERIES[i].v);
+    mk+=`<line class="mkline" x1="${x}" y1="${yTop}" x2="${x}" y2="${y0}" stroke="${m.c}" stroke-width="1.2" stroke-dasharray="3 3" opacity="0"/>`
+      +`<circle class="mkdot" cx="${x}" cy="${y}" r="4.5" fill="${m.c}" stroke="#0a1430" stroke-width="1.5" opacity="0"/>`;});
+  let pts='';[[2004,3636,-1],[2019,8928,-1],[2020,5652,1],[2023,9984,-1]].forEach(([yr,v,dir])=>{const i=SERIES.findIndex(s=>s.y===yr);const x=xOf(i),y=yOf(v);
+    pts+=`<circle class="kp" cx="${x}" cy="${y}" r="3.4" fill="#2b8fff" opacity="0"/><text class="pl kp" x="${x}" y="${y+(dir<0?-7:13)}" text-anchor="middle" opacity="0">${v.toLocaleString()}</text>`;});
+  chart.innerHTML=`<defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="rgba(43,143,255,.45)"/><stop offset="1" stop-color="rgba(43,143,255,0)"/></linearGradient></defs>`
+    +grid+xl
+    +`<path id="areaP" d="${area}" fill="url(#ag)" opacity="0"/>`
+    +`<path id="lineP" d="${line.trim()}" fill="none" stroke="#2b8fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`
+    +mk+pts;
+}
+buildChart();
+
+/* ---------- 무대 스케일 ---------- */
+const deck=document.getElementById('deck');
+let scale=1;
+function fit(){scale=Math.min(window.innerWidth/1280, window.innerHeight/720);deck.style.transform=`scale(${scale})`;}
+window.addEventListener('resize',fit); fit();
+
+/* ---------- 픽셀 Clawd ---------- */
+const svg=document.getElementById('clawd');
+let cur='idle_breathe',frameIdx=0,timer=null,PX=4;
+const SY=0.75, CROP={x:2,y:3,w:16,h:14};
+function renderGrid(grid,pal){
+  const vbH=CROP.h*PX*SY;
+  svg.setAttribute('viewBox',`${CROP.x*PX} ${(CROP.y*PX*SY).toFixed(2)} ${CROP.w*PX} ${vbH.toFixed(2)}`);
+  svg.setAttribute('width',CROP.w*PX); svg.setAttribute('height',vbH.toFixed(2));
+  svg.setAttribute('shape-rendering','crispEdges');
+  const h=grid.length,w=grid[0].length,o=0.7; let s='';
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const v=grid[y][x];
+    if(v>0&&pal[v]&&pal[v]!=='transparent')
+      s+=`<rect x="${x*PX}" y="${(y*PX*SY).toFixed(2)}" width="${PX+o}" height="${(PX*SY+o).toFixed(2)}" fill="${pal[v]}"/>`;}
+  svg.innerHTML=s;
+}
+function step(){const sp=window.CLAWD&&window.CLAWD[cur];if(!sp)return;
+  const fr=sp.frames[frameIdx%sp.frames.length];renderGrid(fr.grid,sp.palette);frameIdx++;
+  timer=setTimeout(step,fr.hold||120);}
+function play(name){if(!window.CLAWD||!window.CLAWD[name])return;cur=name;frameIdx=0;clearTimeout(timer);step();}
+
+/* ---------- 타임라인 ---------- */
+const work=document.getElementById('mcpWork');
+const result=document.getElementById('mcpResult');
+const bubble=document.getElementById('bubble');
+
+function buildTimeline(){
+  const tl=gsap.timeline();
+  const workLines=work.querySelectorAll('.l');
+  const lineP=document.getElementById('lineP');
+  const len=lineP.getTotalLength();
+
+  tl.set('.head',{opacity:0,y:-14});
+  tl.set('#asis',{opacity:0,x:-26}); tl.set('#tobe',{opacity:0,x:26}); tl.set('.foot',{opacity:0,y:20});
+  tl.set('.ububble',{opacity:0,y:8}); tl.set('.gpara,.gphase,.gmeta',{opacity:0,x:-6});
+  tl.set(workLines,{opacity:0,x:-8}); tl.set(result,{opacity:0}); tl.set(work,{opacity:1});
+  tl.set(lineP,{strokeDasharray:len,strokeDashoffset:len});
+  tl.set('#areaP',{opacity:0}); tl.set('.mkline,.mkdot,.kp',{opacity:0});
+  tl.set('#s1',{innerText:'0'});tl.set('#s2',{innerText:'0'});tl.set('#s3',{innerText:'0'});tl.set('#s4',{innerText:'0'});
+  tl.set(bubble,{opacity:0,y:10,scale:.9});
+
+  // 1) 등장
+  tl.to('.head',{opacity:1,y:0,duration:.5,ease:'power2.out'})
+    .to('#asis',{opacity:1,x:0,duration:.5,ease:'power2.out'},'-=.2')
+    .to('#tobe',{opacity:1,x:0,duration:.5,ease:'power2.out'},'<')
+    .to('.foot',{opacity:1,y:0,duration:.5,ease:'power2.out'},'<');
+
+  // 2) 좌: Gemini 줄글이 줄줄이
+  tl.to('.ububble',{opacity:1,y:0,duration:.35},'+=.1')
+    .to('.gpara',{opacity:1,x:0,duration:.3},'+=.1')
+    .to('.gphase',{opacity:1,x:0,duration:.3,stagger:.18},'-=.05')
+    .to('.gmeta',{opacity:1,x:0,duration:.3},'-=.05');
+
+  // 3) 우: MCP 작동
+  tl.add(()=>play('work_think'),'-=.2');
+  tl.to(workLines,{opacity:1,x:0,duration:.3,stagger:.4,ease:'power1.out'},'+=.05');
+
+  // 4) 작동 → 차트
+  tl.to(work,{opacity:0,duration:.4},'+=.3').to(result,{opacity:1,duration:.4},'-=.1');
+
+  // 5) 스탯 카운트업
+  const a={v:0},b={v:0},c={v:0},d={v:0};
+  tl.to(a,{v:3636,duration:.7,onUpdate:()=>document.getElementById('s1').textContent=Math.round(a.v).toLocaleString()},'+=.05')
+    .to(b,{v:9984,duration:.9,onUpdate:()=>document.getElementById('s2').textContent=Math.round(b.v).toLocaleString()},'<')
+    .to(c,{v:5652,duration:.8,onUpdate:()=>document.getElementById('s3').textContent=Math.round(c.v).toLocaleString()},'<')
+    .to(d,{v:174,duration:.9,onUpdate:()=>document.getElementById('s4').textContent='+'+Math.round(d.v)+'%'},'<');
+
+  // 6) 차트: 면적 + 라인 드로잉
+  tl.to('#areaP',{opacity:1,duration:.5},'-=.4')
+    .to(lineP,{strokeDashoffset:0,duration:1.5,ease:'power1.inOut'},'<');
+
+  // 7) 이벤트 마커 + 주요 포인트 라벨
+  tl.to('.mkline',{opacity:.8,duration:.3,stagger:.12},'-=.4')
+    .to('.mkdot',{opacity:1,duration:.3,stagger:.12},'<')
+    .to('.kp',{opacity:1,duration:.3,stagger:.05},'-=.2');
+
+  // 8) Clawd
+  tl.add(()=>play('expression_surprise'),'-=.1');
+  tl.fromTo('#clawdWrap',{y:0},{y:-14,duration:.3,yoyo:true,repeat:1,ease:'power2.out'},'<');
+  tl.to(bubble,{opacity:1,y:0,scale:1,duration:.45,ease:'back.out(1.7)'},'-=.15');
+  tl.add(()=>play('idle_look_around'),'+=1.2');
+
+  return tl;
+}
+
+function composeFinal(){
+  gsap.set('#mcpWork',{opacity:0}); gsap.set('#mcpResult',{opacity:1});
+  gsap.set('.ububble,.gpara,.gphase,.gmeta,.head,#asis,#tobe,.foot',{opacity:1,x:0,y:0});
+  const lineP=document.getElementById('lineP'); gsap.set(lineP,{strokeDasharray:'none',strokeDashoffset:0});
+  gsap.set('#areaP',{opacity:1}); gsap.set('.mkline',{opacity:.8}); gsap.set('.mkdot,.kp',{opacity:1});
+  document.getElementById('s1').textContent='3,636'; document.getElementById('s2').textContent='9,984';
+  document.getElementById('s3').textContent='5,652'; document.getElementById('s4').textContent='+174%';
+  gsap.set('#bubble',{opacity:1,y:0,scale:1});
+  clearTimeout(timer); const sp=window.CLAWD&&window.CLAWD['expression_surprise']; if(sp) renderGrid(sp.frames[0].grid,sp.palette);
+}
+
+let tl=null;
+function startAuto(){ if(tl)tl.kill(); clearTimeout(timer); frameIdx=0; if(window.CLAWD) play('idle_breathe'); tl=buildTimeline(); window.tl=tl; }
+document.getElementById('replay').addEventListener('click',()=>{ location.hash=''; startAuto(); });
+if(location.hash==='#still'){ composeFinal(); } else if(window.self===window.top){ startAuto(); }
+</script>
+</body>
+</html>

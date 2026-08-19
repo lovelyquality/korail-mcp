@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KORAIL MCP · 데모 쇼케이스</title>
+<link rel="stylesheet" href="../fonts/fonts.css" />
+<style>
+  @font-face{
+    font-family:'SUIT Variable'; font-weight:100 900; font-display:swap;
+    src:url('../fonts/SUIT-Variable.woff2') format('woff2-variations');
+  }
+  :root{
+    --korail:#0064cb; --korail-b:#2b8fff; --cyan:#22d3ee;
+    --bg0:#060a1a; --bg1:#0c1330; --ink:#eaf1ff; --dim:#9fb2d8;
+    --line:rgba(120,160,230,.18);
+    --head:'SUIT Variable','Pretendard',sans-serif;
+    --body:'Pretendard',sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;min-height:100%;background:#04060f;}
+  body{
+    font-family:var(--body);color:var(--ink);word-break:keep-all;overflow-wrap:break-word;
+    background:
+      radial-gradient(1100px 700px at 80% -12%,rgba(0,100,203,.30),transparent 60%),
+      radial-gradient(820px 600px at 8% 112%,rgba(34,211,238,.14),transparent 55%),
+      linear-gradient(160deg,var(--bg1),var(--bg0));
+    padding:48px 20px 80px;
+  }
+  .wrap{max-width:960px;margin:0 auto;}
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.26em;
+    text-transform:uppercase;color:var(--cyan);padding:5px 12px;border:1px solid rgba(34,211,238,.35);
+    border-radius:999px;background:rgba(34,211,238,.06);}
+  h1{font-family:var(--head);font-size:clamp(24px,4vw,36px);font-weight:800;letter-spacing:-.02em;margin:16px 0 8px;}
+  p.lead{color:var(--dim);font-size:16px;margin:0 0 40px;}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:720px){.grid{grid-template-columns:1fr;}}
+
+  .card{
+    position:relative;border:1px solid var(--line);border-radius:16px;padding:22px 22px 20px;
+    background:rgba(255,255,255,.03);display:flex;flex-direction:column;gap:10px;
+    text-decoration:none;color:inherit;transition:border-color .15s,background .15s;
+  }
+  .card:hover,.card:active{border-color:rgba(43,143,255,.55);background:rgba(43,143,255,.07);}
+  .card .badge{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:var(--korail-b);}
+  .card h2{font-family:var(--head);font-size:20px;font-weight:700;margin:0;line-height:1.35;}
+  .card .desc{color:var(--dim);font-size:14px;line-height:1.5;margin:0;}
+  .card .go{margin-top:8px;font-family:var(--head);font-weight:700;font-size:14px;color:var(--cyan);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="kicker">KORAIL MCP · DEMO SHOWCASE</span>
+  <h1>공공데이터가 어떻게 답이 되는지,<br>4가지 데모로 확인하세요</h1>
+  <p class="lead">각 데모는 검색만 하던 LLM과 KORAIL MCP로 답하는 LLM의 차이를 비교합니다.</p>
+
+  <div class="grid">
+    <a class="card" href="demo.html?n=1">
+      <span class="badge">DEMO ①</span>
+      <h2>경부선 KTX 정차역, 몇 개일까요?</h2>
+      <p class="desc">역 목록을 검색하던 LLM과, 데이터로 즉시 세는 LLM의 차이</p>
+      <span class="go">보러가기 →</span>
+    </a>
+    <a class="card" href="demo.html?n=2">
+      <span class="badge">DEMO ②</span>
+      <h2>사랑의 성금, 어디에 제일 많이 썼을까요?</h2>
+      <p class="desc">흩어진 공시자료를 실시간으로 집계해서 답하기</p>
+      <span class="go">보러가기 →</span>
+    </a>
+    <a class="card" href="demo.html?n=3">
+      <span class="badge">DEMO ③</span>
+      <h2>호남선 20년, 얼마나 컸을까요?</h2>
+      <p class="desc">연도별 수송 실적을 즉시 불러와 비교하기</p>
+      <span class="go">보러가기 →</span>
+    </a>
+    <a class="card" href="demo.html?n=4">
+      <span class="badge">DEMO ④</span>
+      <h2>휠체어로 수원역, 어떻게 탈까요?</h2>
+      <p class="desc">역사 편의시설 데이터로 실제 동선 안내하기</p>
+      <span class="go">보러가기 →</span>
+    </a>
+  </div>
+</div>
+</body>
+</html>

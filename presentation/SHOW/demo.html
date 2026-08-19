@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KORAIL MCP · 데모</title>
+<style>
+  :root{
+    --korail-b:#2b8fff; --cyan:#22d3ee; --bg0:#060a1a; --bg1:#0c1330;
+    --ink:#eaf1ff; --dim:#9fb2d8; --line:rgba(120,160,230,.18);
+    --head:'SUIT Variable','Pretendard',sans-serif;
+    --mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;background:#04060f;overflow:hidden;}
+  body{display:flex;flex-direction:column;font-family:var(--head);color:var(--ink);}
+
+  #bar{
+    flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    height:52px;padding:0 12px;background:linear-gradient(160deg,var(--bg1),var(--bg0));
+    border-bottom:1px solid var(--line);
+  }
+  #bar a{
+    display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--ink);
+    text-decoration:none;padding:8px 12px;border-radius:10px;border:1px solid var(--line);
+    background:rgba(255,255,255,.03);white-space:nowrap;
+  }
+  #bar a:active{background:rgba(43,143,255,.15);border-color:rgba(43,143,255,.55);}
+  #bar .next{color:var(--cyan);}
+  #title{
+    flex:1;min-width:0;text-align:center;font-size:12px;letter-spacing:.04em;color:var(--dim);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 6px;
+  }
+  #title b{color:var(--korail-b);font-family:var(--mono);letter-spacing:.14em;margin-right:6px;}
+
+  #stage{flex:1;min-height:0;background:#04060f;}
+  #stage iframe{width:100%;height:100%;border:0;display:block;}
+</style>
+</head>
+<body>
+  <div id="bar">
+    <a href="index.html">← 홈</a>
+    <div id="title"></div>
+    <a class="next" id="nextLink">다음 데모 →</a>
+  </div>
+  <div id="stage"><iframe id="frame" allow="autoplay" scrolling="no"></iframe></div>
+
+<script>
+  var DEMOS = [
+    { file:'../slide-09-stations.html',  badge:'DEMO ①', label:'정차역' },
+    { file:'../slide-10-donation.html',  badge:'DEMO ②', label:'사랑의 성금' },
+    { file:'../slide-11-honam.html',     badge:'DEMO ③', label:'호남선 추이' },
+    { file:'../slide-12-wheelchair.html',badge:'DEMO ④', label:'수원역 휠체어 동선' },
+  ];
+
+  var n = parseInt(new URLSearchParams(location.search).get('n'), 10);
+  if(!n || n < 1 || n > DEMOS.length) n = 1;
+  var demo = DEMOS[n-1];
+  var next = (n % DEMOS.length) + 1;
+
+  document.title = 'KORAIL MCP · ' + demo.badge + ' ' + demo.label;
+  document.getElementById('title').innerHTML = '<b>' + demo.badge + '</b>' + demo.label;
+  document.getElementById('nextLink').href = 'demo.html?n=' + next;
+
+  var frame = document.getElementById('frame');
+  frame.addEventListener('load', function onl(){
+    frame.removeEventListener('load', onl);
+    setTimeout(function(){
+      try{ if(frame.contentWindow && frame.contentWindow.startAuto) frame.contentWindow.startAuto(); }catch(_){}
+    }, 40);
+  }, { once:true });
+  frame.src = demo.file;
+</script>
+</body>
+</html>

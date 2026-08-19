@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>데모① 정차역 · As-Is/To-Be · KORAIL MCP</title>
+
+<!-- 폰트: SUIT(헤드) / Pretendard(본문) / Space Grotesk(숫자) / JetBrains Mono(코드) -->
+<link rel="stylesheet" href="fonts/fonts.css" />
+<style>
+  /* SUIT (헤드라인) — 죽으면 Pretendard로 자동 폴백 */
+  @font-face{
+    font-family:'SUIT Variable'; font-weight:100 900; font-display:swap;
+    src:url('fonts/SUIT-Variable.woff2') format('woff2-variations');
+  }
+  :root{
+    --korail:#0064cb; --korail-b:#2b8fff; --cyan:#22d3ee;
+    --bg0:#060a1a; --bg1:#0c1330; --ink:#eaf1ff; --dim:#9fb2d8;
+    --line:rgba(120,160,230,.18);
+    --gem:#9b72cb; --bad:#ff7a7a; --good:#34d399;
+    --head:'SUIT Variable','Pretendard',sans-serif;
+    --body:'Pretendard',sans-serif;
+    --num:'Space Grotesk','Pretendard',sans-serif;
+    --mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;background:#04060f;overflow:hidden;}
+  body{font-family:var(--body);color:var(--ink);display:flex;align-items:center;justify-content:center;
+    word-break:keep-all;overflow-wrap:break-word;}
+
+  /* 16:9 무대 — 창에 맞춰 스케일 */
+  #deck{
+    position:relative;width:1280px;height:720px;flex:none;transform-origin:center center;
+    background:
+      radial-gradient(1100px 700px at 80% -12%,rgba(0,100,203,.30),transparent 60%),
+      radial-gradient(820px 600px at 8% 112%,rgba(34,211,238,.14),transparent 55%),
+      linear-gradient(160deg,var(--bg1),var(--bg0));
+    overflow:hidden;
+  }
+  #deck::after{content:"";position:absolute;inset:0;z-index:0;opacity:.28;pointer-events:none;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:48px 48px;mask-image:radial-gradient(circle at 50% 32%,#000,transparent 88%);}
+  #deck > .head,#deck > .stage{position:relative;z-index:1;}
+
+  /* KORAIL CI (우측 상단, 블루 배경에 안 묻히게 흰 칩) */
+  .ci{position:absolute;z-index:50;top:17px;right:26px;display:flex;align-items:center;
+    background:rgba(255,255,255,.95);border:1px solid rgba(255,255,255,.7);border-radius:11px;
+    padding:7px 16px;box-shadow:0 6px 20px rgba(0,40,110,.35);}
+  .ci .wm{font-family:var(--head);font-weight:800;font-size:18px;letter-spacing:.05em;line-height:1;color:#0064cb;}
+
+  /* 헤더 */
+  .head{padding:18px 34px 2px;}
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;letter-spacing:.26em;
+    text-transform:uppercase;color:var(--cyan);padding:5px 12px;border:1px solid rgba(34,211,238,.35);
+    border-radius:999px;background:rgba(34,211,238,.06);}
+  h1{font-family:var(--head);font-size:32px;font-weight:800;letter-spacing:-.02em;margin:9px 0 0;}
+  h1 .q{color:var(--korail-b);}
+
+  /* 본문 2패널 */
+  .stage{display:flex;gap:20px;padding:8px 30px 0;height:474px;align-items:stretch;}
+  .panel{flex:1 1 0;min-width:0;border-radius:16px;border:1px solid var(--line);
+    background:rgba(10,16,38,.6);display:flex;flex-direction:column;overflow:hidden;position:relative;}
+  .ptag{display:flex;align-items:center;gap:9px;padding:11px 15px;border-bottom:1px solid var(--line);font-size:13px;}
+  .ptag .icon{width:22px;height:22px;flex:none;}
+  .ptag .who{font-weight:700;}
+  .ptag .sub{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);
+    margin-left:auto;padding:3px 8px;border-radius:6px;border:1px solid var(--line);}
+
+  /* 좌: Gemini (회색·흐림) */
+  .asis{filter:grayscale(.55) brightness(.9);}
+  .asis .ptag{background:rgba(120,130,150,.08);}
+  .asis .body{padding:13px 15px;overflow:hidden;font-size:12.5px;line-height:1.5;color:#c7cede;}
+  .ububble{align-self:flex-end;max-width:80%;background:#2a2f3e;color:#e8ecf5;padding:8px 13px;border-radius:14px 14px 4px 14px;
+    font-size:12.5px;margin:0 0 12px auto;width:fit-content;}
+  .ans p{margin:0 0 9px;}
+  .hedge{display:flex;gap:8px;margin:4px 0 11px;}
+  .hedge .b{font-family:var(--num);font-weight:700;font-size:13px;padding:5px 12px;border-radius:9px;
+    border:1px dashed rgba(255,255,255,.28);background:rgba(255,255,255,.04);color:#dfe4ef;}
+  .hedge .b b{font-size:18px;color:#fff;}
+  .grp{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:8px 11px;margin-bottom:8px;}
+  .grp .lab{font-size:11px;color:#9aa3b6;margin-bottom:3px;}
+  .grp .names{font-size:11.5px;color:#dde2ee;line-height:1.45;}
+  .asis .note{font-size:10.5px;color:#9098a8;margin-top:2px;}
+  .asis .miss-meta{margin-top:9px;font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:#8b93a4;}
+  .gem-input{margin-top:auto;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.12);
+    border-radius:999px;padding:8px 14px;font-size:12px;color:#aeb6c6;}
+  .gem-input .flash{margin-left:auto;font-size:11px;border:1px solid rgba(255,255,255,.16);border-radius:7px;padding:3px 9px;}
+
+  /* 우: MCP (코레일블루·선명) */
+  .tobe{box-shadow:0 0 0 1px rgba(43,143,255,.35),0 18px 50px rgba(0,80,180,.18);
+    border-color:rgba(43,143,255,.5);background:linear-gradient(180deg,rgba(16,28,60,.66),rgba(10,16,38,.66));}
+  .tobe .ptag{background:rgba(43,143,255,.12);border-bottom-color:rgba(43,143,255,.35);}
+  .tobe .who{color:#dbe9ff;}
+  .tobe .body{position:relative;flex:1;overflow:hidden;}
+
+  /* 작동 연출(터미널) */
+  #mcpWork{position:absolute;inset:0;padding:16px 17px;font-family:var(--mono);font-size:12.5px;line-height:1.85;color:#bcd2f5;}
+  #mcpWork .l{opacity:0;}
+  #mcpWork .ok{color:var(--cyan);}
+  #mcpWork .dim{color:#7f93bb;}
+  #mcpWork .cur{color:var(--korail-b);}
+
+  /* 결과(표) */
+  #mcpResult{position:absolute;inset:0;padding:11px 14px 12px;display:flex;flex-direction:column;opacity:0;}
+  .rbadge{display:flex;align-items:center;gap:9px;margin-bottom:7px;}
+  .rbadge .big{font-family:var(--num);font-weight:700;font-size:21px;color:#fff;}
+  .rbadge .big b{color:var(--cyan);}
+  .rbadge .date{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:#bcd0f0;
+    border:1px solid rgba(43,143,255,.4);background:rgba(43,143,255,.12);border-radius:7px;padding:3px 9px;}
+  .rsub{font-size:11.5px;color:var(--dim);margin-bottom:6px;}
+  .tbl{flex:1;border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;}
+  .tbl .th,.tbl .tr{display:grid;grid-template-columns:38px 1fr 96px;align-items:center;}
+  .tbl .th{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
+    padding:6px 12px;border-bottom:1px solid var(--line);background:rgba(43,143,255,.07);}
+  .tbl .rows{flex:1;overflow:hidden;}
+  .tbl .tr{padding:0 12px;height:16.2px;font-size:10.5px;border-bottom:1px solid rgba(120,160,230,.07);}
+  .tbl .tr .no{font-family:var(--num);color:#8fa6cf;font-size:10.5px;}
+  .tbl .tr .nm{font-weight:600;color:#eaf1ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .tbl .tr .lo{font-size:10px;color:#9fb2d8;text-align:right;}
+  .tbl .tr.miss{position:relative;}
+  .tbl .tr.lit{background:linear-gradient(90deg,rgba(34,211,238,.18),rgba(43,143,255,.10));}
+  .tbl .tr.lit .nm{color:#fff;}
+  .tbl .tr.lit::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cyan);}
+  .rnote{font-size:9.5px;color:#8597b8;margin-top:6px;line-height:1.4;}
+  .claude-mark{position:absolute;right:12px;bottom:9px;width:18px;height:18px;opacity:.85;}
+
+  /* 푸터 대비 바 */
+  .foot{position:absolute;z-index:2;left:30px;right:30px;bottom:16px;height:84px;display:flex;align-items:center;gap:18px;
+    border-radius:16px;border:1px solid var(--line);background:rgba(8,12,30,.72);padding:0 26px;}
+  .score{display:flex;align-items:center;gap:13px;}
+  .score .v{font-family:var(--num);font-weight:700;font-size:46px;line-height:1;}
+  .score .x{color:var(--bad);} .score .o{color:var(--good);}
+  .score .cap{font-size:12px;color:var(--dim);line-height:1.25;}
+  .score .cap b{display:block;font-size:13px;color:var(--ink);}
+  .vs{font-family:var(--num);font-weight:700;color:var(--dim);font-size:16px;opacity:.6;}
+  .foot .msg{margin:0 6px;flex:1;text-align:center;font-size:15px;font-weight:600;color:#dbe6ff;letter-spacing:-.01em;}
+  .foot .msg span{color:var(--cyan);}
+
+  /* 날아가는 누락 칩 */
+  .chip{position:absolute;z-index:30;font-size:11px;font-weight:700;color:#06121f;padding:4px 10px;border-radius:999px;
+    background:linear-gradient(100deg,var(--cyan),var(--korail-b));box-shadow:0 6px 18px rgba(34,211,238,.4);
+    white-space:nowrap;opacity:0;pointer-events:none;}
+
+  /* Clawd */
+  #clawdWrap{position:absolute;z-index:40;left:26px;bottom:150px;width:72px;height:48px;display:flex;align-items:flex-end;justify-content:center;}
+  #clawd{display:block;image-rendering:pixelated;filter:drop-shadow(0 6px 12px rgba(0,0,0,.5));}
+  #bubble{position:absolute;z-index:41;left:104px;bottom:150px;max-width:262px;opacity:0;word-break:keep-all;
+    background:#fff;color:#0a1430;font-size:13px;font-weight:600;line-height:1.5;padding:11px 14px;border-radius:14px;
+    box-shadow:0 12px 30px rgba(0,0,0,.4);}
+  #bubble::after{content:"";position:absolute;left:-9px;top:50%;transform:translateY(-50%);
+    border:9px solid transparent;border-right-color:#fff;border-left:0;}
+
+  /* 재생 컨트롤 */
+  #replay{position:fixed;left:50%;transform:translateX(-50%);top:8px;z-index:99;font-family:var(--mono);font-size:11px;color:var(--dim);
+    background:rgba(20,32,68,.55);border:1px solid var(--line);border-radius:8px;padding:5px 11px;cursor:pointer;opacity:.6;}
+  #replay:hover{border-color:var(--korail-b);background:rgba(43,143,255,.18);}
+</style>
+</head>
+<body>
+<button id="replay">▶ 다시 재생</button>
+
+<div id="deck">
+  <!-- KORAIL CI (워드마크 — 로고 자산 대체, 사내 발표용) -->
+  <div class="ci"><span class="wm">KORAIL</span></div>
+  <div class="head">
+    <span class="kicker">DEMO ① · AS-IS / TO-BE · 정차역</span>
+    <h1>경부선 KTX 정차역, <span class="q">몇 개일까요?</span></h1>
+  </div>
+
+  <div class="stage">
+    <!-- 좌: As-Is (Gemini) -->
+    <div class="panel asis" id="asis">
+      <div class="ptag">
+        <svg class="icon" viewBox="0 0 24 24"><defs><linearGradient id="gemg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#4285f4"/><stop offset=".5" stop-color="#9b72cb"/><stop offset="1" stop-color="#d96570"/></linearGradient></defs>
+          <path d="M12 2c.55 5.4 2.6 7.45 8 8-5.4 .55-7.45 2.6-8 8-.55-5.4-2.6-7.45-8-8 5.4-.55 7.45-2.6 8-8z" fill="url(#gemg)"/></svg>
+        <span class="who">그냥 AI</span>
+        <span class="sub">Gemini 3.5 Flash</span>
+      </div>
+      <div class="body">
+        <div class="ububble">경부선 KTX 정차역, 몇 개일까요?</div>
+        <div class="ans">
+          <p>총 개수는 <b>어떤 운행 계통(경로)을 기준으로 하느냐</b>에 따라 조금씩 달라집니다.</p>
+          <div class="hedge">
+            <div class="b">본선 기준 <b>9</b>개</div>
+            <div class="b">일반선 포함 <b>13</b>개</div>
+          </div>
+          <div class="grp"><div class="lab">고속선 본선 (9개)</div>
+            <div class="names">서울 · 광명 · 오송 · 대전 · 김천(구미) · 동대구 · 경주 · 울산 · 부산</div></div>
+          <div class="grp"><div class="lab">일반선 · 우회 추가 (+4)</div>
+            <div class="names">영등포 · 수원 · 서대구 · 구포</div></div>
+          <p class="note">💡 행신역은 경의선 구간이라 제외되기도 합니다…</p>
+          <div class="miss-meta">출처 — · 검증 불가</div>
+        </div>
+        <div class="gem-input">＋ Gemini에게 물어보기 <span class="flash">Flash ▾</span></div>
+      </div>
+    </div>
+
+    <!-- 우: To-Be (MCP) -->
+    <div class="panel tobe" id="tobe">
+      <div class="ptag">
+        <svg class="icon" viewBox="0 0 24 24"><g fill="#D97757">
+          <rect x="11" y="2" width="2" height="20" rx="1" transform="rotate(0 12 12)"/>
+          <rect x="11" y="2" width="2" height="20" rx="1" transform="rotate(60 12 12)"/>
+          <rect x="11" y="2" width="2" height="20" rx="1" transform="rotate(120 12 12)"/></g></svg>
+        <span class="who">MCP</span>
+        <span class="sub">Claude + korail-network</span>
+      </div>
+      <div class="body">
+        <!-- 작동 연출 -->
+        <div id="mcpWork">
+          <div class="l"><span class="dim">$</span> <span class="cur">korail-network</span> 도구 로딩…</div>
+          <div class="l"><span class="cur">›</span> get_ktx_stations(<span class="dim">line=</span>"경부선")</div>
+          <div class="l"><span class="ok">‹ 200 OK</span> · <b>19건</b> 수신</div>
+          <div class="l"><span class="cur">›</span> 소재지 매핑 · 순서 정렬 중…</div>
+          <div class="l ok">✓ 완료 · 19개역 정렬</div>
+        </div>
+        <!-- 결과 -->
+        <div id="mcpResult">
+          <div class="rbadge">
+            <span class="big">총 <b>19</b>개역</span>
+            <span class="date">공공데이터 기반</span>
+          </div>
+          <div class="rsub">경부선 KTX 정차역 — 행신 → 부산</div>
+          <div class="tbl">
+            <div class="th"><span>순번</span><span>역명</span><span style="text-align:right">소재지</span></div>
+            <div class="rows" id="rows"></div>
+          </div>
+          <div class="rnote">※ 모든 KTX가 전 역 정차하는 것은 아님 — 행신·영등포·수원·포항·경산·물금·구포 등은 일부 열차만 정차. 출처: 한국철도공사 공공데이터포털.</div>
+        </div>
+        <svg class="claude-mark" viewBox="0 0 24 24"><g fill="#D97757">
+          <rect x="11" y="3" width="2" height="18" rx="1"/><rect x="11" y="3" width="2" height="18" rx="1" transform="rotate(60 12 12)"/>
+          <rect x="11" y="3" width="2" height="18" rx="1" transform="rotate(120 12 12)"/></g></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- 푸터 대비 -->
+  <div class="foot">
+    <div class="score">
+      <span class="v x" id="scGem">0</span>
+      <div class="cap"><b>그냥 AI</b>얼버무림 · 과소집계 ✗</div>
+    </div>
+    <div class="msg" id="footMsg"><span>6개 역</span> 차이 — AI는 얼버무리고, MCP는 데이터 기반 정확히</div>
+    <div class="score">
+      <span class="v o" id="scMcp">0</span>
+      <div class="cap"><b>MCP</b>데이터 기반 · 정확 ✓</div>
+    </div>
+  </div>
+
+  <!-- Clawd -->
+  <div id="bubble">6개 역이나 빠졌네요! MCP는 <b>하나도</b> 안 놓쳤어요 ✨</div>
+  <div id="clawdWrap"><svg id="clawd"></svg></div>
+</div>
+
+<script src="clawd-sprites.js"></script>
+<script src="lib/gsap.min.js"></script>
+<script>
+/* ---------- 데이터 ---------- */
+const STATIONS = [
+  {n:1,name:'행신',loc:'경기 고양',miss:true},
+  {n:2,name:'서울',loc:'서울 용산'},
+  {n:3,name:'영등포',loc:'서울 영등포'},
+  {n:4,name:'광명',loc:'경기 광명'},
+  {n:5,name:'수원',loc:'경기 수원'},
+  {n:6,name:'천안아산',loc:'충남 아산',miss:true},
+  {n:7,name:'오송',loc:'충북 청주'},
+  {n:8,name:'대전',loc:'대전 동구'},
+  {n:9,name:'김천구미',loc:'경북 김천'},
+  {n:10,name:'서대구',loc:'대구 서구'},
+  {n:11,name:'동대구',loc:'대구 동구'},
+  {n:12,name:'포항',loc:'경북 포항',miss:true},
+  {n:13,name:'경주',loc:'경북 경주'},
+  {n:14,name:'울산(통도사)',loc:'울산 울주'},
+  {n:15,name:'경산',loc:'경북 경산',miss:true},
+  {n:16,name:'밀양',loc:'경남 밀양',miss:true},
+  {n:17,name:'물금',loc:'경남 양산',miss:true},
+  {n:18,name:'구포',loc:'부산 북구'},
+  {n:19,name:'부산',loc:'부산 동구'},
+];
+
+/* ---------- 표 렌더 ---------- */
+const rowsEl = document.getElementById('rows');
+STATIONS.forEach(s=>{
+  const tr=document.createElement('div');
+  tr.className='tr'+(s.miss?' miss':'');
+  if(s.miss) tr.dataset.miss=s.name;
+  tr.innerHTML=`<span class="no">${s.n}</span><span class="nm">${s.name}</span><span class="lo">${s.loc}</span>`;
+  rowsEl.appendChild(tr);
+});
+
+/* ---------- 무대 스케일 ---------- */
+const deck=document.getElementById('deck');
+let scale=1;
+function fit(){
+  scale=Math.min(window.innerWidth/1280, window.innerHeight/720);
+  deck.style.transform=`scale(${scale})`;
+}
+window.addEventListener('resize',fit); fit();
+
+/* ---------- Clawd 렌더 (clawd-real.html 방식) ---------- */
+// ── 픽셀 Clawd (claudepix 스프라이트, window.CLAWD · 기본형=idle_breathe) ──
+const svg=document.getElementById('clawd');
+let cur='idle_breathe',frameIdx=0,timer=null,PX=4;
+const SY=0.75; // 세로 압축비 — 몸통을 가로넓게(짜리몽땅). 1=원본, 작을수록 납작
+const CROP={x:2,y:3,w:16,h:14}; // 캐릭터 영역만(빈 여백 제거), 외곽선·곡선 없음
+function renderGrid(grid,pal){
+  const vbH=CROP.h*PX*SY;
+  svg.setAttribute('viewBox',`${CROP.x*PX} ${(CROP.y*PX*SY).toFixed(2)} ${CROP.w*PX} ${vbH.toFixed(2)}`);
+  svg.setAttribute('width',CROP.w*PX); svg.setAttribute('height',vbH.toFixed(2));
+  svg.setAttribute('shape-rendering','crispEdges');
+  const h=grid.length,w=grid[0].length, o=0.7; let s=''; // o: 픽셀 사이 줄(seam) 제거용 겹침
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const v=grid[y][x];
+    if(v>0&&pal[v]&&pal[v]!=='transparent')
+      s+=`<rect x="${x*PX}" y="${(y*PX*SY).toFixed(2)}" width="${PX+o}" height="${(PX*SY+o).toFixed(2)}" fill="${pal[v]}"/>`;}
+  svg.innerHTML=s;
+}
+function step(){const sp=window.CLAWD&&window.CLAWD[cur];if(!sp)return;
+  const fr=sp.frames[frameIdx%sp.frames.length];renderGrid(fr.grid,sp.palette);frameIdx++;
+  timer=setTimeout(step,fr.hold||120);}
+function play(name){if(!window.CLAWD||!window.CLAWD[name])return;cur=name;frameIdx=0;clearTimeout(timer);step();}
+
+/* ---------- 누락 칩 위치 helper ---------- */
+function posInDeck(el){
+  const d=deck.getBoundingClientRect(), r=el.getBoundingClientRect();
+  return {x:(r.left-d.left)/scale, y:(r.top-d.top)/scale, w:r.width/scale, h:r.height/scale};
+}
+
+/* ---------- 타임라인 ---------- */
+const work=document.getElementById('mcpWork');
+const result=document.getElementById('mcpResult');
+const bubble=document.getElementById('bubble');
+let activeChips=[];
+
+function buildTimeline(){
+  // 초기화
+  activeChips.forEach(c=>c.remove()); activeChips=[];
+  document.querySelectorAll('.tbl .tr.lit').forEach(r=>r.classList.remove('lit'));
+  play('idle_breathe');
+
+  const tl=gsap.timeline();
+  const workLines=work.querySelectorAll('.l');
+
+  // 초기 상태
+  tl.set('.head',{opacity:0,y:-14});
+  tl.set('#asis',{opacity:0,x:-26});
+  tl.set('#tobe',{opacity:0,x:26});
+  tl.set('.foot',{opacity:0,y:20});
+  tl.set('.ans, .gem-input',{opacity:0});
+  tl.set('.ububble',{opacity:0,y:8});
+  tl.set(workLines,{opacity:0,x:-8});
+  tl.set(result,{opacity:0});
+  tl.set(work,{opacity:1});
+  tl.set('#scGem',{innerText:'0'}); tl.set('#scMcp',{innerText:'0'});
+  tl.set(bubble,{opacity:0,y:10,scale:.9});
+
+  // 1) 헤더 + 패널 등장
+  tl.to('.head',{opacity:1,y:0,duration:.5,ease:'power2.out'})
+    .to('#asis',{opacity:1,x:0,duration:.5,ease:'power2.out'},'-=.2')
+    .to('#tobe',{opacity:1,x:0,duration:.5,ease:'power2.out'},'<')
+    .to('.foot',{opacity:1,y:0,duration:.5,ease:'power2.out'},'<');
+
+  // 2) 좌: 질문 → Gemini가 "즉답"으로 얼버무림
+  tl.to('.ububble',{opacity:1,y:0,duration:.35},'+=.1')
+    .to('.ans',{opacity:1,duration:.45,ease:'power1.out'},'+=.25')
+    .to('.gem-input',{opacity:1,duration:.3},'-=.2')
+    .to('.hedge .b',{scale:1.06,duration:.25,yoyo:true,repeat:1,stagger:.12,ease:'power1.inOut'},'-=.1');
+
+  // 3) 우: MCP 작동 연출 (Clawd 생각)
+  tl.add(()=>play('work_think'),'-=.1');
+  tl.to(workLines,{opacity:1,x:0,duration:.32,stagger:.42,ease:'power1.out'},'+=.05');
+
+  // 4) 작동 → 결과 전환
+  tl.to(work,{opacity:0,duration:.4},'+=.35')
+    .to(result,{opacity:1,duration:.45,ease:'power2.out'},'-=.1');
+
+  // 5) 표 행 스태거 등장
+  tl.from('.tbl .tr',{opacity:0,y:6,duration:.5,stagger:.028,ease:'power1.out'},'-=.15');
+
+  // 6) 점수 카운트업 (13 vs 19)
+  const gem={v:0},mcp={v:0};
+  tl.to(gem,{v:13,duration:.7,ease:'power1.out',onUpdate:()=>document.getElementById('scGem').innerText=Math.round(gem.v)},'+=.1')
+    .to(mcp,{v:19,duration:.9,ease:'power1.out',onUpdate:()=>document.getElementById('scMcp').innerText=Math.round(mcp.v)},'<');
+
+  // 7) 누락 6역: 칩이 좌→우로 날아가 표 행에 꽂히고 하이라이트 (메인 타임라인·결정적)
+  const missRows=[...document.querySelectorAll('.tbl .tr[data-miss]')];
+  const _grps=document.querySelectorAll('#asis .grp');
+  const startP=posInDeck(_grps[_grps.length-1]||document.querySelector('#asis .ans'));
+  tl.addLabel('hi','+=.25');
+  missRows.forEach((row,i)=>{
+    const chip=document.createElement('div');
+    chip.className='chip'; chip.textContent='+ '+row.dataset.miss;
+    deck.appendChild(chip); activeChips.push(chip);
+    const tp=posInDeck(row);
+    gsap.set(chip,{x:startP.x+12, y:startP.y+6, opacity:0, scale:.85});
+    const base=i*0.22;
+    tl.to(chip,{opacity:1,scale:1,duration:.2,ease:'back.out(2)'}, `hi+=${base}`);
+    tl.to(chip,{x:tp.x+tp.w-84, y:tp.y-1, duration:.5, ease:'power2.inOut'}, `hi+=${base+0.14}`);
+    tl.add(()=>row.classList.add('lit'), `hi+=${base+0.62}`);
+    tl.fromTo(row,{boxShadow:'inset 0 0 0 40px rgba(34,211,238,.55)'},
+      {boxShadow:'inset 0 0 0 40px rgba(34,211,238,0)',duration:.8,clearProps:'boxShadow'}, `hi+=${base+0.62}`);
+    tl.to(chip,{opacity:0,scale:.6,duration:.25}, `hi+=${base+0.72}`);
+  });
+
+  // 8) Clawd 놀람 + 말풍선
+  tl.add(()=>play('expression_surprise'),'+=.45');
+  tl.fromTo('#clawdWrap',{y:0},{y:-16,duration:.3,yoyo:true,repeat:1,ease:'power2.out'},'<');
+  tl.to(bubble,{opacity:1,y:0,scale:1,duration:.45,ease:'back.out(1.7)'},'-=.2');
+  tl.add(()=>play('idle_look_around'),'+=1.2');
+
+  return tl;
+}
+
+/* 정적 최종상태 (검증/캡처용) — #still 해시로 진입 */
+function composeFinal(){
+  gsap.set('#mcpWork',{opacity:0});
+  gsap.set('#mcpResult',{opacity:1});
+  gsap.set('.tbl .tr',{opacity:1,y:0});
+  gsap.set('.ans,.gem-input,.ububble,.head,#asis,#tobe,.foot',{opacity:1,x:0,y:0});
+  document.getElementById('scGem').innerText='13';
+  document.getElementById('scMcp').innerText='19';
+  document.querySelectorAll('.tbl .tr[data-miss]').forEach(r=>r.classList.add('lit'));
+  gsap.set('#bubble',{opacity:1,y:0,scale:1});
+  clearTimeout(timer); const sp=window.CLAWD&&window.CLAWD['expression_surprise']; if(sp) renderGrid(sp.frames[0].grid,sp.palette);
+}
+
+let tl=null;
+function startAuto(){ if(tl)tl.kill(); clearTimeout(timer); frameIdx=0; if(window.CLAWD) play('idle_breathe'); tl=buildTimeline(); window.tl=tl; }
+document.getElementById('replay').addEventListener('click',()=>{ location.hash=''; startAuto(); });
+
+if(location.hash==='#still'){ composeFinal(); }
+else if(window.self===window.top){ startAuto(); }
+</script>
+</body>
+</html>
