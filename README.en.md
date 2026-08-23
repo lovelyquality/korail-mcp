@@ -11,6 +11,103 @@ Once installed, you can query KORAIL data in natural language from Claude, Curso
 >
 > 📦 **Disk space needed** — about **100MB** (including the Python runtime and packages managed by `uv`)
 
+> 👉 **New here?** Just follow the 3 install steps below. The full list of 98 tools further down is only for reference once you're set up.
+
+---
+
+## ⚙️ Installation (Windows · 2 steps)
+
+No need to install Python separately or download the repository. **`uv` prepares everything it needs automatically.**
+
+### Step 1 — Install uv (one-time)
+
+Open PowerShell and paste the following. **Administrator rights are not required.**
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+After installing, **open a new PowerShell window** — if `uv --version` prints a version, it worked.
+
+### Step 2 — Install KORAIL MCP (one-time)
+
+```powershell
+uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korail-mcp
+```
+
+Success looks like `Installed 1 executable: korail-mcp` at the end.
+
+> ⏳ The first install takes 1–3 minutes (downloading Python and packages). After that, startup takes **about 5 seconds**.
+>
+> 🔄 **Updating to the latest version** — run `uv tool upgrade korail-mcp`, then restart your client.
+
+---
+
+## 🔌 Step 3 — Connect your client
+
+Add the JSON below inside your client config file's `mcpServers` section, replacing `<username>` with your Windows account name.
+
+```json
+{
+  "mcpServers": {
+    "korail-mcp": {
+      "command": "C:\\Users\\<username>\\.local\\bin\\korail-mcp.exe"
+    }
+  }
+}
+```
+
+> 💡 Not sure of your account name? Run `echo $env:USERNAME` in PowerShell. JSON requires backslashes to be doubled (`\\`).
+>
+> ⚠️ If you already use other MCP servers, **add only the `korail-mcp` entry** to your existing `mcpServers` block — overwriting the whole file will remove your other servers.
+
+### Config file locations
+
+| Client | Config file |
+|---|---|
+| **Claude Desktop** | `%APPDATA%\Claude\claude_desktop_config.json` |
+| **Cursor** | `C:\Users\<username>\.cursor\mcp.json` |
+| **Antigravity** | `C:\Users\<username>\.gemini\antigravity\mcp_config.json` |
+
+<details>
+<summary>Claude Desktop — if the folder doesn't exist</summary>
+
+1. Type `%APPDATA%` in Explorer's address bar and press Enter
+2. Create a `Claude` folder if it doesn't exist
+3. Inside it, create `claude_desktop_config.json` and paste the JSON above
+
+If `AppData` isn't visible, enable **Hidden items** in Explorer → View.
+</details>
+
+<details>
+<summary>Cursor / Antigravity — if the file or folder doesn't exist</summary>
+
+If the `.cursor` or `.gemini\antigravity` folder (or the config file inside it) doesn't exist yet, just create it yourself.
+
+1. Type `%USERPROFILE%` in Explorer's address bar and press Enter (goes to your account folder)
+2. Create the missing folder (`.cursor` or `.gemini\antigravity`)
+3. Inside it, create `mcp.json` (Cursor) or `mcp_config.json` (Antigravity) and paste the JSON above
+
+With Antigravity it's even easier to just ask the agent — paste the JSON above into the chat and say "register this MCP server." It can be installed for free; no separate subscription is needed to connect KORAIL MCP.
+</details>
+
+### After connecting — fully quit and relaunch your client
+
+Closing the window with the X doesn't stop it — it **keeps running in the system tray** (the `^` area near the clock), so the new config won't take effect.
+→ Right-click the tray icon → **Quit / Exit**, then relaunch.
+
+Once connected, `korail-mcp` shows as **running** in your client's MCP server list, and all 98 tools become available.
+
+### 💬 Verify it worked — try asking
+
+```
+Does Seoul Station have an elevator?
+What was the mainline rail transport performance in 2024?
+What's the operation plan for KTX train 101?
+```
+
+If you get a real answer back, you're all set. More example queries are in the "Example queries" section further down.
+
 ---
 
 ## 📦 Included Servers (11 servers · 98 tools)
@@ -208,87 +305,6 @@ Once installed, you can query KORAIL data in natural language from Claude, Curso
 | get_urban_train_facility | Per-car facilities (fire extinguishers, emergency call phones, defibrillators, priority seating, wheelchair space, etc.) |
 | get_urban_train_environment | In-train environmental info per car (temperature, humidity, fine dust, etc.) |
 </details>
-
----
-
-## ⚙️ Installation (Windows · 2 steps)
-
-No need to install Python separately or download the repository. **`uv` prepares everything it needs automatically.**
-
-### Step 1 — Install uv (one-time)
-
-Open PowerShell and paste the following. **Administrator rights are not required.**
-
-```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
-
-After installing, **open a new PowerShell window** — if `uv --version` prints a version, it worked.
-
-### Step 2 — Install KORAIL MCP (one-time)
-
-```powershell
-uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korail-mcp
-```
-
-Success looks like `Installed 1 executable: korail-mcp` at the end.
-
-> ⏳ The first install takes 1–3 minutes (downloading Python and packages). After that, startup takes **about 5 seconds**.
->
-> 🔄 **Updating to the latest version** — run `uv tool upgrade korail-mcp`, then restart your client.
-
----
-
-## 🔌 Step 3 — Connect your client
-
-Add the JSON below inside your client config file's `mcpServers` section, replacing `<username>` with your Windows account name.
-
-```json
-{
-  "mcpServers": {
-    "korail-mcp": {
-      "command": "C:\\Users\\<username>\\.local\\bin\\korail-mcp.exe"
-    }
-  }
-}
-```
-
-> 💡 Not sure of your account name? Run `echo $env:USERNAME` in PowerShell. JSON requires backslashes to be doubled (`\\`).
->
-> ⚠️ If you already use other MCP servers, **add only the `korail-mcp` entry** to your existing `mcpServers` block — overwriting the whole file will remove your other servers.
-
-### Config file locations
-
-| Client | Config file |
-|---|---|
-| **Claude Desktop** | `%APPDATA%\Claude\claude_desktop_config.json` |
-| **Cursor** | `C:\Users\<username>\.cursor\mcp.json` |
-| **Antigravity** | `C:\Users\<username>\.gemini\antigravity\mcp_config.json` |
-
-<details>
-<summary>Claude Desktop — if the folder doesn't exist</summary>
-
-1. Type `%APPDATA%` in Explorer's address bar and press Enter
-2. Create a `Claude` folder if it doesn't exist
-3. Inside it, create `claude_desktop_config.json` and paste the JSON above
-
-If `AppData` isn't visible, enable **Hidden items** in Explorer → View.
-</details>
-
-<details>
-<summary>Antigravity — configure via natural language</summary>
-
-With Antigravity it's easier to just ask the agent. Paste the JSON above into the chat and say "register this MCP server."
-
-> 💡 Antigravity can be installed for free; no separate subscription is needed to connect KORAIL MCP.
-</details>
-
-### After connecting — fully quit and relaunch your client
-
-Closing the window with the X doesn't stop it — it **keeps running in the system tray** (the `^` area near the clock), so the new config won't take effect.
-→ Right-click the tray icon → **Quit / Exit**, then relaunch.
-
-Once connected, `korail-mcp` shows as **running** in your client's MCP server list, and all 98 tools become available.
 
 ---
 

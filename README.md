@@ -11,6 +11,103 @@
 >
 > 📦 **필요 디스크 공간** — 약 **100MB** (`uv`가 관리하는 Python과 패키지 포함)
 
+> 👉 **처음이신가요?** 바로 아래 "설치" 3단계만 따라 하시면 됩니다. 98개 도구 전체 목록은 설치를 마친 뒤 필요할 때 참고하세요.
+
+---
+
+## ⚙️ 설치 (Windows · 2단계)
+
+Python을 따로 설치하거나 저장소를 다운로드할 필요가 없습니다. **`uv`가 필요한 것을 알아서 준비합니다.**
+
+### 1단계 — uv 설치 (최초 1회)
+
+PowerShell을 열고 아래를 붙여넣습니다. **관리자 권한이 필요 없습니다.**
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+설치 후 PowerShell을 **새로 열고** `uv --version`이 출력되면 성공입니다.
+
+### 2단계 — KORAIL MCP 설치 (최초 1회)
+
+```powershell
+uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korail-mcp
+```
+
+마지막에 `Installed 1 executable: korail-mcp` 가 나오면 성공입니다.
+
+> ⏳ 첫 설치는 1~3분 걸립니다(Python과 패키지를 받는 시간). 설치 후 실행은 **약 5초**입니다.
+>
+> 🔄 **최신 버전으로 갱신** — `uv tool upgrade korail-mcp` 실행 후 클라이언트를 재시작하세요.
+
+---
+
+## 🔌 3단계 — 클라이언트 연결
+
+아래 JSON을 클라이언트 설정 파일의 `mcpServers` 안에 넣고, **`<사용자명>` 부분만 본인 윈도우 계정명으로 바꿉니다.**
+
+```json
+{
+  "mcpServers": {
+    "korail-mcp": {
+      "command": "C:\\Users\\<사용자명>\\.local\\bin\\korail-mcp.exe"
+    }
+  }
+}
+```
+
+> 💡 계정명을 모르면 PowerShell에 `echo $env:USERNAME` 을 입력하세요. 경로의 역슬래시는 JSON 규칙상 **두 개(`\\`)** 로 씁니다.
+>
+> ⚠️ 이미 다른 MCP 서버를 쓰고 있다면 **`korail-mcp` 항목만** 기존 `mcpServers` 안에 추가하세요(전체를 덮어쓰면 기존 서버가 사라집니다).
+
+### 설정 파일 위치
+
+| 클라이언트 | 설정 파일 |
+|---|---|
+| **Claude Desktop** | `%APPDATA%\Claude\claude_desktop_config.json` |
+| **Cursor** | `C:\Users\<사용자명>\.cursor\mcp.json` |
+| **Antigravity** | `C:\Users\<사용자명>\.gemini\antigravity\mcp_config.json` |
+
+<details>
+<summary>Claude Desktop — 폴더가 없을 때</summary>
+
+1. 탐색기 주소창에 `%APPDATA%` 입력 → Enter
+2. `Claude` 폴더가 없으면 직접 만드세요
+3. 그 안에 `claude_desktop_config.json` 파일을 만들고 위 JSON을 넣으세요
+
+`AppData`가 안 보이면 탐색기 → 보기 → **숨긴 항목**을 체크하세요.
+</details>
+
+<details>
+<summary>Cursor / Antigravity — 파일이나 폴더가 없을 때</summary>
+
+`.cursor` 또는 `.gemini\antigravity` 폴더나 그 안의 설정 파일이 없다면 직접 만들면 됩니다.
+
+1. 탐색기 주소창에 `%USERPROFILE%` 입력 → Enter (본인 계정 폴더로 이동)
+2. 없는 폴더(`.cursor` 또는 `.gemini\antigravity`)를 새로 만드세요
+3. 그 안에 `mcp.json`(Cursor) 또는 `mcp_config.json`(Antigravity) 파일을 만들고 위 JSON을 넣으세요
+
+Antigravity는 채팅에 위 JSON을 붙여넣고 "이 MCP 서버를 등록해줘"라고 요청하는 방법이 더 쉽습니다. 무료로 설치 가능하며, KORAIL MCP 연결에 별도 구독이 필요 없습니다.
+</details>
+
+### 연결 후 반드시 — 클라이언트를 완전히 종료했다 다시 실행
+
+창의 X를 눌러 닫아도 **트레이(작업표시줄 오른쪽 `^` 안)에 계속 실행 중**이라 설정이 적용되지 않습니다.
+→ 트레이 아이콘 **우클릭 → Quit / 종료** 후 다시 실행하세요.
+
+정상 연결되면 설정의 MCP 서버 목록에 `korail-mcp`가 **running** 으로 표시되고, 98개 도구를 쓸 수 있습니다.
+
+### 💬 설치 확인 — 이렇게 물어보세요
+
+```
+서울역에 엘리베이터가 있나요?
+2024년 간선철도 수송실적을 알려주세요.
+KTX 101 열차의 운행 계획을 알려주세요.
+```
+
+정상 응답이 오면 설치 완료입니다. 더 많은 사용 예시는 문서 하단의 "사용 예시" 섹션을 참고하세요.
+
 ---
 
 ## 📦 제공 서버 (총 11개 · 98개 도구)
@@ -208,87 +305,6 @@
 | get_urban_train_facility | 차량(호차)별 시설 조회 (소화기·비상콜폰·제세동기·임산부석·노약자석·휠체어 등) |
 | get_urban_train_environment | 열차별 차내 환경정보 조회 (온도·습도·미세먼지 등) |
 </details>
-
----
-
-## ⚙️ 설치 (Windows · 2단계)
-
-Python을 따로 설치하거나 저장소를 다운로드할 필요가 없습니다. **`uv`가 필요한 것을 알아서 준비합니다.**
-
-### 1단계 — uv 설치 (최초 1회)
-
-PowerShell을 열고 아래를 붙여넣습니다. **관리자 권한이 필요 없습니다.**
-
-```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
-
-설치 후 PowerShell을 **새로 열고** `uv --version`이 출력되면 성공입니다.
-
-### 2단계 — KORAIL MCP 설치 (최초 1회)
-
-```powershell
-uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korail-mcp
-```
-
-마지막에 `Installed 1 executable: korail-mcp` 가 나오면 성공입니다.
-
-> ⏳ 첫 설치는 1~3분 걸립니다(Python과 패키지를 받는 시간). 설치 후 실행은 **약 5초**입니다.
->
-> 🔄 **최신 버전으로 갱신** — `uv tool upgrade korail-mcp` 실행 후 클라이언트를 재시작하세요.
-
----
-
-## 🔌 3단계 — 클라이언트 연결
-
-아래 JSON을 클라이언트 설정 파일의 `mcpServers` 안에 넣고, **`<사용자명>` 부분만 본인 윈도우 계정명으로 바꿉니다.**
-
-```json
-{
-  "mcpServers": {
-    "korail-mcp": {
-      "command": "C:\\Users\\<사용자명>\\.local\\bin\\korail-mcp.exe"
-    }
-  }
-}
-```
-
-> 💡 계정명을 모르면 PowerShell에 `echo $env:USERNAME` 을 입력하세요. 경로의 역슬래시는 JSON 규칙상 **두 개(`\\`)** 로 씁니다.
->
-> ⚠️ 이미 다른 MCP 서버를 쓰고 있다면 **`korail-mcp` 항목만** 기존 `mcpServers` 안에 추가하세요(전체를 덮어쓰면 기존 서버가 사라집니다).
-
-### 설정 파일 위치
-
-| 클라이언트 | 설정 파일 |
-|---|---|
-| **Claude Desktop** | `%APPDATA%\Claude\claude_desktop_config.json` |
-| **Cursor** | `C:\Users\<사용자명>\.cursor\mcp.json` |
-| **Antigravity** | `C:\Users\<사용자명>\.gemini\antigravity\mcp_config.json` |
-
-<details>
-<summary>Claude Desktop — 폴더가 없을 때</summary>
-
-1. 탐색기 주소창에 `%APPDATA%` 입력 → Enter
-2. `Claude` 폴더가 없으면 직접 만드세요
-3. 그 안에 `claude_desktop_config.json` 파일을 만들고 위 JSON을 넣으세요
-
-`AppData`가 안 보이면 탐색기 → 보기 → **숨긴 항목**을 체크하세요.
-</details>
-
-<details>
-<summary>Antigravity — 자연어로 설정하기</summary>
-
-Antigravity는 에이전트에게 시키는 방법이 더 쉽습니다. 채팅에 위 JSON을 붙여넣고 "이 MCP 서버를 등록해줘" 라고 요청하세요.
-
-> 💡 Antigravity는 무료로 설치 가능하며, KORAIL MCP 연결에 별도 구독이 필요 없습니다.
-</details>
-
-### 연결 후 반드시 — 클라이언트를 완전히 종료했다 다시 실행
-
-창의 X를 눌러 닫아도 **트레이(작업표시줄 오른쪽 `^` 안)에 계속 실행 중**이라 설정이 적용되지 않습니다.
-→ 트레이 아이콘 **우클릭 → Quit / 종료** 후 다시 실행하세요.
-
-정상 연결되면 설정의 MCP 서버 목록에 `korail-mcp`가 **running** 으로 표시되고, 98개 도구를 쓸 수 있습니다.
 
 ---
 

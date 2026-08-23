@@ -83,6 +83,8 @@ def get_station_facilities(station_name: str) -> str:
     """역 이름으로 편의시설 정보 조회 (B551457 실시간 API).
     엘리베이터·에스컬레이터·화장실·수유실·종합안내센터 유무.
     station_name: 역 이름 부분일치 (예: '서울', '부산')
+    (EN: station amenities/facilities - elevator, escalator, restroom, nursing room, information center.
+    JA: 駅の便宜施設・設備 - エレベーター、エスカレーター、トイレ、授乳室、案内センター)
     ※ 데이터기준일: 실시간 API (날짜 미포함). 현장 변경이 즉시 반영되지 않을 수 있음."""
     items = _fetch_all("stationFacilities")
     matches = [i for i in items if station_name in i.get("stn_nm", "")]
@@ -108,6 +110,9 @@ def get_accessible_facilities(station_name: str) -> str:
     """역 이름으로 교통약자(장애인) 편의시설 조회 (B551457 실시간 API).
     휠체어리프트·장애인경사로·장애인화장실 유무.
     station_name: 역 이름 부분일치 (예: '서울', '부산')
+    (EN: accessible/accessibility facilities for disabled and mobility-impaired passengers -
+    wheelchair lift, accessible ramp, accessible restroom.
+    JA: 交通弱者・障害者向け便宜施設 - 車椅子リフト、スロープ、障害者トイレ)
     ※ 데이터기준일: 실시간 API. 현장 변경이 즉시 반영되지 않을 수 있음."""
     items = _fetch_all("weekPersonFacilities")
     matches = [i for i in items if station_name in i.get("stn_nm", "")]
@@ -129,6 +134,7 @@ def get_accessible_facilities(station_name: str) -> str:
 @mcp.tool()
 def list_stations_with_elevator() -> str:
     """엘리베이터가 설치된 역 목록 전체 조회 (B551457 실시간 API).
+    (EN: list of stations with elevators. JA: エレベーターが設置された駅の一覧)
     ※ 데이터기준일: 실시간 API. 현장 변경이 즉시 반영되지 않을 수 있음."""
     items = _fetch_all("stationFacilities")
     matches = [i for i in items if int(i.get("elevt_cnt", 0) or 0) > 0]
@@ -144,6 +150,8 @@ def get_station_facilities_detail(station_name: str = "") -> str:
     엘리베이터·에스컬레이터·휠체어리프트·장애인경사로·장애인화장실·일반화장실·
     모유수유실·종합안내소·환승주차장(면수) 수량 포함.
     station_name: 역명 부분일치 (예: '서울', '광명'). 미입력 시 전체 반환.
+    (EN: detailed interior/exterior station facilities - elevator, escalator, wheelchair lift,
+    accessible ramp/restroom, nursing room, parking. JA: 駅舎内外の詳細な設備現況)
     ※ B551457 편의시설 API 대비 수량 정보 더 풍부하나 데이터 기준일 고정(2024.12.31)."""
     PATH = "/15090379/v1/uddi:6a8ae00e-4d06-4bdd-af70-c360b9fbbbc6"
     rows = _get("station_facilities_detail", lambda: _odcloud_load_all(PATH))
@@ -161,7 +169,8 @@ def get_station_transfer_info(station_name: str = "", line_name: str = "") -> st
     노선별·역별 KTX·광역철도·도시철도 역수 및 환승주차장 면수 포함.
     station_name: 역명 부분일치 (예: '서울', '동대구').
     line_name: 노선명 부분일치 (예: '경부고속', '호남선').
-    미입력 시 전체 반환."""
+    미입력 시 전체 반환.
+    (EN: transfer info to other transit modes by station. JA: 駅別の他交通手段への乗換現況)"""
     PATH = "/15090378/v1/uddi:57b94475-833c-4242-9a42-cd7d3bfef4d8"
     rows = _get("station_transfer_info", lambda: _odcloud_load_all(PATH))
     result = rows
@@ -180,7 +189,8 @@ def get_station_location(station_name: str = "", region: str = "") -> str:
     지역본부·역명·위도·경도·출입구 개수 포함.
     station_name: 역명 부분일치 (예: '서울', '부산').
     region: 지역본부 부분일치 (예: '서울본부', '대전충청', '강원본부').
-    미입력 시 전체 반환."""
+    미입력 시 전체 반환.
+    (EN: station location - coordinates, regional HQ, number of exits. JA: 駅の位置情報)"""
     PATH = "/15127532/v1/uddi:c1d09745-9e5c-48e4-b26c-c1833592509c"
     rows = _get("station_location", lambda: _odcloud_load_all(PATH))
     result = rows

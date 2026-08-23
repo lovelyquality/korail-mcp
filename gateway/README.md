@@ -35,6 +35,25 @@ uvicorn gateway.server:app --host 0.0.0.0 --port 8080
 
 `MCP_API_KEY` 환경변수 미설정 시 인증 없이 열림(개발용). `.env.example` 참고.
 
+> ⚠️ **`No module named gateway.server` 오류가 나면** — 터미널에 다른 프로젝트의 가상환경(`VIRTUAL_ENV`)이 이미 활성화되어 있어 `uv run`이 그 venv의 python을 사용했기 때문입니다. 아래처럼 비우고 다시 실행하세요.
+> ```powershell
+> set VIRTUAL_ENV=
+> cd /d E:\AI\MCP
+> uv run python -m gateway.server --transport http --port 8080
+> ```
+
+### Grok / ChatGPT 실제 연결 방법 (실전 확인됨)
+
+원격 모드로 띄운 뒤 (`https://<host>/mcp`), 각 서비스에 아래처럼 등록합니다.
+
+**Grok** — 설정 → 스킬 및 커넥터 → 새 커넥터 → **맞춤 모드**. 이름과 서버 URL을 입력합니다.
+> ⚠️ Grok의 맞춤 커넥터는 **OAuth 또는 인증 없음만 지원**하며, `Authorization: Bearer <MCP_API_KEY>` 같은 단순 토큰 입력란이 없습니다. `MCP_API_KEY`를 설정한 상태로 등록하면 "OAuth 인증 정보 필요" 화면으로 막힙니다 — Grok용으로는 `MCP_API_KEY`를 비우고(무인증) 배포하거나 별도 OAuth 프록시를 앞단에 둬야 합니다.
+
+**ChatGPT** — 먼저 설정 → 보안 및 로그인 → **개발자 모드**를 켜야 커스텀 커넥터 등록이 열립니다(위험 고지 동의 필요). 이후 `chatgpt.com/plugins` 우측 상단의 **앱 만들기** 버튼(작은 아이콘이라 화면 밖으로 잘리기 쉬움) → **맞춤형 커넥터** → 이름/서버 URL/인증 방식(OAuth·인증 없음·혼합 중 선택)을 입력합니다.
+> 💡 등록 후 채팅에서 자동으로 도구를 골라 쓰기도 하지만, 확실히 호출시키려면 메시지 앞에 **`@커넥터이름`**을 붙여 명시적으로 멘션하세요. 특히 영어·일본어 질문에서는 자동 판단이 도구를 안 쓰고 자체 웹검색으로 새는 경우가 있었습니다(멘션하면 항상 호출됨).
+
+두 서비스 모두 임시 확인용으로는 `cloudflared tunnel --url http://localhost:8080` 같은 퀵 터널로 충분하지만, 상시 운영은 안정적인 공개 URL(컨테이너 배포 등)이 필요합니다.
+
 ## 컨테이너 배포 (Cloud Run 등)
 
 저장소 루트의 [`Dockerfile`](../Dockerfile)이 이 게이트웨이를 HTTP 모드로 띄운다. 빌드 컨텍스트는 13MB(`.dockerignore`가 venv·발표자산·개인설정 제외).
