@@ -7,7 +7,7 @@
 
 > ✅ **API 키 신청 불필요** — 전용 프록시 서버가 공공데이터 API 호출을 대신 처리합니다.
 >
-> 💻 **로컬 설치형 (stdio)** — 별도 서버 없이 개인 PC에서 직접 실행됩니다. Claude Desktop·Claude Code·Cursor·Antigravity·GitHub Copilot(CLI/VS Code) 등 로컬 MCP 클라이언트에 연결합니다. ChatGPT·Grok 같은 웹 서비스는 원격 연결이 필요합니다(하단 고급 항목 참고).
+> 💻 **로컬 설치형 (stdio)** — 별도 서버 없이 개인 PC에서 직접 실행됩니다. Claude Desktop·Claude Code·Cursor·Antigravity·GitHub Copilot(CLI/VS Code) 등 로컬 MCP 클라이언트에 연결합니다. ChatGPT·Grok 같은 웹 서비스는 원격 연결이 필요합니다(하단 "그 밖의 방식" 참고).
 >
 > 📦 **필요 디스크 공간** — 약 **100MB** (`uv`가 관리하는 Python과 패키지 포함)
 
@@ -137,7 +137,7 @@ Antigravity는 채팅에 위 JSON을 붙여넣고 "이 MCP 서버를 등록해�
 <details>
 <summary>GitHub Copilot CLI — 실제 계정으로 도구 호출까지 실측 완료</summary>
 
-터미널에서 쓰는 공식 **GitHub Copilot CLI**(`@github/copilot`, VS Code 없이도 동작)로 실제 계정 붙여서 검증했습니다. **무료 플랜에서도 MCP 서버 연결이 됩니다.**
+터미널에서 쓰는 공식 **GitHub Copilot CLI**(`@github/copilot`, VS Code 없이도 동작)로 실제 계정 붙여서 검증했습니다. **무료 플랜에서도 MCP 서버 연결이 됩니다** (다만 월 채팅 50회, 모델은 Claude Haiku 4.5 / GPT-5 mini로 제한).
 
 > ⚠️ **사전 준비 — Node.js 22 이상**이 필요합니다. `node --version`으로 확인하고, 없으면 [nodejs.org](https://nodejs.org)에서 LTS 버전을 설치하세요(uv와 달리 자동으로 준비되지 않습니다).
 

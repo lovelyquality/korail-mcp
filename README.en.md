@@ -7,7 +7,7 @@ Once installed, you can query KORAIL data in natural language from Claude Deskto
 
 > ✅ **No API key required** — a dedicated proxy server handles all public data API calls for you.
 >
-> 💻 **Local install (stdio)** — runs directly on your PC, no separate server needed. Connects to local MCP clients such as Claude Desktop, Claude Code, Cursor, Antigravity, and GitHub Copilot (CLI/VS Code). Web-only services like ChatGPT and Grok need a remote connection instead (see the Advanced section below).
+> 💻 **Local install (stdio)** — runs directly on your PC, no separate server needed. Connects to local MCP clients such as Claude Desktop, Claude Code, Cursor, Antigravity, and GitHub Copilot (CLI/VS Code). Web-only services like ChatGPT and Grok need a remote connection instead (see "Other setups" below).
 >
 > 📦 **Disk space needed** — about **100MB** (including the Python runtime and packages managed by `uv`)
 
@@ -137,7 +137,7 @@ With Antigravity it's even easier to just ask the agent — paste the JSON above
 <details>
 <summary>GitHub Copilot CLI — tested end-to-end with a real account, including an actual tool call</summary>
 
-Tested with the official **GitHub Copilot CLI** (`@github/copilot`), which runs in a terminal without needing VS Code at all. **MCP works on the free plan too.**
+Tested with the official **GitHub Copilot CLI** (`@github/copilot`), which runs in a terminal without needing VS Code at all. **MCP works on the free plan too** (limited to 50 chat requests/month, using Claude Haiku 4.5 or GPT-5 mini).
 
 > ⚠️ **Prerequisite — Node.js 22 or later.** Check with `node --version`; if missing, install the LTS release from [nodejs.org](https://nodejs.org) (unlike `uv`, this isn't set up automatically).
 
