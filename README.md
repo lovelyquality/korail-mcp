@@ -3,11 +3,11 @@
 # KORAIL 공공데이터 MCP
 
 한국철도공사(KORAIL) 공공데이터를 AI에 연결하는 MCP(Model Context Protocol) 서버 모음입니다.
-설치 후 Claude·Cursor·Antigravity·GitHub Copilot(CLI/VS Code) 등에서 자연어로 KORAIL 데이터를 조회할 수 있습니다.
+설치 후 Claude Desktop·Claude Code·Cursor·Antigravity·GitHub Copilot(CLI/VS Code) 등에서 자연어로 KORAIL 데이터를 조회할 수 있습니다.
 
 > ✅ **API 키 신청 불필요** — 전용 프록시 서버가 공공데이터 API 호출을 대신 처리합니다.
 >
-> 💻 **로컬 설치형 (stdio)** — 별도 서버 없이 개인 PC에서 직접 실행됩니다. Claude Desktop·Cursor·Antigravity·GitHub Copilot(CLI/VS Code) 등 로컬 MCP 클라이언트에 연결합니다. ChatGPT·Grok 같은 웹 서비스는 원격 연결이 필요합니다(하단 고급 항목 참고).
+> 💻 **로컬 설치형 (stdio)** — 별도 서버 없이 개인 PC에서 직접 실행됩니다. Claude Desktop·Claude Code·Cursor·Antigravity·GitHub Copilot(CLI/VS Code) 등 로컬 MCP 클라이언트에 연결합니다. ChatGPT·Grok 같은 웹 서비스는 원격 연결이 필요합니다(하단 고급 항목 참고).
 >
 > 📦 **필요 디스크 공간** — 약 **100MB** (`uv`가 관리하는 Python과 패키지 포함)
 
@@ -66,6 +66,7 @@ uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korai
 | 클라이언트 | 설정 파일 |
 |---|---|
 | **Claude Desktop** | `%APPDATA%\Claude\claude_desktop_config.json` |
+| **Claude Code** | `claude mcp add` 명령으로 등록 (아래 별도 안내) |
 | **Cursor** | `C:\Users\<사용자명>\.cursor\mcp.json` |
 | **Antigravity** | `C:\Users\<사용자명>\.gemini\antigravity\mcp_config.json` |
 | **GitHub Copilot CLI** | `copilot mcp add` 명령으로 등록 (아래 별도 안내) |
@@ -79,6 +80,30 @@ uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korai
 3. 그 안에 `claude_desktop_config.json` 파일을 만들고 위 JSON을 넣으세요
 
 `AppData`가 안 보이면 탐색기 → 보기 → **숨긴 항목**을 체크하세요.
+</details>
+
+<details>
+<summary>Claude Code — 실제 계정으로 도구 호출까지 실측 완료</summary>
+
+터미널에서 쓰는 **Claude Code CLI**(`claude`, VS Code나 Claude Desktop 없이도 동작)로 실제 계정 붙여서 검증했습니다.
+
+```powershell
+# 1) korail-mcp를 MCP 서버로 등록 (최초 1회)
+claude mcp add korail-mcp -s user -- "C:\Users\<사용자명>\.local\bin\korail-mcp.exe"
+
+# 2) 실제 질문 (해당 도구만 허용)
+claude -p "korail-mcp 도구를 사용해서 서울역에 엘리베이터가 있는지 알려줘" --allowedTools "mcp__korail-mcp__*"
+```
+
+> ✅ **2026-08-24 실측 결과** — 위 명령을 실제로 실행해서 실데이터 답변까지 확인했습니다:
+>
+> ```
+> 서울역 — 엘리베이터 있음 (18개)
+> 에스컬레이터: 23개 · 일반화장실: 있음 · 수유실: 있음 · 종합안내센터: 있음
+> (출처: 한국철도공사 공공데이터포털 편의시설정보, 실시간 API 기준)
+> ```
+>
+> `claude mcp list`로 등록 확인, `claude mcp remove korail-mcp`로 제거할 수 있습니다. 대화형으로 쓸 때는 `--allowedTools` 없이 실행하면 첫 도구 호출 시 승인 여부를 물어봅니다.
 </details>
 
 <details>
@@ -149,7 +174,7 @@ VS Code 확장 형태의 Copilot Chat은 위 CLI와 별개 제품이라 설정 �
 
 ### 연결 후 반드시 — 클라이언트를 완전히 종료했다 다시 실행
 
-> ℹ️ **GitHub Copilot CLI는 이 단계가 필요 없습니다** — 명령을 실행할 때마다 설정을 새로 읽습니다. 아래는 Claude Desktop·Cursor·Antigravity·VS Code처럼 **창을 띄워두는 클라이언트**에만 해당합니다.
+> ℹ️ **Claude Code·GitHub Copilot CLI는 이 단계가 필요 없습니다** — 명령을 실행할 때마다 설정을 새로 읽습니다. 아래는 Claude Desktop·Cursor·Antigravity·VS Code처럼 **창을 띄워두는 클라이언트**에만 해당합니다.
 
 창의 X를 눌러 닫아도 **트레이(작업표시줄 오른쪽 `^` 안)에 계속 실행 중**이라 설정이 적용되지 않습니다.
 → 트레이 아이콘 **우클릭 → Quit / 종료** 후 다시 실행하세요.

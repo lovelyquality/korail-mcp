@@ -3,11 +3,11 @@
 # KORAIL Open Data MCP
 
 A collection of MCP (Model Context Protocol) servers that connect Korea Railroad Corporation (KORAIL) public data to AI.
-Once installed, you can query KORAIL data in natural language from Claude, Cursor, Antigravity, GitHub Copilot (CLI/VS Code), and other MCP clients.
+Once installed, you can query KORAIL data in natural language from Claude Desktop, Claude Code, Cursor, Antigravity, GitHub Copilot (CLI/VS Code), and other MCP clients.
 
 > ✅ **No API key required** — a dedicated proxy server handles all public data API calls for you.
 >
-> 💻 **Local install (stdio)** — runs directly on your PC, no separate server needed. Connects to local MCP clients such as Claude Desktop, Cursor, Antigravity, and GitHub Copilot (CLI/VS Code). Web-only services like ChatGPT and Grok need a remote connection instead (see the Advanced section below).
+> 💻 **Local install (stdio)** — runs directly on your PC, no separate server needed. Connects to local MCP clients such as Claude Desktop, Claude Code, Cursor, Antigravity, and GitHub Copilot (CLI/VS Code). Web-only services like ChatGPT and Grok need a remote connection instead (see the Advanced section below).
 >
 > 📦 **Disk space needed** — about **100MB** (including the Python runtime and packages managed by `uv`)
 
@@ -66,6 +66,7 @@ Add the JSON below inside your client config file's `mcpServers` section, replac
 | Client | Config file |
 |---|---|
 | **Claude Desktop** | `%APPDATA%\Claude\claude_desktop_config.json` |
+| **Claude Code** | registered via `claude mcp add` (see the separate section below) |
 | **Cursor** | `C:\Users\<username>\.cursor\mcp.json` |
 | **Antigravity** | `C:\Users\<username>\.gemini\antigravity\mcp_config.json` |
 | **GitHub Copilot CLI** | registered via `copilot mcp add` (see the separate section below) |
@@ -79,6 +80,30 @@ Add the JSON below inside your client config file's `mcpServers` section, replac
 3. Inside it, create `claude_desktop_config.json` and paste the JSON above
 
 If `AppData` isn't visible, enable **Hidden items** in Explorer → View.
+</details>
+
+<details>
+<summary>Claude Code — tested end-to-end with a real account, including an actual tool call</summary>
+
+Tested with the **Claude Code CLI** (`claude`), which runs in a terminal without needing VS Code or Claude Desktop at all.
+
+```powershell
+# 1) Register korail-mcp as an MCP server (one-time)
+claude mcp add korail-mcp -s user -- "C:\Users\<username>\.local\bin\korail-mcp.exe"
+
+# 2) Ask a real question (only allow that tool)
+claude -p "Use the korail-mcp tools to check whether Seoul Station has an elevator" --allowedTools "mcp__korail-mcp__*"
+```
+
+> ✅ **Verified 2026-08-24** — ran the commands above for real and got a real-data answer back:
+>
+> ```
+> Seoul Station — has elevators (18)
+> Escalators: 23 · Restroom: yes · Nursing room: yes · Info center: yes
+> (Source: KORAIL Public Data Portal amenity info, live API)
+> ```
+>
+> Use `claude mcp list` to confirm it's registered, or `claude mcp remove korail-mcp` to remove it. For interactive use, drop `--allowedTools` and Claude Code will ask for approval on the first tool call.
 </details>
 
 <details>
@@ -149,7 +174,7 @@ The VS Code extension is a separate product from the CLI above, with its own con
 
 ### After connecting — fully quit and relaunch your client
 
-> ℹ️ **Not needed for the GitHub Copilot CLI** — it reloads config on every run. The steps below only apply to clients that stay open in a window, like Claude Desktop, Cursor, Antigravity, and VS Code.
+> ℹ️ **Not needed for Claude Code or the GitHub Copilot CLI** — they reload config on every run. The steps below only apply to clients that stay open in a window, like Claude Desktop, Cursor, Antigravity, and VS Code.
 
 Closing the window with the X doesn't stop it — it **keeps running in the system tray** (the `^` area near the clock), so the new config won't take effect.
 → Right-click the tray icon → **Quit / Exit**, then relaunch.
