@@ -3,11 +3,11 @@
 # KORAIL 공공데이터 MCP
 
 한국철도공사(KORAIL) 공공데이터를 AI에 연결하는 MCP(Model Context Protocol) 서버 모음입니다.
-설치 후 Claude·Cursor·Antigravity 등에서 자연어로 KORAIL 데이터를 조회할 수 있습니다.
+설치 후 Claude·Cursor·Antigravity·GitHub Copilot(CLI/VS Code) 등에서 자연어로 KORAIL 데이터를 조회할 수 있습니다.
 
 > ✅ **API 키 신청 불필요** — 전용 프록시 서버가 공공데이터 API 호출을 대신 처리합니다.
 >
-> 💻 **로컬 설치형 (stdio)** — 별도 서버 없이 개인 PC에서 직접 실행됩니다. Claude Desktop·Cursor·Antigravity 등 로컬 MCP 클라이언트에 연결합니다. ChatGPT·Grok 같은 웹 서비스는 원격 연결이 필요합니다(하단 고급 항목 참고).
+> 💻 **로컬 설치형 (stdio)** — 별도 서버 없이 개인 PC에서 직접 실행됩니다. Claude Desktop·Cursor·Antigravity·GitHub Copilot(CLI/VS Code) 등 로컬 MCP 클라이언트에 연결합니다. ChatGPT·Grok 같은 웹 서비스는 원격 연결이 필요합니다(하단 고급 항목 참고).
 >
 > 📦 **필요 디스크 공간** — 약 **100MB** (`uv`가 관리하는 Python과 패키지 포함)
 
@@ -68,6 +68,8 @@ uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korai
 | **Claude Desktop** | `%APPDATA%\Claude\claude_desktop_config.json` |
 | **Cursor** | `C:\Users\<사용자명>\.cursor\mcp.json` |
 | **Antigravity** | `C:\Users\<사용자명>\.gemini\antigravity\mcp_config.json` |
+| **GitHub Copilot CLI** | `copilot mcp add` 명령으로 등록 (아래 별도 안내) |
+| **VS Code (GitHub Copilot Chat)** | 아래 별도 안내 참고 (JSON 형식이 다름) |
 
 <details>
 <summary>Claude Desktop — 폴더가 없을 때</summary>
@@ -91,7 +93,63 @@ uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korai
 Antigravity는 채팅에 위 JSON을 붙여넣고 "이 MCP 서버를 등록해줘"라고 요청하는 방법이 더 쉽습니다. 무료로 설치 가능하며, KORAIL MCP 연결에 별도 구독이 필요 없습니다.
 </details>
 
+<details>
+<summary>GitHub Copilot CLI — 실제 계정으로 도구 호출까지 실측 완료</summary>
+
+터미널에서 쓰는 공식 **GitHub Copilot CLI**(`@github/copilot`, VS Code 없이도 동작)로 실제 계정 붙여서 검증했습니다. **무료 플랜에서도 MCP 서버 연결이 됩니다.**
+
+> ⚠️ **사전 준비 — Node.js 22 이상**이 필요합니다. `node --version`으로 확인하고, 없으면 [nodejs.org](https://nodejs.org)에서 LTS 버전을 설치하세요(uv와 달리 자동으로 준비되지 않습니다).
+
+```powershell
+# 1) 설치 (최초 1회)
+npm install -g @github/copilot
+
+# 2) korail-mcp를 MCP 서버로 등록 (최초 1회)
+copilot mcp add korail-mcp -- "C:\Users\<사용자명>\.local\bin\korail-mcp.exe"
+
+# 3) 실제 질문 (도구 자동 승인)
+copilot -p "서울역에 엘리베이터가 있는지 korail-mcp 도구로 조회해줘" --allow-all-tools
+```
+
+> ✅ **2026-08-24 실측 결과** — 위 명령을 실제로 실행해서 GitHub Copilot이 `get_urban_accessibility` 도구를 스스로 호출하고 실데이터로 답변하는 것까지 확인했습니다:
+>
+> ```
+> ● get_urban_accessibility (MCP: korail-mcp) · station_name: "서울역", facility_type: "elevator"
+>
+> 네, 서울역에는 엘리베이터가 있습니다! 총 17개의 엘리베이터가 설치되어 있습니다.
+> - 공항철도(AR): 9개 · 경의중앙선(KR): 1개 · 1호선(S1): 4개 · 4호선(S1): 3개
+> ```
+>
+> 설정 파일은 `~/.copilot/mcp-config.json`에 `mcpServers.korail-mcp`로 저장되며, `copilot mcp list`로 등록 확인, `copilot mcp remove korail-mcp`로 제거할 수 있습니다.
+</details>
+
+<details>
+<summary>VS Code (GitHub Copilot Chat) — JSON 형식이 다릅니다 (서버 프로토콜은 실측, VS Code GUI 자체는 미확인)</summary>
+
+VS Code 확장 형태의 Copilot Chat은 위 CLI와 별개 제품이라 설정 파일이 다릅니다. 최상위 키가 `mcpServers`가 아니라 **`servers`** 라서 위 JSON을 그대로 쓸 수 없습니다.
+
+1. 저장소(작업 폴더) 루트에 `.vscode\mcp.json` 파일을 만들고 아래 내용을 넣습니다.
+   (모든 작업 폴더에서 쓰려면 명령 팔레트(Ctrl+Shift+P) → **MCP: Open User Configuration** 으로 열리는 `%APPDATA%\Code\User\mcp.json` 에 넣으세요.)
+
+```json
+{
+  "servers": {
+    "korail-mcp": {
+      "command": "C:\\Users\\<사용자명>\\.local\\bin\\korail-mcp.exe"
+    }
+  }
+}
+```
+
+2. 파일을 저장하면 상단에 나타나는 **Start** 버튼을 클릭합니다.
+3. Copilot Chat을 열고 **Agent 모드**를 선택 → 도구 아이콘에서 `korail-mcp` 98개 도구가 보이면 연결 완료입니다.
+
+> ⚠️ **위 CLI 테스트로 서버 쪽(stdio 프로토콜·98개 도구·실데이터 응답)은 이미 검증됐지만, VS Code 화면에서 Start를 눌러 실제로 붙는지는 GUI 조작 도구가 없어 확인하지 못했습니다.** 안 되면 알려주세요.
+</details>
+
 ### 연결 후 반드시 — 클라이언트를 완전히 종료했다 다시 실행
+
+> ℹ️ **GitHub Copilot CLI는 이 단계가 필요 없습니다** — 명령을 실행할 때마다 설정을 새로 읽습니다. 아래는 Claude Desktop·Cursor·Antigravity·VS Code처럼 **창을 띄워두는 클라이언트**에만 해당합니다.
 
 창의 X를 눌러 닫아도 **트레이(작업표시줄 오른쪽 `^` 안)에 계속 실행 중**이라 설정이 적용되지 않습니다.
 → 트레이 아이콘 **우클릭 → Quit / 종료** 후 다시 실행하세요.

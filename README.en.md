@@ -3,11 +3,11 @@
 # KORAIL Open Data MCP
 
 A collection of MCP (Model Context Protocol) servers that connect Korea Railroad Corporation (KORAIL) public data to AI.
-Once installed, you can query KORAIL data in natural language from Claude, Cursor, Antigravity, and other MCP clients.
+Once installed, you can query KORAIL data in natural language from Claude, Cursor, Antigravity, GitHub Copilot (CLI/VS Code), and other MCP clients.
 
 > ✅ **No API key required** — a dedicated proxy server handles all public data API calls for you.
 >
-> 💻 **Local install (stdio)** — runs directly on your PC, no separate server needed. Connects to local MCP clients such as Claude Desktop, Cursor, and Antigravity. Web-only services like ChatGPT and Grok need a remote connection instead (see the Advanced section below).
+> 💻 **Local install (stdio)** — runs directly on your PC, no separate server needed. Connects to local MCP clients such as Claude Desktop, Cursor, Antigravity, and GitHub Copilot (CLI/VS Code). Web-only services like ChatGPT and Grok need a remote connection instead (see the Advanced section below).
 >
 > 📦 **Disk space needed** — about **100MB** (including the Python runtime and packages managed by `uv`)
 
@@ -68,6 +68,8 @@ Add the JSON below inside your client config file's `mcpServers` section, replac
 | **Claude Desktop** | `%APPDATA%\Claude\claude_desktop_config.json` |
 | **Cursor** | `C:\Users\<username>\.cursor\mcp.json` |
 | **Antigravity** | `C:\Users\<username>\.gemini\antigravity\mcp_config.json` |
+| **GitHub Copilot CLI** | registered via `copilot mcp add` (see the separate section below) |
+| **VS Code (GitHub Copilot Chat)** | see the separate section below (different JSON format) |
 
 <details>
 <summary>Claude Desktop — if the folder doesn't exist</summary>
@@ -91,7 +93,63 @@ If the `.cursor` or `.gemini\antigravity` folder (or the config file inside it) 
 With Antigravity it's even easier to just ask the agent — paste the JSON above into the chat and say "register this MCP server." It can be installed for free; no separate subscription is needed to connect KORAIL MCP.
 </details>
 
+<details>
+<summary>GitHub Copilot CLI — tested end-to-end with a real account, including an actual tool call</summary>
+
+Tested with the official **GitHub Copilot CLI** (`@github/copilot`), which runs in a terminal without needing VS Code at all. **MCP works on the free plan too.**
+
+> ⚠️ **Prerequisite — Node.js 22 or later.** Check with `node --version`; if missing, install the LTS release from [nodejs.org](https://nodejs.org) (unlike `uv`, this isn't set up automatically).
+
+```powershell
+# 1) Install (one-time)
+npm install -g @github/copilot
+
+# 2) Register korail-mcp as an MCP server (one-time)
+copilot mcp add korail-mcp -- "C:\Users\<username>\.local\bin\korail-mcp.exe"
+
+# 3) Ask a real question (auto-approve tool calls)
+copilot -p "Use the korail-mcp tools to check whether Seoul Station has an elevator" --allow-all-tools
+```
+
+> ✅ **Verified 2026-08-24** — ran the commands above for real and confirmed GitHub Copilot autonomously called the `get_urban_accessibility` tool and answered from real data:
+>
+> ```
+> ● get_urban_accessibility (MCP: korail-mcp) · station_name: "서울역", facility_type: "elevator"
+>
+> Yes, Seoul Station has elevators — 17 in total.
+> Airport Railroad (AR): 9 · Gyeongui–Jungang Line (KR): 1 · Line 1 (S1): 4 · Line 4 (S1): 3
+> ```
+>
+> The config is written to `~/.copilot/mcp-config.json` under `mcpServers.korail-mcp`. Use `copilot mcp list` to confirm it's registered, or `copilot mcp remove korail-mcp` to remove it.
+</details>
+
+<details>
+<summary>VS Code (GitHub Copilot Chat) — different JSON format (server protocol tested; VS Code GUI itself not verified)</summary>
+
+The VS Code extension is a separate product from the CLI above, with its own config file. The top-level key is **`servers`**, not `mcpServers`, so you can't reuse the JSON above as-is.
+
+1. Create `.vscode\mcp.json` at the root of your workspace and paste the block below.
+   (To make it available in every workspace instead, open the Command Palette (Ctrl+Shift+P) → **MCP: Open User Configuration**, which opens `%APPDATA%\Code\User\mcp.json`.)
+
+```json
+{
+  "servers": {
+    "korail-mcp": {
+      "command": "C:\\Users\\<username>\\.local\\bin\\korail-mcp.exe"
+    }
+  }
+}
+```
+
+2. Save the file, then click the **Start** button that appears at the top.
+3. Open Copilot Chat, switch to **Agent mode**, and check the tools icon — if `korail-mcp`'s 98 tools show up, you're connected.
+
+> ⚠️ **The CLI test above already proves the server side works (stdio protocol, all 98 tools, real data responses) — it does not prove that clicking Start in VS Code actually connects, since this environment has no way to drive the VS Code GUI.** Let us know if it doesn't work.
+</details>
+
 ### After connecting — fully quit and relaunch your client
+
+> ℹ️ **Not needed for the GitHub Copilot CLI** — it reloads config on every run. The steps below only apply to clients that stay open in a window, like Claude Desktop, Cursor, Antigravity, and VS Code.
 
 Closing the window with the X doesn't stop it — it **keeps running in the system tray** (the `^` area near the clock), so the new config won't take effect.
 → Right-click the tray icon → **Quit / Exit**, then relaunch.
