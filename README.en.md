@@ -11,11 +11,25 @@ Once installed, you can query KORAIL data in natural language from Claude Deskto
 >
 > 📦 **Disk space needed** — about **100MB** (including the Python runtime and packages managed by `uv`)
 
-> 👉 **New here?** Just follow the 3 install steps below. The full list of 98 tools further down is only for reference once you're set up.
+> 👉 **New here?** Try the "Easiest way" section right below first. The full list of 98 tools further down is only for reference once you're set up.
 
 ---
 
-## ⚙️ Installation (Windows · 2 steps)
+## 🤖 Easiest way — just ask your AI to do it
+
+If you're using an **AI that can run terminal commands directly** — Claude Code, Cursor, GitHub Copilot (CLI/VS Code), Antigravity, and similar — paste this into its chat:
+
+```
+Check out the README at https://github.com/lovelyquality/korail-mcp and install this MCP server, then connect it to my client.
+```
+
+The AI will read the README itself and handle everything — installing `uv`, installing `korail-mcp`, and registering it in your client's config file. Once it's done, verify with a question like "Does Seoul Station have an elevator?"
+
+> ⚠️ **This won't work with AIs that can't run local commands, like ChatGPT or Grok** (see "Other setups" further down for why). And if the AI gets stuck, or you're not using a tool-capable AI at all → **just follow the "Manual installation" section right below.**
+
+---
+
+## ⚙️ Manual installation (Windows · 2 steps)
 
 No need to install Python separately or download the repository. **`uv` prepares everything it needs automatically.**
 
@@ -40,6 +54,8 @@ Success looks like `Installed 1 executable: korail-mcp` at the end.
 > ⏳ The first install takes 1–3 minutes (downloading Python and packages). After that, startup takes **about 5 seconds**.
 >
 > 🔄 **Updating to the latest version** — run `uv tool upgrade korail-mcp`, then restart your client.
+>
+> ⚠️ **Before updating, fully quit any client using korail-mcp** (Claude Desktop, Cursor, Antigravity, VS Code, etc). Upgrading while one is still running locks the executable file, so `uv` swaps in the new package internals but leaves the old executable in place — **this can break with `ModuleNotFoundError: No module named 'gateway'`** (reproduced and confirmed 2026-08-24). If you hit that error, kill every process using `korail-mcp.exe` in Task Manager, then reinstall with `uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korail-mcp --force`. **Multiple clients sharing the same install at the same time is fine** — the conflict only happens at the moment of upgrading.
 
 ---
 

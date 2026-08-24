@@ -11,11 +11,25 @@
 >
 > 📦 **필요 디스크 공간** — 약 **100MB** (`uv`가 관리하는 Python과 패키지 포함)
 
-> 👉 **처음이신가요?** 바로 아래 "설치" 3단계만 따라 하시면 됩니다. 98개 도구 전체 목록은 설치를 마친 뒤 필요할 때 참고하세요.
+> 👉 **처음이신가요?** 바로 아래 "제일 쉬운 방법"부터 시도해보세요. 98개 도구 전체 목록은 설치를 마친 뒤 필요할 때 참고하세요.
 
 ---
 
-## ⚙️ 설치 (Windows · 2단계)
+## 🤖 제일 쉬운 방법 — AI에게 그대로 시키기
+
+**Claude Code·Cursor·GitHub Copilot(CLI/VS Code)·Antigravity처럼 터미널 명령을 직접 실행할 수 있는 AI**를 쓰고 있다면, 그 채팅창에 아래 문장을 그대로 붙여넣으세요.
+
+```
+https://github.com/lovelyquality/korail-mcp 의 README를 참고해서 이 MCP 서버를 설치하고 내 클라이언트에 연결해줘.
+```
+
+AI가 README를 직접 읽고 `uv` 설치 → `korail-mcp` 설치 → 클라이언트 설정 파일 등록까지 알아서 처리합니다. 완료되면 "서울역에 엘리베이터가 있나요?" 같은 질문으로 확인해보세요.
+
+> ⚠️ **ChatGPT·Grok처럼 로컬 명령을 실행하지 못하는 AI**에서는 이 방법이 통하지 않습니다(왜인지는 하단 "그 밖의 방식" 참고). 그리고 AI가 중간에 막히거나, 애초에 이런 방식의 AI 도구가 없다면 → **바로 아래 "수동 설치"를 그대로 따라 하시면 됩니다.**
+
+---
+
+## ⚙️ 수동 설치 (Windows · 2단계)
 
 Python을 따로 설치하거나 저장소를 다운로드할 필요가 없습니다. **`uv`가 필요한 것을 알아서 준비합니다.**
 
@@ -40,6 +54,8 @@ uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korai
 > ⏳ 첫 설치는 1~3분 걸립니다(Python과 패키지를 받는 시간). 설치 후 실행은 **약 5초**입니다.
 >
 > 🔄 **최신 버전으로 갱신** — `uv tool upgrade korail-mcp` 실행 후 클라이언트를 재시작하세요.
+>
+> ⚠️ **갱신 전에는 korail-mcp를 쓰는 클라이언트(Claude Desktop·Cursor·Antigravity·VS Code 등)를 먼저 완전히 종료하세요.** 실행 중인 상태로 갱신하면 실행파일이 잠겨 있어 내부 패키지만 새 버전으로 바뀌고 실행파일은 그대로 남아 **`ModuleNotFoundError: No module named 'gateway'`로 깨질 수 있습니다** (2026-08-24 실측으로 재현·확인). 이미 이 에러가 나면 `korail-mcp.exe`를 쓰는 모든 프로세스를 작업 관리자에서 종료한 뒤 `uv tool install --from git+https://github.com/lovelyquality/korail-mcp.git korail-mcp --force`로 재설치하세요. **여러 클라이언트가 같은 설치를 동시에 쓰는 것 자체는 문제 없습니다** — 충돌은 갱신하는 그 순간에만 일어납니다.
 
 ---
 
