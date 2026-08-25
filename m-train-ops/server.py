@@ -9,6 +9,8 @@ load_dotenv(encoding='utf-8-sig')
 PROXY_BASE = os.getenv("KORAIL_PROXY_URL", "https://korail-mcp-proxy.lovelymong.workers.dev") + "/proxy"
 BASE_URL = f"{PROXY_BASE}/apis/B551457/run/v2"
 ODCLOUD_BASE = f"{PROXY_BASE}/odcloud"
+_PROXY_TOKEN = os.getenv("KORAIL_PROXY_TOKEN", "")
+_PROXY_HEADERS = {"Authorization": f"Bearer {_PROXY_TOKEN}"} if _PROXY_TOKEN else {}
 
 mcp = MCPServer("KORAIL 열차운행정보")
 
@@ -40,6 +42,7 @@ def _odcloud_get(path: str, page: int = 1, per_page: int = 1000) -> dict:
     r = httpx.get(
         f"{ODCLOUD_BASE}{path}",
         params={"page": page, "perPage": per_page},
+        headers=_PROXY_HEADERS,
         timeout=20,
     )
     return r.json()
@@ -70,7 +73,7 @@ def fetch_train(endpoint: str, cond: dict = {}) -> list:
     }
     for k, v in cond.items():
         params[f"cond[{k}]"] = v
-    response = httpx.get(f"{BASE_URL}/{endpoint}", params=params, timeout=15)
+    response = httpx.get(f"{BASE_URL}/{endpoint}", params=params, headers=_PROXY_HEADERS, timeout=15)
     body = response.json().get("response", {}).get("body", {})
     items = (body.get("items") or {}).get("item", [])
     return items if isinstance(items, list) else [items]
