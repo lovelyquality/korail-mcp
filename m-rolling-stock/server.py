@@ -8,8 +8,6 @@ load_dotenv(encoding='utf-8-sig')
 
 PROXY_BASE = os.getenv("KORAIL_PROXY_URL", "https://korail-mcp-proxy.lovelymong.workers.dev") + "/proxy"
 ODCLOUD_BASE = f"{PROXY_BASE}/odcloud"
-_PROXY_TOKEN = os.getenv("KORAIL_PROXY_TOKEN", "")
-_PROXY_HEADERS = {"Authorization": f"Bearer {_PROXY_TOKEN}"} if _PROXY_TOKEN else {}
 
 mcp = MCPServer("KORAIL 차량·장비 정보")
 
@@ -39,7 +37,6 @@ def _odcloud_get(path: str, page: int = 1, per_page: int = 1000) -> dict:
     r = httpx.get(
         f"{ODCLOUD_BASE}{path}",
         params={"page": page, "perPage": per_page},
-        headers=_PROXY_HEADERS,
         timeout=20,
     )
     return r.json()
