@@ -30,9 +30,11 @@ KORAIL MCP Gateway
   헤더: Authorization: Bearer <MCP_API_KEY>
 
 환경변수:
-  KORAIL_PROXY_URL  Cloudflare 프록시 URL (기본값 내장)
-  MCP_API_KEY       Bearer Token, 원격 모드 전용 (미설정 시 인증 없음 — 개발용)
-  PORT              원격 모드 수신 포트 (기본 8080)
+  KORAIL_PROXY_URL   Cloudflare 프록시 URL (기본값 내장)
+  KORAIL_PROXY_TOKEN 프록시 인증 토큰 (proxy-worker에 PROXY_AUTH_TOKEN secret 설정 시 필수,
+                      미설정 시 인증 없음 — 하위 11개 서버가 공용으로 사용)
+  MCP_API_KEY        Bearer Token, 원격 모드 전용 (미설정 시 인증 없음 — 개발용)
+  PORT               원격 모드 수신 포트 (기본 8080)
 """
 
 from __future__ import annotations
