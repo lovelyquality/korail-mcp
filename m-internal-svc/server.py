@@ -8,8 +8,6 @@ import json
 load_dotenv(encoding='utf-8-sig')
 
 PROXY_BASE = os.getenv("KORAIL_PROXY_URL", "https://korail-mcp-proxy.lovelymong.workers.dev") + "/proxy"
-_PROXY_TOKEN = os.getenv("KORAIL_PROXY_TOKEN", "")
-_PROXY_HEADERS = {"Authorization": f"Bearer {_PROXY_TOKEN}"} if _PROXY_TOKEN else {}
 
 # ── B551457 REST API (임대매장정보) ──────────────────────────────────────
 LEASE_BASE = f"{PROXY_BASE}/apis/B551457/lease"
@@ -63,7 +61,6 @@ def _load(key: str) -> list:
         r = httpx.get(
             f"{ODCLOUD_BASE}{path}",
             params={"page": page, "perPage": 1000},
-            headers=_PROXY_HEADERS,
             timeout=30,
         )
         body = r.json()
@@ -94,7 +91,7 @@ def _fetch_lease(endpoint: str, cond: dict = {}) -> list:
     params = {"pageNo": 1, "numOfRows": 1000}
     for k, v in cond.items():
         params[f"cond[{k}]"] = v
-    r = httpx.get(f"{LEASE_BASE}/{endpoint}", params=params, headers=_PROXY_HEADERS, timeout=15)
+    r = httpx.get(f"{LEASE_BASE}/{endpoint}", params=params, timeout=15)
     body = r.json().get("response", {}).get("body", {})
     items = (body.get("items") or {}).get("item", [])
     return items if isinstance(items, list) else [items]
