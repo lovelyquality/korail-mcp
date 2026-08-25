@@ -9,8 +9,6 @@ load_dotenv(encoding='utf-8-sig')
 
 PROXY_BASE = os.getenv("KORAIL_PROXY_URL", "https://korail-mcp-proxy.lovelymong.workers.dev") + "/proxy"
 ODCLOUD_BASE = f"{PROXY_BASE}/odcloud"
-_PROXY_TOKEN = os.getenv("KORAIL_PROXY_TOKEN", "")
-_PROXY_HEADERS = {"Authorization": f"Bearer {_PROXY_TOKEN}"} if _PROXY_TOKEN else {}
 
 ENDPOINTS = {
     "satisfaction":          "/15153929/v1/uddi:8996eb87-a404-4acb-80fe-b267fb5325fd",
@@ -54,7 +52,6 @@ def _load(key: str) -> list:
         r = httpx.get(
             f"{ODCLOUD_BASE}{path}",
             params={"page": page, "perPage": 1000},
-            headers=_PROXY_HEADERS,
             timeout=20,
         )
         body = r.json()
