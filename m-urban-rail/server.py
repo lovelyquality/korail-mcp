@@ -33,8 +33,6 @@ PROXY_URL = os.getenv(
     "KORAIL_PROXY_URL", "https://korail-mcp-proxy.lovelymong.workers.dev"
 ).rstrip("/")
 KRIC_BASE = f"{PROXY_URL}/proxy/kric"
-_PROXY_TOKEN = os.getenv("KORAIL_PROXY_TOKEN", "")
-_PROXY_HEADERS = {"Authorization": f"Bearer {_PROXY_TOKEN}"} if _PROXY_TOKEN else {}
 
 mcp = MCPServer("korail-urban-rail")
 
@@ -272,7 +270,7 @@ def _kric_get(svc: str, op: str, params: dict) -> tuple[list, str | None]:
     url = f"{KRIC_BASE}/{svc}/{op}"
     q = {"format": "json", **params}
     try:
-        r = httpx.get(url, params=q, headers=_PROXY_HEADERS, timeout=30)
+        r = httpx.get(url, params=q, timeout=30)
     except Exception as e:  # noqa: BLE001
         return [], f"요청 실패: {type(e).__name__}: {e}"
     if r.status_code != 200:
