@@ -12,8 +12,6 @@ load_dotenv(encoding='utf-8-sig')
 PROXY_BASE = os.getenv("KORAIL_PROXY_URL", "https://korail-mcp-proxy.lovelymong.workers.dev") + "/proxy"
 BASE_URL = f"{PROXY_BASE}/apis/B551457/issueStatistics"
 CARRIAGE_BASE = f"{PROXY_BASE}/apis/B551457/carriageStatistics"
-_PROXY_TOKEN = os.getenv("KORAIL_PROXY_TOKEN", "")
-_PROXY_HEADERS = {"Authorization": f"Bearer {_PROXY_TOKEN}"} if _PROXY_TOKEN else {}
 DATA_DIR = Path(__file__).parent / "data"
 
 mcp = MCPServer("KORAIL 여객·화물 수송통계")
@@ -46,7 +44,7 @@ def fetch_stats(endpoint: str, cond: dict = {}) -> list:
     }
     for k, v in cond.items():
         params[f"cond[{k}]"] = v
-    response = httpx.get(f"{BASE_URL}/{endpoint}", params=params, headers=_PROXY_HEADERS, timeout=15)
+    response = httpx.get(f"{BASE_URL}/{endpoint}", params=params, timeout=15)
     body = response.json().get("response", {}).get("body", {})
     items = (body.get("items") or {}).get("item", [])
     return items if isinstance(items, list) else [items]
@@ -58,7 +56,7 @@ def fetch_carriage(endpoint: str, cond: dict = {}) -> list:
     params = {"pageNo": 1, "numOfRows": 1000}
     for k, v in cond.items():
         params[f"cond[{k}]"] = v
-    response = httpx.get(f"{CARRIAGE_BASE}/{endpoint}", params=params, headers=_PROXY_HEADERS, timeout=15)
+    response = httpx.get(f"{CARRIAGE_BASE}/{endpoint}", params=params, timeout=15)
     body = response.json().get("response", {}).get("body", {})
     items = (body.get("items") or {}).get("item", [])
     return items if isinstance(items, list) else [items]
