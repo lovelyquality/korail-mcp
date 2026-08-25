@@ -12,6 +12,10 @@
  *   2) 엣지 캐싱 — 역코드·노선코드 등 거의 안 바뀌는 데이터라, 한 번 받아온
  *      응답을 CACHE_TTL_SECONDS 동안 재사용. 사용자가 늘어도 실제 정부 API
  *      호출은 거의 안 늘어나게 한다.
+ *   3) IP당 레이트리밋(캐시 미스에만 적용) — 쿼리를 계속 바꿔가며 캐싱을
+ *      우회하려는 시도에 대한 보조 장치. Workers 레이트리밋은 10초/60초
+ *      창만 지원해 "하루 몇 회" 개념은 없다 — 완전한 방어가 아니라 폭주를
+ *      늦추는 용도.
  *
  * 라우팅:
  *   /proxy/apis/B551457/...  →  https://apis.data.go.kr/B551457/...   (DATA_GO_KR_API_KEY)
@@ -153,6 +157,18 @@ export default {
         hit.headers.set("X-Proxy-Cache", "HIT");
         return hit;
       }
+    }
+
+    // 캐시 미스 = 실제 정부 API를 때리는 요청일 때만 IP당 레이트리밋 적용.
+    // (캐시 히트는 정부 API를 안 건드리니 제한할 이유가 없다 — 쿼리를 계속
+    //  바꿔가며 캐시를 우회하려는 시도만 여기서 잡힌다)
+    const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+    const { success } = await env.RATE_LIMITER.limit({ key: ip });
+    if (!success) {
+      return new Response(JSON.stringify({ error: "Too Many Requests" }), {
+        status: 429,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+      });
     }
 
     // 타깃 URL 구성

@@ -2,3 +2,12 @@ name = "korail-mcp-proxy"
 main = "src/index.js"
 compatibility_date = "2024-01-01"
 workers_dev = true
+
+# IP당 60초에 30회 — 실제 정부 API를 때리는 요청(캐시 미스)에만 적용.
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+
+  [ratelimits.simple]
+  limit = 30
+  period = 60
