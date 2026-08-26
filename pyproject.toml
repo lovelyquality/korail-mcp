@@ -1,9 +1,16 @@
 [project]
 name = "korail-mcp"
-version = "1.0.0"
+version = "1.0.1"
 description = "한국철도공사(KORAIL) 공공데이터 MCP 서버 — 11개 서버 98개 도구를 단일 게이트웨이로 통합"
 readme = "README.md"
 requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["mcp", "korail", "railway", "korea", "public-data"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
 dependencies = [
     "mcp>=2.0.0,<3",
     "httpx>=0.25.0,<1",
@@ -13,12 +20,49 @@ dependencies = [
     "starlette>=0.40.0,<1",
 ]
 
+[project.urls]
+Homepage = "https://github.com/lovelyquality/korail-mcp"
+Repository = "https://github.com/lovelyquality/korail-mcp"
+
 [project.scripts]
 korail-mcp = "gateway.server:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+# 기본 sdist는 저장소 루트 전체(PPT·발표자료·엑셀 등, 130MB+)를 그대로 담아버린다.
+# 휠 빌드에 실제로 필요한 파일만 명시해서 sdist도 휠과 같은 범위로 좁힌다.
+[tool.hatch.build.targets.sdist]
+only-include = [
+    "gateway",
+    "m-codebook/server.py",
+    "m-convenience/server.py",
+    "m-freight/server.py",
+    "m-freight/data",
+    "m-internal-svc/server.py",
+    "m-network/server.py",
+    "m-network/data",
+    "m-procurement/server.py",
+    "m-procurement/data",
+    "m-rolling-stock/server.py",
+    "m-rolling-stock/data",
+    "m-stats/server.py",
+    "m-stats/data",
+    "m-train-ops/server.py",
+    "m-urban-rail/server.py",
+    "m-urban-rail/data",
+    "m-voc-cs/server.py",
+    "README.md",
+    "README.en.md",
+    "LICENSE",
+]
+exclude = [
+    "**/venv",
+    "**/__pycache__",
+    "**/*.pyc",
+    "**/.env",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["gateway"]

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.lovelyquality/korail-mcp",
+  "description": "한국철도공사(KORAIL) 공공데이터 MCP 서버 — 98개 도구, API 키 신청 불필요. 역·열차·화물·통계 데이터 자연어 조회.",
+  "repository": {
+    "url": "https://github.com/lovelyquality/korail-mcp",
+    "source": "github"
+  },
+  "version": "1.0.1",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "korail-mcp",
+      "version": "1.0.1",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

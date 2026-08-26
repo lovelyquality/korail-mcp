@@ -66,7 +66,7 @@ else:
 # ── Gateway MCPServer 인스턴스 ─────────────────────────────────────
 # version 을 명시하지 않으면 serverInfo.version 이 빈 문자열로 나간다
 # (mcp 1.x 는 SDK 버전을 자동으로 채웠으나 2.0 은 채우지 않음).
-gateway = MCPServer("KORAIL MCP", version="1.0.0")
+gateway = MCPServer("KORAIL MCP", version="1.0.1")
 # mcp 2.0: settings.stateless_http 가 제거되어 streamable_http_app() 인자로 전달한다.
 
 # ── 11개 서버 동적 로드 후 도구 통합 ──────────────────────────────
