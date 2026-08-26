@@ -49,4 +49,7 @@ startup_out.txt
 # Cloudflare credentials
 cloudfire.txt
 
+# 배포 현황 추적 문서 — 계정 이메일·내부 전략 판단 포함, 저장소 공개 후 노출 위험
+DEPLOYMENT.md
+
 proxy-worker/.wrangler/
